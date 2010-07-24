@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-07-23 20:56:50 erik>
+#    Time-stamp:      <2010-07-23 21:16:09 erik>
 #
 #   Purpose:          
 #
@@ -45,8 +45,6 @@ parseFormula <- function(formula, data, subset) {
   mf[[1L]] <- as.name("model.frame")
   mf <- eval(mf, parent.frame())
 
-  #mf <- model.frame(formula, data)
-
   Terms <- terms(formula)
   strat <- attr(Terms, "response")
 
@@ -59,7 +57,6 @@ parseFormula <- function(formula, data, subset) {
   }
 
   list(vars = df.vars, strat = mf[[strat]])
-  
 }
 
 etable <- function(x, ...) {
@@ -127,8 +124,6 @@ esummary.factor <- function(x, strat, data, ...) {
   ret
 }
 
-## say I want to add statistical test.
-
 etest <- function(x, strat, data, ...) {
   UseMethod("etest")
 }
@@ -141,24 +136,7 @@ etest.factor <- function(x, strat, data, round.digits = 2, ...) {
   round(fisher.test(x, strat, ...)$p.value, round.digits)
 }
 
-## now how about the regression coefficient?
-
-elm <- function(x, strat, data, ...) {
- UseMethod("elm")
-}
-
-elm.default <- function(x, strat, data, model.formula, round.digits = 2, ...) {
-  data$x <- x
-  round(coef(lm(update(model.formula, diffs ~ .), data = data), ...)[2], round.digits)
-}
-
-elm.factor <- function(x, strat, data, model.formula, round.digits = 2, ...) {
-  data$x <- x
-  round(exp(coef(glm(update(model.formula, inc4x ~ .),
-                     data = data, family = binomial, ...))[2]), round.digits)
-}
-
-elm2 <- function(formula, data, round.digits = 2, ...) {
+elm <- function(formula, data, round.digits = 2, ...) {
   ret <- round(coef(lm(formula, data, ...))[-1], round.digits)
   list(plain = ret, latex = ret)
 }
@@ -378,17 +356,17 @@ eLaTeXFooter <- function(x) {
     "\\end{longtable}")
 }
 
+attr(erownames, "latex.function") <-  elatexrownames
+attr(erownames, "format.function") <- eprintrownames
+attr(etest, "latex.function") <- eprintidentity
+
 tmp <- etable(form, data = pead.bl, colname = "rownames",
               summary.function = erownames) +
   etable() +
   etable(subset = hiv == "Positive") +
   etable(subset = hiv == "Negative") +
   etable(summary.function = etest) +
-  etable(elm2, update(form, diffs ~ .), data = pead.bl)
-
-attr(erownames, "latex.function") <-  elatexrownames
-attr(erownames, "format.function") <- eprintrownames
-attr(etest, "latex.function") <- eprintidentity
+  etable(elm, update(form, diffs ~ .), data = pead.bl)
 
 etable(form, data = pead.bl, colname = "rownames",
        summary.function = erownames) +
@@ -396,6 +374,6 @@ etable(form, data = pead.bl, colname = "rownames",
   etable(subset = hiv == "Positive") +
   etable(subset = hiv == "Negative") +
   etable(summary.function = etest) +
-  etable(elm2, update(form, diffs ~ .), data = pead.bl)
+  etable(elm, update(form, diffs ~ .), data = pead.bl)
 
 ##latex(summary(hiv ~ age + gender, data = pead.bl, method = "reverse"), longtable = TRUE)
