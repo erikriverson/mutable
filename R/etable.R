@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-07-23 21:16:09 erik>
+#    Time-stamp:      <2010-07-23 23:00:18 erik>
 #
 #   Purpose:          
 #
@@ -252,7 +252,6 @@ eformat.table <- function(x, name, data, round.digits = 0, ...) {
   names(val) <- paste(name, names(x), sep = "")
   val
 }
-
 
 print.etable <- function(x, quote = FALSE, na.print = "--", print.rownames = FALSE, ...) {
   x <- x[["plain"]]
