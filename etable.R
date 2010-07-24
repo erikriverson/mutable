@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-07-22 23:30:37 erik>
+#    Time-stamp:      <2010-07-23 20:56:50 erik>
 #
 #   Purpose:          
 #
@@ -27,6 +27,10 @@ pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRU
                       diffs = rnorm(100, 500, sd = 100),
                       inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
                       bmi = rnorm(100, 30, sd = 3))
+
+label(pead.bl$hiv) <- "HIV Status"
+label(pead.bl$age) <- "Age"
+label(pead.bl$gender) <- "Gender"
                         
 form <- hiv ~ age + gender
 
@@ -65,19 +69,14 @@ etable <- function(x, ...) {
 }
 
 etable.function <- function(FUNCTION, ...) {
-  if(any(c("summary.function",
-           "format.function",
-           "latex.function",
-           "html.function") %in% names(list(...))))
-    etable.default(...)
-  else
-    do.call(FUNCTION, list(...))
+  do.call(FUNCTION, list(...))
 }
 
 esummary <- function(x, strat, data, ...) {
   UseMethod("esummary")
 }
 
+ 
 esummary.default <- function(x, strat, data, ...) {
   quant <- quantile(x, probs = c(.25, .5, .75), ...)
   attr(quant, "N") <- length(x)
@@ -215,6 +214,21 @@ etable.formula <- function(formula, data,
   
   ret <- lapply(dfv$vars, summary.function, dfv$strat, data, ...)
 
+  ## grab any defaults for formatting functions from the
+  ## summary.function attributes we need to know which ones to grab
+  ## though, probably through a list as as argument to this function.
+  ## Or, we could just define any of them based on the attribute being
+  ## present.  But how would we know which functions are actually
+  ## meant to be called?  Perhaps intitial object can specify these.
+  ## for now, just use our latex/html/format
+
+  if(!is.null(lf <- attr(summary.function, "latex.function")))
+    latex.function <- lf
+  if(!is.null(hf <- attr(summary.function, "html.function")))
+    html.function <- hf
+  if(!is.null(ff <- attr(summary.function, "format.function")))
+    format.function <- ff
+  
   format.ret <- NULL
   for(i in 1:length(ret)) {
     val <- format.function(ret[[i]], names(ret)[i], data)
@@ -248,7 +262,7 @@ eformat <- function(x, name, data, ... ) {
 }
 
 eformat.default <- function(x, name, data, round.digits = 2, ... ) {
-  val <- paste(x, collapse = "/")
+  val <- paste(round(x, round.digits), collapse = "/")
   names(val) <- name
   val
 }
@@ -365,38 +379,23 @@ eLaTeXFooter <- function(x) {
 }
 
 tmp <- etable(form, data = pead.bl, colname = "rownames",
-              summary.function = erownames,
-              format.function = eprintrownames,
-              latex.function = elatexrownames) +
-  etable(form, data = pead.bl, colname = "combined") +
-  etable(form, subset = hiv == "Positive") +
-  etable(form, data = subset(pead.bl, hiv == "Negative")) +
-  etable(hiv ~ age + gender, data = pead.bl,
-         summary.function = etest,
-         latex.function = eprintidentity) +
- etable(hiv ~ age + gender, data = pead.bl, summary.function = elm,
-         model.formula = ~ x + hiv + bmi,
-         latex.function = eprintidentity) +
-  etable(elm2, update(form, diffs ~ .), data = pead.bl)
-
-
-etable(form, data = pead.bl, colname = "rownames",
-       summary.function = erownames,
-       format.function = eprintrownames,
-       latex.function = elatexrownames) +
+              summary.function = erownames) +
   etable() +
   etable(subset = hiv == "Positive") +
   etable(subset = hiv == "Negative") +
-  etable(summary.function = etest,
-         latex.function = eprintidentity) +
+  etable(summary.function = etest) +
   etable(elm2, update(form, diffs ~ .), data = pead.bl)
 
-latex(summary(hiv ~ age + gender, data = pead.bl, method = "reverse"), longtable = TRUE)
-      
+attr(erownames, "latex.function") <-  elatexrownames
+attr(erownames, "format.function") <- eprintrownames
+attr(etest, "latex.function") <- eprintidentity
 
+etable(form, data = pead.bl, colname = "rownames",
+       summary.function = erownames) +
+  etable() +
+  etable(subset = hiv == "Positive") +
+  etable(subset = hiv == "Negative") +
+  etable(summary.function = etest) +
+  etable(elm2, update(form, diffs ~ .), data = pead.bl)
 
-
-
-
-
-
+##latex(summary(hiv ~ age + gender, data = pead.bl, method = "reverse"), longtable = TRUE)
