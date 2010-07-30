@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-07-23 23:00:18 erik>
+#    Time-stamp:      <2010-07-23 23:38:11 erik>
 #
 #   Purpose:          
 #
@@ -72,7 +72,6 @@ etable.function <- function(FUNCTION, ...) {
 esummary <- function(x, strat, data, ...) {
   UseMethod("esummary")
 }
-
  
 esummary.default <- function(x, strat, data, ...) {
   quant <- quantile(x, probs = c(.25, .5, .75), ...)
@@ -164,6 +163,10 @@ etable.formula <- function(formula, data,
                            colname,
                            subset = NULL, ...) {
 
+  ## if there was no data argument, we have to go find it first return
+  ## from function knowing this, and resolve the data argument later,
+  ## since we know `+.etable.` must have been called. 
+  
   if(missing(data)) {
     lst <- as.list(match.call()[-1])
     attr(lst, "resolve") <- TRUE
