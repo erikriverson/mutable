@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-07-23 23:38:11 erik>
+#    Time-stamp:      <2010-09-01 15:30:16 eriki>
 #
 #   Purpose:          
 #
@@ -132,7 +132,7 @@ etest.default <- function(x, strat, data, round.digits = 2, ...) {
 }
 
 etest.factor <- function(x, strat, data, round.digits = 2, ...) {
-  round(fisher.test(x, strat, ...)$p.value, round.digits)
+  round(chisq.test(x, strat, ...)$p.value, round.digits)
 }
 
 elm <- function(formula, data, round.digits = 2, ...) {
@@ -227,8 +227,10 @@ etable.formula <- function(formula, data,
   ## set the names of the matrix for printing 
   rownames(format.ret) <- xx
   rownames(latex.ret) <- xx
-  if(!missing(colname))
+  if(!missing(colname)) {
     colnames(format.ret) <- colname
+    colnames(latex.ret) <- colname
+  }
 
   ## set up the return value (a list)
   return.list <- list(plain = format.ret, latex = latex.ret,
@@ -268,10 +270,10 @@ elatex <- function(x, ...) {
   UseMethod("elatex")
 }
 
-elatex.default <- function(x, name, data, ...) {
-  ret <- paste("\\scriptsize{", x[1], "}", 
-               x[2],
-               "\\scriptsize{", x[3], "}",
+elatex.default <- function(x, name, data, round.digits = 1, ...) {
+  ret <- paste("\\scriptsize{", round(x[1], round.digits), "}", 
+               round(x[2], round.digits),
+               "\\scriptsize{", round(x[3], round.digits), "}",
                sep = " ")
   names(ret) <- name
   ret
@@ -330,18 +332,35 @@ elatexrownames.special <- function(x, name, data, ...) {
   ret
 }
 
-latex.etable <- function(x, na.print = "", file = "", headerFunction = eLaTeXHeader,
-                         footerFunction = eLaTeXFooter, caption = "", ...) {
+latex.etable <- function(x, na.print = "", file = "", headerFunction = eLaTeXHeader.tabular,
+                         footerFunction = eLaTeXFooter.tabular, caption = "", ...) {
   x <- x$latex
   x[is.na(x)] <- na.print
   cat(paste(headerFunction(x, caption, ...), collapse = "\n"), "\n", file = file)
   cat(paste(apply(x, 1, paste, collapse = "&"), collapse = "\\\\\n"), "\\\\\n", file = file,
       append = TRUE)
-  cat(paste(footerFunction(x), collapse = "\n"), "\n", file = file, append = TRUE)
+  cat(paste(footerFunction(x, caption), collapse = "\n"), "\n", file = file, append = TRUE)
 
 }
 
-eLaTeXHeader <- function(x, caption, collabel.just) {
+eLaTeXHeader.tabular <- function(x, caption, collabel.just) {
+  if(missing(collabel.just))
+    collabel.just <- paste(c("l", rep("c", ncol(x) - 1)), collapse = "")
+  
+  c("\\begin{table}",
+    ps("\\begin{tabular}{", collabel.just, "}"),
+    c(paste("\\multicolumn{1}{c}{", colnames(x), "}", collapse = "&"), "\\\\"),
+    "\\hline\\\\")
+}
+
+eLaTeXFooter.tabular <- function(x, caption) {
+    c("\\end{tabular}",
+      ps("\\caption{", caption , "}"),
+      "\\end{table}")
+  }
+
+
+eLaTeXHeader.longtable <- function(x, caption, collabel.just) {
   if(missing(collabel.just))
     collabel.just <- paste(c("l", rep("c", ncol(x) - 1)), collapse = "")
   c(paste("\\begin{longtable}{", collabel.just, "}"),
@@ -353,10 +372,11 @@ eLaTeXHeader <- function(x, caption, collabel.just) {
     "\\hline")
 }
 
-eLaTeXFooter <- function(x) {
+eLaTeXFooter.longtable <- function(x) {
   c("\\hline",
     "\\end{longtable}")
 }
+
 
 attr(erownames, "latex.function") <-  elatexrownames
 attr(erownames, "format.function") <- eprintrownames
@@ -367,8 +387,10 @@ tmp <- etable(form, data = pead.bl, colname = "rownames",
   etable() +
   etable(subset = hiv == "Positive") +
   etable(subset = hiv == "Negative") +
-  etable(summary.function = etest) +
-  etable(elm, update(form, diffs ~ .), data = pead.bl)
+  etable(summary.function = etest)
+
+
+latex(tmp)
 
 etable(form, data = pead.bl, colname = "rownames",
        summary.function = erownames) +
@@ -378,4 +400,12 @@ etable(form, data = pead.bl, colname = "rownames",
   etable(summary.function = etest) +
   etable(elm, update(form, diffs ~ .), data = pead.bl)
 
-##latex(summary(hiv ~ age + gender, data = pead.bl, method = "reverse"), longtable = TRUE)
+
+tab1 <- etable(form, data = pead.bl, colname = "rownames",
+              summary.function = erownames) +
+  etable() +
+  etable(subset = hiv == "Positive") +
+  etable(subset = hiv == "Negative") +
+  etable(summary.function = etest)
+
+  latex(tab1)
