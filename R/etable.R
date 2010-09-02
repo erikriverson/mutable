@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-09-01 15:30:16 eriki>
+#    Time-stamp:      <2010-09-02 10:32:15 eriki>
 #
 #   Purpose:          
 #
@@ -271,9 +271,9 @@ elatex <- function(x, ...) {
 }
 
 elatex.default <- function(x, name, data, round.digits = 1, ...) {
-  ret <- paste("\\scriptsize{", round(x[1], round.digits), "}", 
-               round(x[2], round.digits),
-               "\\scriptsize{", round(x[3], round.digits), "}",
+  ret <- paste(round(x[1], round.digits), "/", 
+               round(x[2], round.digits), "/",
+               round(x[3], round.digits),
                sep = " ")
   names(ret) <- name
   ret
