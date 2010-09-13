@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-09-02 10:32:15 eriki>
+#    Time-stamp:      <2010-09-13 16:55:59 eriki>
 #
 #   Purpose:          
 #
@@ -21,18 +21,6 @@
 
 library(Hmisc)
 
-pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
-                      age = rnorm(100, 50, sd = 5),
-                      gender = sample(c("Male", "Female"), 100, replace = TRUE),
-                      diffs = rnorm(100, 500, sd = 100),
-                      inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
-                      bmi = rnorm(100, 30, sd = 3))
-
-label(pead.bl$hiv) <- "HIV Status"
-label(pead.bl$age) <- "Age"
-label(pead.bl$gender) <- "Gender"
-                        
-form <- hiv ~ age + gender
 
 parseFormula <- function(formula, data, subset) {
   ## why this option is set?  do we need it, or leave it up to user? 
@@ -382,6 +370,21 @@ attr(erownames, "latex.function") <-  elatexrownames
 attr(erownames, "format.function") <- eprintrownames
 attr(etest, "latex.function") <- eprintidentity
 
+
+
+pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
+                      age = rnorm(100, 50, sd = 5),
+                      gender = sample(c("Male", "Female"), 100, replace = TRUE),
+                      diffs = rnorm(100, 500, sd = 100),
+                      inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
+                      bmi = rnorm(100, 30, sd = 3))
+
+label(pead.bl$hiv) <- "HIV Status"
+label(pead.bl$age) <- "Age"
+label(pead.bl$gender) <- "Gender"
+                        
+form <- hiv ~ age + gender
+
 tmp <- etable(form, data = pead.bl, colname = "rownames",
               summary.function = erownames) +
   etable() +
@@ -408,4 +411,44 @@ tab1 <- etable(form, data = pead.bl, colname = "rownames",
   etable(subset = hiv == "Negative") +
   etable(summary.function = etest)
 
-  latex(tab1)
+
+## try to replicate an Hmisc type table with a function
+eN <- function(x, strat, data, ...) {
+  length(x)
+}
+
+tab1 <- etable(form, data = pead.bl, colname = "Variable",
+              summary.function = erownames) +
+  etable(summary.function = eN, colname = "N") +
+  etable(colname = "Combined") +
+  etable(subset = hiv == "Positive", colname = "Positive") +
+  etable(subset = hiv == "Negative", colname = "Negative") +
+  etable(elm, update(form, diffs ~ .), data = pead.bl) +
+  etable(summary.function = etest, colname = "P-value")
+
+tab1
+
+
+eStratTable <- function(formula, data) {
+  
+  first <- etable(formula, data = data, colname = "Variable",
+                  summary.function = erownames) +
+           etable(summary.function = eN, colname = "N") +
+           etable(colname = "Combined")
+
+  ## this needs the bound argument to be data, but that creates
+  ## a problem for combining calls from completely separate
+  ## datasets, need to deduce what pfargs is doing, and if
+  ## I can use environments or some such thing to get at the
+  ## proper data.frame
+  
+  middle <- Reduce("+", lapply(split(data, data[[as.character(as.list(form)[[2]])]]),
+                               function(data) etable(formula, data = data)))
+                            
+  last <- etable(summary.function = etest, colname = "P-value")
+  first + middle + last
+}
+
+eStratTable(form, pead.bl)
+
+str(split(pead.bl, pead.bl[["hiv"]]))
