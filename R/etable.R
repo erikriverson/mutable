@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-09-13 16:55:59 eriki>
+#    Time-stamp:      <2010-09-22 13:17:59 eriki>
 #
 #   Purpose:          
 #
@@ -20,7 +20,6 @@
 ################################################################################
 
 library(Hmisc)
-
 
 parseFormula <- function(formula, data, subset) {
   ## why this option is set?  do we need it, or leave it up to user? 
@@ -102,7 +101,7 @@ esummary.factor <- function(x, strat, data, ...) {
     rownames(ret) <- rns
     ret
   }
-  mapvars <- c("plain", "latex")
+  mapvars <- c("plain", "latex", "html")
   ret <- mapply(addelement, x[mapvars], y[mapvars], SIMPLIFY = FALSE)
   ret$formula <- x$formula
   ret$data <- x$data
@@ -128,7 +127,6 @@ elm <- function(formula, data, round.digits = 2, ...) {
   list(plain = ret, latex = ret)
 }
 
-
 etable.default <- function(x, ...) {
   m <- as.list(match.call())[-1]
   if(!"data" %in% names(m))
@@ -137,10 +135,6 @@ etable.default <- function(x, ...) {
     lst <- c(list(formula = NULL), m)
   attr(lst, "resolve") <- TRUE
   lst
-}
-
-ehtml <- function(x, ...) {
-  x
 }
 
 etable.formula <- function(formula, data,
@@ -212,16 +206,25 @@ etable.formula <- function(formula, data,
   }
   latex.ret <- as.matrix(latex.ret[xx], ncol = 1)
 
+  html.ret <- NULL
+  for(i in 1:length(ret)) {
+    val <- html.function(ret[[i]], names(ret)[i], data)
+    html.ret <- c(html.ret, val)
+  }
+  html.ret <- as.matrix(html.ret[xx], ncol = 1)
+
   ## set the names of the matrix for printing 
   rownames(format.ret) <- xx
   rownames(latex.ret) <- xx
+  rownames(html.ret) <- xx
   if(!missing(colname)) {
     colnames(format.ret) <- colname
     colnames(latex.ret) <- colname
+    colnames(html.ret) <- colname
   }
 
   ## set up the return value (a list)
-  return.list <- list(plain = format.ret, latex = latex.ret,
+  return.list <- list(plain = format.ret, latex = latex.ret, html = html.ret, 
                       formula = formula, data = data)
   attr(return.list, "resolve") <- FALSE
   class(return.list) <- c("etable")
@@ -254,27 +257,6 @@ print.etable <- function(x, quote = FALSE, na.print = "--", print.rownames = FAL
 }
 
 
-elatex <- function(x, ...) {
-  UseMethod("elatex")
-}
-
-elatex.default <- function(x, name, data, round.digits = 1, ...) {
-  ret <- paste(round(x[1], round.digits), "/", 
-               round(x[2], round.digits), "/",
-               round(x[3], round.digits),
-               sep = " ")
-  names(ret) <- name
-  ret
-}
-
-elatex.table <- function(x, name, data, round.digits, ...) {
-  dft <- as.data.frame(x)
-  pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
-  val <- paste(pct, paste(dft[["Freq"]], "/", sum(x), sep = ""))
-  names(val) <- paste(name, names(x), sep = "")
-  val
-}
-
 eprintidentity <- function(x, name, data, ...) {
   ret <- x
   names(ret) <- name
@@ -299,156 +281,15 @@ eprintrownames <- function(x, ...) {
   UseMethod("eprintrownames")
 }
 
-eprintrownames.character <- eprintidentity
-
 eprintrownames.special <- function(x, name, data, ...) {
   ret <- c(x[1], paste("", tail(x, length(x) - 1)))
   names(ret) <- c(name, paste(name,  levels(data[[name]]), sep = ""))
   ret
 }
 
-elatexrownames <- function(x, ...) {
-  UseMethod("elatexrownames")
-}
-
-
-elatexrownames.character <- eprintidentity
-
-elatexrownames.special <- function(x, name, data, ...) {
-  ret <- c(x[1], paste("~~~", tail(x, length(x) - 1)))
-  names(ret) <- c(name, paste(name,  levels(data[[name]]), sep = ""))
-  ret
-}
-
-latex.etable <- function(x, na.print = "", file = "", headerFunction = eLaTeXHeader.tabular,
-                         footerFunction = eLaTeXFooter.tabular, caption = "", ...) {
-  x <- x$latex
-  x[is.na(x)] <- na.print
-  cat(paste(headerFunction(x, caption, ...), collapse = "\n"), "\n", file = file)
-  cat(paste(apply(x, 1, paste, collapse = "&"), collapse = "\\\\\n"), "\\\\\n", file = file,
-      append = TRUE)
-  cat(paste(footerFunction(x, caption), collapse = "\n"), "\n", file = file, append = TRUE)
-
-}
-
-eLaTeXHeader.tabular <- function(x, caption, collabel.just) {
-  if(missing(collabel.just))
-    collabel.just <- paste(c("l", rep("c", ncol(x) - 1)), collapse = "")
-  
-  c("\\begin{table}",
-    ps("\\begin{tabular}{", collabel.just, "}"),
-    c(paste("\\multicolumn{1}{c}{", colnames(x), "}", collapse = "&"), "\\\\"),
-    "\\hline\\\\")
-}
-
-eLaTeXFooter.tabular <- function(x, caption) {
-    c("\\end{tabular}",
-      ps("\\caption{", caption , "}"),
-      "\\end{table}")
-  }
-
-
-eLaTeXHeader.longtable <- function(x, caption, collabel.just) {
-  if(missing(collabel.just))
-    collabel.just <- paste(c("l", rep("c", ncol(x) - 1)), collapse = "")
-  c(paste("\\begin{longtable}{", collabel.just, "}"),
-    paste("\\caption{", caption, "}\\\\"),
-    "\\hline\\hline",
-    c(paste("\\multicolumn{1}{c}{", colnames(x), "}", collapse = "&"), "\\\\"),
-    "\\hline",
-    "\\endhead",
-    "\\hline")
-}
-
-eLaTeXFooter.longtable <- function(x) {
-  c("\\hline",
-    "\\end{longtable}")
-}
-
-
-attr(erownames, "latex.function") <-  elatexrownames
+eprintrownames.character <- eprintidentity
 attr(erownames, "format.function") <- eprintrownames
-attr(etest, "latex.function") <- eprintidentity
 
 
-
-pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
-                      age = rnorm(100, 50, sd = 5),
-                      gender = sample(c("Male", "Female"), 100, replace = TRUE),
-                      diffs = rnorm(100, 500, sd = 100),
-                      inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
-                      bmi = rnorm(100, 30, sd = 3))
-
-label(pead.bl$hiv) <- "HIV Status"
-label(pead.bl$age) <- "Age"
-label(pead.bl$gender) <- "Gender"
-                        
-form <- hiv ~ age + gender
-
-tmp <- etable(form, data = pead.bl, colname = "rownames",
-              summary.function = erownames) +
-  etable() +
-  etable(subset = hiv == "Positive") +
-  etable(subset = hiv == "Negative") +
-  etable(summary.function = etest)
-
-
-latex(tmp)
-
-etable(form, data = pead.bl, colname = "rownames",
-       summary.function = erownames) +
-  etable() +
-  etable(subset = hiv == "Positive") +
-  etable(subset = hiv == "Negative") +
-  etable(summary.function = etest) +
-  etable(elm, update(form, diffs ~ .), data = pead.bl)
-
-
-tab1 <- etable(form, data = pead.bl, colname = "rownames",
-              summary.function = erownames) +
-  etable() +
-  etable(subset = hiv == "Positive") +
-  etable(subset = hiv == "Negative") +
-  etable(summary.function = etest)
-
-
-## try to replicate an Hmisc type table with a function
-eN <- function(x, strat, data, ...) {
-  length(x)
-}
-
-tab1 <- etable(form, data = pead.bl, colname = "Variable",
-              summary.function = erownames) +
-  etable(summary.function = eN, colname = "N") +
-  etable(colname = "Combined") +
-  etable(subset = hiv == "Positive", colname = "Positive") +
-  etable(subset = hiv == "Negative", colname = "Negative") +
-  etable(elm, update(form, diffs ~ .), data = pead.bl) +
-  etable(summary.function = etest, colname = "P-value")
-
-tab1
-
-
-eStratTable <- function(formula, data) {
   
-  first <- etable(formula, data = data, colname = "Variable",
-                  summary.function = erownames) +
-           etable(summary.function = eN, colname = "N") +
-           etable(colname = "Combined")
 
-  ## this needs the bound argument to be data, but that creates
-  ## a problem for combining calls from completely separate
-  ## datasets, need to deduce what pfargs is doing, and if
-  ## I can use environments or some such thing to get at the
-  ## proper data.frame
-  
-  middle <- Reduce("+", lapply(split(data, data[[as.character(as.list(form)[[2]])]]),
-                               function(data) etable(formula, data = data)))
-                            
-  last <- etable(summary.function = etest, colname = "P-value")
-  first + middle + last
-}
-
-eStratTable(form, pead.bl)
-
-str(split(pead.bl, pead.bl[["hiv"]]))

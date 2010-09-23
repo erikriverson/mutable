@@ -1,7 +1,7 @@
 Package: etable
 Version: 0.0-0
 Date: 2010-07-23
-Title: Output user-defined tables in any format (LaTeX, HTML, plain text, ...)
+Title: Generate completely user-defined tables in any format (LaTeX, HTML, plain text, ...)
 Author: Erik Iverson <eriki@ccbr.umn.edu>
 Maintainer: Erik Iverson <eriki@ccbr.umn.edu>
 Suggests: Hmisc
@@ -10,7 +10,9 @@ Description: The etable package allows users to construct arbitrary tabular
   plain text output functions are included.  Users can supply their own format
   functions for these output types, and easily create their own.  For example,
   the provided LaTeX output style can be completely changed if the user specifies
-  their own format.latex function. 
+  their own format.latex function. The modular design of the package allows every
+  design decision to be overridden easily and consistently. The result is that
+  the user is in complete control over the final markup produced. 
 License: GPL (>= 2)
 
 
