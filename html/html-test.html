@@ -1,6 +1,7 @@
 <html>
 <head>
-<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<link rel = "stylesheet" type = "text/css" href = " main.css " </>
+<script type="text/javascript" src="MathJax/MathJax.js">
 <!--/*--><![CDATA[/*><!--*/
 MathJax.Hub.Config({
 // Only one of the two following lines, depending on user settings
@@ -45,16 +46,21 @@ MathJax.Hub.Config({
 <table summary = "  ">
 <caption> Baseline Table </caption>
 <tr>
-<th scope = "col"> rownames </th>
+<th scope = "col"> V1 </th>
 <th scope = "col"> Combined </th>
 <th scope = "col"> Positive </th>
 <th scope = "col"> Negative </th>
 <th scope = "col"> P-value </th>
 </tr> 
-<tr> <th scope = "row"> Age </th> <td> 46.7 / 49.9 / 53.8 </td> <td> 45.9 / 49.1 / 52.1 </td> <td> 47.5 / 51 / 54.8 </td> <td> 0.11 </td></tr>
-<tr> <th scope = "row"> Gender </th> <td></td> <td></td> <td></td> <td> 0.18 </td></tr>
-<tr> <th scope = "row">  Female </th> <td> $$ 48\% \frac{ 48}{100}$$ </td> <td> $$ 42\% \frac{ 25}{60}$$ </td> <td> $$ 57\% \frac{ 23}{40}$$ </td> <td></td></tr>
-<tr> <th scope = "row">  Male </th> <td> $$ 52\% \frac{ 52}{100}$$ </td> <td> $$ 58\% \frac{ 35}{60}$$ </td> <td> $$ 42\% \frac{ 17}{40}$$ </td> <td></td> </tr>
+ <tr><th scope = "row"> Age </th> <td>$$\scriptsize{ 46.3 }\;\normalsize{ 50.1 }\;\scriptsize{ 54.7 }$$</td> <td>$$\scriptsize{ 46 }\;\normalsize{ 49.1 }\;\scriptsize{ 54.9 }$$</td> <td>$$\scriptsize{ 47.7 }\;\normalsize{ 50.8 }\;\scriptsize{ 53.8 }$$</td> <td>$$ 0.46 $$</td></tr>
+ <tr class="factor-heading"><th scope = "row"> Gender </th> <td></td> <td></td> <td></td> <td>$$ 0.07 $$</td></tr>
+ <tr class="factor-level"><th scope = "row"> &nbsp; Female </th> <td> $$ 48\% \;\;\frac{ 48}{100}$$ </td> <td> $$ 37\% \;\;\frac{ 17}{46}$$ </td> <td> $$ 57\% \;\;\frac{ 31}{54}$$ </td> <td></td></tr>
+ <tr class="factor-level"><th scope = "row"> &nbsp; Male </th> <td> $$ 52\% \;\;\frac{ 52}{100}$$ </td> <td> $$ 63\% \;\;\frac{ 29}{46}$$ </td> <td> $$ 43\% \;\;\frac{ 23}{54}$$ </td> <td></td></tr>
+ <tr><th scope = "row"> V2 GMT - V1 GMT </th> <td>$$\scriptsize{ 430.2 }\;\normalsize{ 497.9 }\;\scriptsize{ 572.6 }$$</td> <td>$$\scriptsize{ 448.8 }\;\normalsize{ 518.4 }\;\scriptsize{ 574.8 }$$</td> <td>$$\scriptsize{ 422.8 }\;\normalsize{ 483.4 }\;\scriptsize{ 565.7 }$$</td> <td>$$ 0.39 $$</td></tr>
+ <tr class="factor-heading"><th scope = "row"> $$\frac{V1 GMT}{V2 GMT} >= 4$$ </th> <td></td> <td></td> <td></td> <td>$$ 0.55 $$</td></tr>
+ <tr class="factor-level"><th scope = "row"> &nbsp; No </th> <td> $$ 50\% \;\;\frac{ 50}{100}$$ </td> <td> $$ 54\% \;\;\frac{ 25}{46}$$ </td> <td> $$ 46\% \;\;\frac{ 25}{54}$$ </td> <td></td></tr>
+ <tr class="factor-level"><th scope = "row"> &nbsp; Yes </th> <td> $$ 50\% \;\;\frac{ 50}{100}$$ </td> <td> $$ 46\% \;\;\frac{ 21}{46}$$ </td> <td> $$ 54\% \;\;\frac{ 29}{54}$$ </td> <td></td></tr>
+ <tr><th scope = "row"> BMI </th> <td>$$\scriptsize{ 28 }\;\normalsize{ 30 }\;\scriptsize{ 32 }$$</td> <td>$$\scriptsize{ 27.7 }\;\normalsize{ 30.2 }\;\scriptsize{ 32.3 }$$</td> <td>$$\scriptsize{ 28 }\;\normalsize{ 29.9 }\;\scriptsize{ 31.8 }$$</td> <td>$$ 0.94 $$</td> </tr>
 </table> 
 </body>
 </html> 

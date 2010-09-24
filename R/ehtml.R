@@ -3,16 +3,17 @@ html.etable <- function(x, na.print = "<td></td>", file = "", headerFunction = e
                         completeDocument = FALSE,
                         documentHeaderFunction = eHTMLDocHeader,
                         documentFooterFunction = eHTMLDocFooter,
+                        cssFile = "", 
                         ...) {
   x <- x$html
   x[is.na(x)] <- na.print
 
   if(completeDocument)
-    cat(paste(documentHeaderFunction(), collapse = "\n"), "\n", file = file, append = FALSE)
+    cat(paste(documentHeaderFunction(cssFile), collapse = "\n"), "\n", file = file, append = FALSE)
       
   cat(paste(headerFunction(x, caption, collabel.just, summary, ...), collapse = "\n"), "\n",
       file = file, append = completeDocument)
-  cat(paste("<tr>",apply(x, 1, paste, collapse = " "), collapse = "</tr>\n"), "</tr>\n", file = file,
+  cat(paste("",apply(x, 1, paste, collapse = " "), collapse = "</tr>\n"), "</tr>\n", file = file,
       append = TRUE)
   cat(paste(footerFunction(x, caption), collapse = "\n"), "\n", file = file, append = TRUE)
 
@@ -20,10 +21,11 @@ html.etable <- function(x, na.print = "<td></td>", file = "", headerFunction = e
     cat(paste(documentFooterFunction(), collapse = "\n"), "\n", file = file, append = TRUE)
 }
 
-eHTMLDocHeader <- function() {
+eHTMLDocHeader <- function(cssFile) {
   c("<html>",
     "<head>",
-    "<script type=\"text/javascript\" src=\"http://orgmode.org/mathjax/MathJax.js\">",
+    paste("<link rel = \"stylesheet\" type = \"text/css\" href = \"", cssFile, "\" </>"),
+    "<script type=\"text/javascript\" src=\"MathJax/MathJax.js\">",
     "<!--/*--><![CDATA[/*><!--*/",
     "MathJax.Hub.Config({",
     "// Only one of the two following lines, depending on user settings",
@@ -89,9 +91,9 @@ ehtml <- function(x, ...) {
 }
 
 ehtml.default <- function(x, name, data, round.digits = 1, ...) {
-  ret <- paste("<td>", round(x[1], round.digits), "/", 
-               round(x[2], round.digits), "/",
-               round(x[3], round.digits), "</td>",
+  ret <- paste("<td>$$\\scriptsize{", round(x[1], round.digits), "}\\;\\normalsize{", 
+               round(x[2], round.digits), "}\\;\\scriptsize{",
+               round(x[3], round.digits), "}$$</td>",
                sep = " ")
   names(ret) <- name
   ret
@@ -100,7 +102,10 @@ ehtml.default <- function(x, name, data, round.digits = 1, ...) {
 ehtml.table <- function(x, name, data, round.digits, ...) {
   dft <- as.data.frame(x)
   pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
-  val <- paste("<td> $$", pct, "\\frac{", paste(dft[["Freq"]], "}{", sum(x), "}$$ </td>", sep = ""))
+  val <- paste("<td> $$", pct,
+               "\\;\\;\\frac{", paste(dft[["Freq"]],
+                                      "}{", sum(x), "}$$ </td>",
+                                      sep = ""))
   names(val) <- paste(name, names(x), sep = "")
   val
 }
@@ -110,20 +115,25 @@ ehtmlrownames <- function(x, ...) {
 }
 
 ehtmlrownames.special <- function(x, name, data, ...) {
-  ret <- c(x[1], paste("", tail(x, length(x) - 1)))
-  ret <- paste("<th scope = \"row\">", ret, "</th>")
+  ret <- c(x[1], paste("&nbsp;", tail(x, length(x) - 1)))
+
+  ret <- c(paste("<tr class=\"factor-heading\"><th scope = \"row\">",
+                 ret[1], "</th>"),
+           paste("<tr class=\"factor-level\"><th scope = \"row\">",
+                 tail(ret, length(ret) - 1), "</th>"))
+  
   names(ret) <- c(name, paste(name,  levels(data[[name]]), sep = ""))
   ret
 }
 
 ehtmlrownames.character <- function(x, name, data, ...) {
-  ret <- paste("<th scope = \"row\">", x, "</th>")
+  ret <- paste("<tr><th scope = \"row\">", x, "</th>")
   names(ret) <- name
   ret
 }
 
 ehtmltest <- function(x, name, data, ...) {
-  ret <- paste("<td>", x, "</td>")
+  ret <- paste("<td>$$", x, "$$</td>")
   names(ret) <- name
   ret
 }

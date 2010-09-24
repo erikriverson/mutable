@@ -3,18 +3,6 @@ eN <- function(x, strat, data, ...) {
   length(x)
 }
 
-tab1 <- etable(form, data = pead.bl, colname = "Variable",
-              summary.function = erownames) +
-  etable(summary.function = eN, colname = "N") +
-  etable(colname = "Combined") +
-  etable(subset = hiv == "Positive", colname = "Positive") +
-  etable(subset = hiv == "Negative", colname = "Negative") +
-  etable(elm, update(form, diffs ~ .), data = pead.bl) +
-  etable(summary.function = etest, colname = "P-value")
-
-tab1
-
-
 eStratTable <- function(formula, data) {
   
   first <- etable(formula, data = data, colname = "Variable",
@@ -35,4 +23,3 @@ eStratTable <- function(formula, data) {
   first + middle + last
 }
 
-eStratTable(form, pead.bl)

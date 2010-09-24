@@ -37,7 +37,7 @@ latex.etable <- function(x, na.print = "", file = "", headerFunction = eLaTeXHea
   cat(paste(apply(x, 1, paste, collapse = "&"), collapse = "\\\\\n"), "\\\\\n", file = file,
       append = TRUE)
   cat(paste(footerFunction(x, caption), collapse = "\n"), "\n", file = file, append = TRUE)
-
+  
 }
 
 eLaTeXHeader.tabular <- function(x, caption, collabel.just) {
