@@ -12,9 +12,9 @@ eStratTable <- function(formula, data) {
 
   middle <- Reduce("+",
                    lapply(split(data,
-                                data[[as.character(as.list(form)[[2]])]]),
+                                data[[as.character(as.list(formula)[[2]])]]),
                           function(x) etable(formula, data = x,
-                                             colname = x[[as.character(form)[[2]]]][1])))
+                                             colname = x[[as.character(formula)[[2]]]][1])))
                             
   last <- etable(summary.function = etest, colname = "P-value")
 

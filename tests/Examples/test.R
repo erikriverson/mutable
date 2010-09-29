@@ -1,6 +1,3 @@
-
-setwd(ps(R.config.root, "R-etable-package/etable/"))
-      
 pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
                       age = rnorm(100, c(50, 40), sd = 10),
                       gender = sample(c("Male", "Female"), 100, replace = TRUE),
@@ -25,10 +22,13 @@ tab1 <- etable(form, data = pead.bl, colname = "",
   etable(summary.function = etest, colname = "P-value")
 
 html(tab1,
-     file = "html/html-test.html",
      caption = "Baseline Table",
      completeDocument = TRUE,
      cssFile = "main.css")
+
+latex(tab1,
+     caption = "Baseline Table")
+
 
 
 

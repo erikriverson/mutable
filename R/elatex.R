@@ -29,9 +29,9 @@ elatexrownames.special <- function(x, name, data, ...) {
   ret
 }
 
-latex.etable <- function(x, na.print = "", file = "", headerFunction = eLaTeXHeader.tabular,
+latex.etable <- function(object, na.print = "", file = "", headerFunction = eLaTeXHeader.tabular,
                          footerFunction = eLaTeXFooter.tabular, caption = "", ...) {
-  x <- x$latex
+  x <- object$latex
   x[is.na(x)] <- na.print
   cat(paste(headerFunction(x, caption, ...), collapse = "\n"), "\n", file = file)
   cat(paste(apply(x, 1, paste, collapse = "&"), collapse = "\\\\\n"), "\\\\\n", file = file,
@@ -73,7 +73,4 @@ eLaTeXFooter.longtable <- function(x, caption) {
     "\\end{longtable}")
 }
 
-elatexrownames.character <- eprintidentity
-attr(erownames, "latex.function") <-  elatexrownames
-attr(etest, "latex.function") <- eprintidentity
 

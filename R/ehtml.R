@@ -1,17 +1,17 @@
-html.etable <- function(x, na.print = "<td></td>", file = "", headerFunction = eHTMLHeader,
+html.etable <- function(object, na.print = "<td></td>", file = "", headerFunction = eHTMLHeader,
                         footerFunction = eHTMLFooter, caption = "", summary = "",
                         completeDocument = FALSE,
                         documentHeaderFunction = eHTMLDocHeader,
                         documentFooterFunction = eHTMLDocFooter,
                         cssFile = "", 
                         ...) {
-  x <- x$html
+  x <- object$html
   x[is.na(x)] <- na.print
 
   if(completeDocument)
     cat(paste(documentHeaderFunction(cssFile), collapse = "\n"), "\n", file = file, append = FALSE)
       
-  cat(paste(headerFunction(x, caption, collabel.just, summary, ...), collapse = "\n"), "\n",
+  cat(paste(headerFunction(x, caption, summary, ...), collapse = "\n"), "\n",
       file = file, append = completeDocument)
   cat(paste("",apply(x, 1, paste, collapse = " "), collapse = "</tr>\n"), "</tr>\n", file = file,
       append = TRUE)
@@ -74,7 +74,7 @@ eHTMLDocFooter <- function() {
     "</html>")
 }
 
-eHTMLHeader <- function(x, caption, collabel.just, summary, ...) {
+eHTMLHeader <- function(x, caption, summary, ...) {
   c(paste("<table summary = \"", summary, "\">"),
     paste("<caption>", caption, "</caption>"),
     "<colgroup>",
@@ -96,19 +96,19 @@ ehtml <- function(x, ...) {
 ehtml.default <- function(x, name, data, colname, round.digits = 1, ...) {
   colname <- gsub(" +", "", colname)
 
-  png(paste("html/", colname, "-", name, ".png", sep = ""),
-      width = 200, height = 50, bg = "transparent")
-  p1 <- qplot(data[[name]], geom = "density", colour = I("grey90"), fill = I("grey90")) +
-    opts(axis.text.x = theme_blank(),
-         axis.text.y = theme_blank(),
-         axis.ticks = theme_blank(),
-         plot.background = theme_rect("transparent", size = 0),
-         panel.background = theme_rect("transparent", size = 0),
-         plot.margin = unit(c(0, 0, -2, -2), "lines"),
-         axis.ticks.margin = unit(0, "lines")) +
-           labs(x = "", y = "")
-  print(p1)
-  dev.off()
+  ## png(paste("html/", colname, "-", name, ".png", sep = ""),
+  ##     width = 200, height = 50, bg = "transparent")
+  ## p1 <- qplot(data[[name]], geom = "density", colour = I("grey90"), fill = I("grey90")) +
+  ##   opts(axis.text.x = theme_blank(),
+  ##        axis.text.y = theme_blank(),
+  ##        axis.ticks = theme_blank(),
+  ##        plot.background = theme_rect("transparent", size = 0),
+  ##        panel.background = theme_rect("transparent", size = 0),
+  ##        plot.margin = unit(c(0, 0, -2, -2), "lines"),
+  ##        axis.ticks.margin = unit(0, "lines")) +
+  ##          labs(x = "", y = "")
+  ## print(p1)
+  ## dev.off()
 
   ret <- paste(paste("<td class = \"continuous-cell\" id = \"", colname, "-", name,
                      "\" style = \"background-image : url(\'", colname, "-", name, ".png\'",
@@ -125,19 +125,19 @@ ehtml.default <- function(x, name, data, colname, round.digits = 1, ...) {
 ehtml.table <- function(x, name, data, colname, round.digits = 0, ...) {
   colname <- gsub(" +", "", colname)
 
-  png(paste("html/", colname, "-", name, ".png", sep = ""),
-      width = 200, height = 50, bg = "transparent")
+  ## png(paste("html/", colname, "-", name, ".png", sep = ""),
+  ##     width = 200, height = 50, bg = "transparent")
   
-  p1 <-qplot(data[[name]]) +
-    opts(axis.text.x = theme_blank(),
-         axis.text.y = theme_blank(),
-         axis.ticks = theme_blank(),
-         plot.background = theme_rect("transparent", size = 0),
-         panel.background = theme_rect("transparent", size = 0),
-         plot.margin = unit(c(0, 0, -2, -2), "lines")) +
-           labs(x = "", y = "")
-  print(p1)
-  dev.off()
+  ## p1 <-qplot(data[[name]]) +
+  ##   opts(axis.text.x = theme_blank(),
+  ##        axis.text.y = theme_blank(),
+  ##        axis.ticks = theme_blank(),
+  ##        plot.background = theme_rect("transparent", size = 0),
+  ##        panel.background = theme_rect("transparent", size = 0),
+  ##        plot.margin = unit(c(0, 0, -2, -2), "lines")) +
+  ##          labs(x = "", y = "")
+  ## print(p1)
+  ## dev.off()
   
   dft <- as.data.frame(x)
   pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
@@ -183,8 +183,6 @@ ehtmltest <- function(x, name, data, colname, ...) {
   ret
 }
 
-attr(erownames, "html.function") <-  ehtmlrownames
-attr(etest, "html.function") <- ehtmltest
 
 
 

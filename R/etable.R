@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-09-28 13:44:45 eriki>
+#    Time-stamp:      <2010-09-29 14:39:40 eriki>
 #
 #   Purpose:          
 #
@@ -51,8 +51,8 @@ etable <- function(x, ...) {
   UseMethod("etable", x)
 }
 
-etable.function <- function(FUNCTION, ...) {
-  do.call(FUNCTION, list(...))
+etable.function <- function(x, ...) {
+  do.call(x, list(...))
 }
 
 esummary <- function(x, strat, data, ...) {
@@ -289,7 +289,14 @@ eprintrownames.special <- function(x, name, data, ...) {
 }
 
 eprintrownames.character <- eprintidentity
+elatexrownames.character <- eprintidentity
+
 attr(erownames, "format.function") <- eprintrownames
+attr(erownames, "html.function") <-  ehtmlrownames
+attr(erownames, "latex.function") <-  elatexrownames
+
+attr(etest, "html.function") <- ehtmltest
+attr(etest, "latex.function") <- eprintidentity
 
 
   

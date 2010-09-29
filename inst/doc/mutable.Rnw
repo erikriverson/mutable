@@ -1,0 +1,138 @@
+\documentclass{article}
+
+\usepackage{graphics}
+\usepackage{lmodern}
+
+%\VignetteIndexEntry{mutable}
+
+\begin{document}
+
+<<foo,include=FALSE,echo=FALSE>>=
+options(keep.source = TRUE, width = 60)
+foo <- packageDescription("mutable")
+@
+
+\title{Creating Markup Tables with the \texttt{mutable} Package (Version \Sexpr{foo[["Version"]]})}
+
+\author{Erik Iverson}
+\maketitle
+
+\section{What is \texttt{mutable}?}
+
+\texttt{mutable} is: 
+\begin{itemize}
+  \item An R package to create statistical tables ($\mu$ table)
+  \item Tables are completely user-defined, and easily changed to meet the user's exact needs
+  \item Tables can be exported to several different markup languages
+\end{itemize}
+
+\section{How does \texttt{mutable} differ from all the other table packages?}
+
+There are already several packages on CRAN that generate
+tables. Several of these even generate markup so that you can
+display the resulting table in \LaTeX{} or HTML. 
+
+
+\subsection{Hmisc}
+Perhaps the most famous of these functions are contained in the
+\texttt{Hmisc} package, through the \texttt{summary.formula} and
+\texttt{latex} functions.  I have used these functions for a long time
+to generate \LaTeX{} tables for my statistical reports.  They have
+served me and countless others very well, and will continue to do so.
+
+However, I continually ran into problems when the output wasn't just
+as I had hoped. There are \texttt{latex} methods for the objects
+created by \texttt{summary.formula}.  The general approach is to
+create an object using summary.formula, and then pass it to the latex
+function. 
+
+There are literally dozens of parameters to the latex function, many
+of which control some small piece of the resulting latex output.  For
+example, there is a first.hline.double parameter to control the
+placment of a horizontal line, and helvetica to control the default
+font used in the table. 
+
+The main issue with this approach is that \LaTeX{} tables can be
+configured to a very fine degree, and introducing a new parameter
+every time you want to change a small bit of output was a painstaking
+process.
+
+Another issue related to the first was that I could not obtain an R
+object with a representation of the LaTeX code that would be written
+out to a file upon calling the latex function.  If this were available,
+I could have finely tuned the LaTeX code 'by hand' as it were, without
+introducing new parameters to the latex function. 
+
+More substantial changes to the output required even more challenging
+procedures.  When dealing with categorical variables, I find it useful
+to prohibit pagebreaks in the middle of the levels of the variable.
+Adding this functionality required tracking down the appropriate
+places in the function to make the change, and then hoping that it
+didn't break anything else.
+
+In short, these functions take an omnibus approach to generating
+markup.  If you want to alter the resulting markup code, you have to
+dig into the function or introduce a new parameter.
+
+\subsection{How does mutable fix this?}
+The mutable package takes a very modular, function-based approach to
+generating markup tables.  Instead of defining and setting lots of
+parameters to control the final output, you pass small, user-defined
+functions to generate each part of the markup. In general, the user
+makes one call to mutable for each column of the resulting table.
+
+For example, the following simple table was generated with mutable. 
+
+<<demo1, results=hide>>=
+
+pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
+                      age = rnorm(100, c(50, 40), sd = 10),
+                      gender = sample(c("Male", "Female"), 100, replace = TRUE),
+                      diffs = rnorm(100, 500, sd = 100),
+                      inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
+                      bmi = rnorm(100, 30, sd = 2))
+
+label(pead.bl$hiv) <- "HIV Status"
+label(pead.bl$age) <- "Age"
+label(pead.bl$gender) <- "Gender"
+label(pead.bl$diffs) <- "V2 GMT - V1 GMT"
+label(pead.bl$inc4x) <- "$\\frac{V1 GMT}{V2 GMT} >= 4$"
+label(pead.bl$bmi) <- "BMI" 
+                        
+
+@ 
+
+We define a table by calling mutable once for each column. We combine
+columns into single table object with the '+' operator. We need a
+formula and a data.frame, which will proprogate from the first column
+to subsequent columns if they are not specified by further columns.
+
+Each column needs a summary.function, and functions to generate the
+markup. There are defaults for these. Finally, the colname argument
+must be specified.
+
+<<demo2, results=tex>>=
+
+form <- hiv ~ age + gender + diffs + inc4x + bmi
+
+tab1 <- etable(form, data = pead.bl, colname = "Variable",
+              summary.function = erownames) +
+  etable(colname = "Combined Categories") +
+  etable(subset = hiv == "Positive", colname = "Positive") +
+  etable(subset = hiv == "Negative", colname = "Negative") +
+  etable(summary.function = etest, colname = "P-value")
+
+latex(tab1,
+     caption = "Baseline Table")
+
+@ 
+
+
+
+This may seem like a lot of work to generate the table, but for common
+types of tables such as this, high-level wrapper functions can be 
+constructed to do all the work for you.  Something else has also happened,
+The tab1 object also contains an HTML version of the table.
+
+\end{document}
+
