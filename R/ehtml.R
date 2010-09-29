@@ -77,6 +77,9 @@ eHTMLDocFooter <- function() {
 eHTMLHeader <- function(x, caption, collabel.just, summary, ...) {
   c(paste("<table summary = \"", summary, "\">"),
     paste("<caption>", caption, "</caption>"),
+    "<colgroup>",
+    paste("<col id = \"", gsub(" +", "", colnames(x)), "\" />", sep = ""),
+    "</colgroup>",
     "<tr>",
     paste("<th scope = \"col\">", colnames(x), "</th>"),
     "</tr>")
@@ -90,8 +93,28 @@ ehtml <- function(x, ...) {
   UseMethod("ehtml")
 }
 
-ehtml.default <- function(x, name, data, round.digits = 1, ...) {
-  ret <- paste("<td>$$\\scriptsize{", round(x[1], round.digits), "}\\;\\normalsize{", 
+ehtml.default <- function(x, name, data, colname, round.digits = 1, ...) {
+  colname <- gsub(" +", "", colname)
+
+  png(paste("html/", colname, "-", name, ".png", sep = ""),
+      width = 200, height = 50, bg = "transparent")
+  p1 <- qplot(data[[name]], geom = "density", colour = I("grey90"), fill = I("grey90")) +
+    opts(axis.text.x = theme_blank(),
+         axis.text.y = theme_blank(),
+         axis.ticks = theme_blank(),
+         plot.background = theme_rect("transparent", size = 0),
+         panel.background = theme_rect("transparent", size = 0),
+         plot.margin = unit(c(0, 0, -2, -2), "lines"),
+         axis.ticks.margin = unit(0, "lines")) +
+           labs(x = "", y = "")
+  print(p1)
+  dev.off()
+
+  ret <- paste(paste("<td class = \"continuous-cell\" id = \"", colname, "-", name,
+                     "\" style = \"background-image : url(\'", colname, "-", name, ".png\'",
+                     ");\"",
+                     ">$$\\scriptsize{", sep = ""),
+               round(x[1], round.digits), "}\\;\\normalsize{", 
                round(x[2], round.digits), "}\\;\\scriptsize{",
                round(x[3], round.digits), "}$$</td>",
                sep = " ")
@@ -99,14 +122,36 @@ ehtml.default <- function(x, name, data, round.digits = 1, ...) {
   ret
 }
 
-ehtml.table <- function(x, name, data, round.digits, ...) {
+ehtml.table <- function(x, name, data, colname, round.digits = 0, ...) {
+  colname <- gsub(" +", "", colname)
+
+  png(paste("html/", colname, "-", name, ".png", sep = ""),
+      width = 200, height = 50, bg = "transparent")
+  
+  p1 <-qplot(data[[name]]) +
+    opts(axis.text.x = theme_blank(),
+         axis.text.y = theme_blank(),
+         axis.ticks = theme_blank(),
+         plot.background = theme_rect("transparent", size = 0),
+         panel.background = theme_rect("transparent", size = 0),
+         plot.margin = unit(c(0, 0, -2, -2), "lines")) +
+           labs(x = "", y = "")
+  print(p1)
+  dev.off()
+  
   dft <- as.data.frame(x)
   pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
-  val <- paste("<td> $$", pct,
-               "\\;\\;\\frac{", paste(dft[["Freq"]],
-                                      "}{", sum(x), "}$$ </td>",
-                                      sep = ""))
-  names(val) <- paste(name, names(x), sep = "")
+
+  val <- c(paste("<td class = \"factor-heading-cell\" id = \"", colname, "-" , name, "\"",
+                 "style = \"background-image : url(\'", colname, "-", name, ".png\'",
+                 ");\"></td>", sep = ""),
+           paste(paste("<td class = \"factor-level-cell\" id = \"", colname, "-", name, names(x), sep = ""),
+                 "\"> $$", pct,
+                 "\\;\\;\\frac{", paste(dft[["Freq"]],
+                                        "}{", sum(x), "}$$ </td>",
+                                        sep = ""), sep = ""))
+
+  names(val) <- c(name, paste(name, names(x), sep = ""))
   val
 }
 
@@ -117,9 +162,9 @@ ehtmlrownames <- function(x, ...) {
 ehtmlrownames.special <- function(x, name, data, ...) {
   ret <- c(x[1], paste("&nbsp;", tail(x, length(x) - 1)))
 
-  ret <- c(paste("<tr class=\"factor-heading\"><th scope = \"row\">",
+  ret <- c(paste("<tr class= \"factor-heading factor\"><th scope = \"row\">",
                  ret[1], "</th>"),
-           paste("<tr class=\"factor-level\"><th scope = \"row\">",
+           paste("<tr class= \"factor-level factor\"><th scope = \"row\">",
                  tail(ret, length(ret) - 1), "</th>"))
   
   names(ret) <- c(name, paste(name,  levels(data[[name]]), sep = ""))
@@ -127,13 +172,13 @@ ehtmlrownames.special <- function(x, name, data, ...) {
 }
 
 ehtmlrownames.character <- function(x, name, data, ...) {
-  ret <- paste("<tr><th scope = \"row\">", x, "</th>")
+  ret <- paste("<tr class = \"continuous\"><th scope = \"row\">", x, "</th>")
   names(ret) <- name
   ret
 }
 
-ehtmltest <- function(x, name, data, ...) {
-  ret <- paste("<td>$$", x, "$$</td>")
+ehtmltest <- function(x, name, data, colname, ...) {
+  ret <- paste("<td id = \"pval-", name, "\"", ">$$", x, "$$</td>", sep = "")
   names(ret) <- name
   ret
 }
@@ -145,3 +190,4 @@ attr(etest, "html.function") <- ehtmltest
 
 
 
+  

@@ -10,16 +10,17 @@ eStratTable <- function(formula, data) {
            etable(summary.function = eN, colname = "N") +
            etable(colname = "Combined")
 
-  ## this needs the bound argument to be data, but that creates
-  ## a problem for combining calls from completely separate
-  ## datasets, need to deduce what pfargs is doing, and if
-  ## I can use environments or some such thing to get at the
-  ## proper data.frame
-  
-  middle <- Reduce("+", lapply(split(data, data[[as.character(as.list(form)[[2]])]]),
-                               function(data) etable(formula, data = data)))
+  middle <- Reduce("+",
+                   lapply(split(data,
+                                data[[as.character(as.list(form)[[2]])]]),
+                          function(x) etable(formula, data = x,
+                                             colname = x[[as.character(form)[[2]]]][1])))
                             
   last <- etable(summary.function = etest, colname = "P-value")
+
   first + middle + last
 }
+
+
+
 

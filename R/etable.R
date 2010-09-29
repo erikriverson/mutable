@@ -4,7 +4,7 @@
 #   Created:          06/22/2010
 #
 #   Last saved
-#    Time-stamp:      <2010-09-22 13:17:59 eriki>
+#    Time-stamp:      <2010-09-28 13:44:45 eriki>
 #
 #   Purpose:          
 #
@@ -25,12 +25,11 @@ parseFormula <- function(formula, data, subset) {
   ## why this option is set?  do we need it, or leave it up to user? 
   options(na.action = "na.pass")
 
-  ## copied from lm, check what it does.
   mf <- match.call(expand.dots = FALSE)
   m <- match(c("formula", "data", "subset"), names(mf), 0L)
   mf <- mf[c(1L, m)]
   mf[[1L]] <- as.name("model.frame")
-  mf <- eval(mf, parent.frame())
+  mf <- eval(mf, parent.frame(n = 2))
 
   Terms <- terms(formula)
   strat <- attr(Terms, "response")
@@ -161,7 +160,9 @@ etable.formula <- function(formula, data,
   else
     pfargs <- list(m$formula, m$data, NULL)
   pfargs[sapply(pfargs, is.null)] <- NULL
+  
   dfv <- do.call(parseFormula, pfargs)
+
   table.vars <- strsplit(tail(as.character(formula), n = 1), " + ", fixed = TRUE)[[1]]
 
   xx <- NULL
@@ -194,21 +195,21 @@ etable.formula <- function(formula, data,
   
   format.ret <- NULL
   for(i in 1:length(ret)) {
-    val <- format.function(ret[[i]], names(ret)[i], data)
+    val <- format.function(ret[[i]], names(ret)[i], data, colname = colname)
     format.ret <- c(format.ret, val)
   }
   format.ret <- as.matrix(format.ret[xx], ncol = 1)
 
   latex.ret <- NULL
   for(i in 1:length(ret)) {
-    val <- latex.function(ret[[i]], names(ret)[i], data)
+    val <- latex.function(ret[[i]], names(ret)[i], data, colname = colname)
     latex.ret <- c(latex.ret, val)
   }
   latex.ret <- as.matrix(latex.ret[xx], ncol = 1)
 
   html.ret <- NULL
   for(i in 1:length(ret)) {
-    val <- html.function(ret[[i]], names(ret)[i], data)
+    val <- html.function(ret[[i]], names(ret)[i], data, colname = colname)
     html.ret <- c(html.ret, val)
   }
   html.ret <- as.matrix(html.ret[xx], ncol = 1)
