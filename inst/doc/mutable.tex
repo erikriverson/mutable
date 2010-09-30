@@ -5,7 +5,7 @@
 
 %\VignetteIndexEntry{mutable}
 
-\usepackage{/usr/local/R-2.11.1/lib64/R/share/texmf/Sweave}
+\usepackage{/usr/share/R/share/texmf/Sweave}
 \begin{document}
 
 
@@ -23,7 +23,7 @@
   \item Tables can be exported to several different markup languages
 \end{itemize}
 
-\section{How does \texttt{mutable} differ from all the other table packages?}
+\section{How does \texttt{mutable} differ from other table packages?}
 
 There are already several packages on CRAN that generate
 tables. Several of these even generate markup so that you can
@@ -31,7 +31,7 @@ display the resulting table in \LaTeX{} or HTML.
 
 
 \subsection{Hmisc}
-Perhaps the most famous of these functions are contained in the
+Perhaps the most well-known of these functions are contained in the
 \texttt{Hmisc} package, through the \texttt{summary.formula} and
 \texttt{latex} functions.  I have used these functions for a long time
 to generate \LaTeX{} tables for my statistical reports.  They have
@@ -78,6 +78,59 @@ parameters to control the final output, you pass small, user-defined
 functions to generate each part of the markup. In general, the user
 makes one call to mutable for each column of the resulting table.
 
+
+\section{The mutable function} 
+
+Since we will be constructing tables by making multiple calls to the
+\texttt{mutable} function, it pays to describe it here.  The
+\texttt{mutable} function is an S3 generic function, meaning that
+multiple methods are implemented depending on the first argument.  The
+two that have been implemented so far are for \texttt{formula} objects
+and for \texttt{function} objects.  Let us first turn our attention to
+the formula interface. 
+
+\begin{verbatim}
+mutable(formula, data, summary.function = esummary, 
+        format.function = eformat, 
+        latex.function = elatex, 
+        html.function = ehtml, 
+        colname, 
+        subset = NULL, ...) 
+\end{verbatim}
+
+A summary of the arguments is given in \ref{ref:args}
+
+
+\begin{table}
+  \label{ref:args}
+  \caption{Arguments to \texttt{mutable.formula}}
+  \begin{tabular}{|p{3cm}|p{8cm}|p{3cm}|}
+    \hline\\
+    argument&description&default\\
+    \hline\\
+    formula* & an R formula, where the left-hand side is a stratification variable
+    and the right-hand side is list of variables to be included as the rows in the table &
+    NA\\
+    &&\\
+    data* & the data.frame where variables in \texttt{formula} are found & NA\\
+    &&\\
+    summary.function & a function to summarize each variable. Can be generic to accomodate 
+    different types of data & esummary \\
+    &&\\
+    format.function & function that will generate plain text the object from \texttt{summary.function}
+    & eformat\\
+    &&\\
+    latex.function & function that will generate latex markup from \texttt{summary.function} & elatex\\
+    &&\\
+    html.function & function that will generate HTML markup from \texttt{summary.function}& ehtml\\
+    &&\\
+    colname* & a character string specifying the name of the column& NA\\
+    &&\\
+    subset & a subset to use of \texttt{data}& NULL\\
+    \hline
+  \end{tabular}
+\end{table}
+
 For example, the following simple table was generated with mutable. 
 
 \begin{Schunk}
@@ -107,7 +160,6 @@ Each column needs a summary.function, and functions to generate the
 markup. There are defaults for these. Finally, the colname argument
 must be specified.
 
-\small{
 \begin{Schunk}
 \begin{Sinput}
 > form <- hiv ~ age + gender + diffs + inc4x + bmi
@@ -123,18 +175,23 @@ must be specified.
 \multicolumn{1}{c}{ Variable }&\multicolumn{1}{c}{ Combined Categories }&\multicolumn{1}{c}{ Positive }&\multicolumn{1}{c}{ Negative }&\multicolumn{1}{c}{ P-value }
 \\
 \hline\\ 
-Age&40.3 / 47.1 / 52.1&39.8 / 47 / 52.9&40.8 / 47.2 / 51.6&0.69\\
-Gender&&&&0.86\\
-~~~ Female&57\% 57/100&59\% 30/51&55\% 27/49&\\
-~~~ Male&43\% 43/100&41\% 21/51&45\% 22/49&\\
-V2 GMT - V1 GMT&440.5 / 496.9 / 560.1&441.4 / 493 / 570&442.2 / 499.8 / 557.3&0.77\\
-$\frac{V1 GMT}{V2 GMT} >= 4$&&&&0.42\\
-~~~ No&52\% 52/100&47\% 24/51&57\% 28/49&\\
-~~~ Yes&48\% 48/100&53\% 27/51&43\% 21/49&\\
-BMI&28.7 / 30.2 / 31.2&28.6 / 30.4 / 31.6&28.8 / 30.2 / 31.2&0.91 \\
+Age&38.5 / 44.6 / 52.2&36.3 / 44.6 / 51.1&39 / 45 / 54.9&0.20\\
+Gender&&&&0.75\\
+~~~ Female&45\% 45/100&48\% 22/46&43\% 23/54&\\
+~~~ Male&55\% 55/100&52\% 24/46&57\% 31/54&\\
+V2 GMT - V1 GMT&429 / 495.1 / 564.1&422.6 / 481 / 539.9&454.3 / 502.2 / 577.5&0.15\\
+$\frac{V1 GMT}{V2 GMT} >= 4$&&&&0.53\\
+~~~ No&52\% 52/100&57\% 26/46&48\% 26/54&\\
+~~~ Yes&48\% 48/100&43\% 20/46&52\% 28/54&\\
+BMI&28.8 / 30.2 / 31.4&28.5 / 30.5 / 31.5&28.9 / 30.1 / 31.3&0.83 \\
 \end{tabular}
 \caption{Baseline Table}
 \end{table} \end{Schunk}
-}
+
+This may seem like a lot of work to generate the table, but for common
+types of tables such as this, high-level wrapper functions can be 
+constructed to do all the work for you.  Something else has also happened,
+The tab1 object also contains an HTML version of the table.
+
 \end{document}
 

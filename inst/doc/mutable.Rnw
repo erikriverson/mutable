@@ -10,6 +10,22 @@
 <<foo,include=FALSE,echo=FALSE>>=
 options(keep.source = TRUE, width = 60)
 foo <- packageDescription("mutable")
+library(mutable)
+
+pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
+                      age = rnorm(100, c(50, 40), sd = 10),
+                      gender = sample(c("Male", "Female"), 100, replace = TRUE),
+                      diffs = rnorm(100, 500, sd = 100),
+                      inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
+                      bmi = rnorm(100, 30, sd = 2))
+
+label(pead.bl$hiv) <- "HIV Status"
+label(pead.bl$age) <- "Age"
+label(pead.bl$gender) <- "Gender"
+label(pead.bl$diffs) <- "V2 GMT - V1 GMT"
+label(pead.bl$inc4x) <- "$\\frac{V1 GMT}{V2 GMT} >= 4$"
+label(pead.bl$bmi) <- "BMI" 
+
 @
 
 \title{Creating Markup Tables with the \texttt{mutable} Package (Version \Sexpr{foo[["Version"]]})}
@@ -26,7 +42,7 @@ foo <- packageDescription("mutable")
   \item Tables can be exported to several different markup languages
 \end{itemize}
 
-\section{How does \texttt{mutable} differ from all the other table packages?}
+\section{How does \texttt{mutable} differ from other table packages?}
 
 There are already several packages on CRAN that generate
 tables. Several of these even generate markup so that you can
@@ -34,7 +50,7 @@ display the resulting table in \LaTeX{} or HTML.
 
 
 \subsection{Hmisc}
-Perhaps the most famous of these functions are contained in the
+Perhaps the most well-known of these functions are contained in the
 \texttt{Hmisc} package, through the \texttt{summary.formula} and
 \texttt{latex} functions.  I have used these functions for a long time
 to generate \LaTeX{} tables for my statistical reports.  They have
@@ -81,26 +97,59 @@ parameters to control the final output, you pass small, user-defined
 functions to generate each part of the markup. In general, the user
 makes one call to mutable for each column of the resulting table.
 
-For example, the following simple table was generated with mutable. 
 
-<<demo1, results=hide>>=
+\section{The mutable function} 
 
-pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
-                      age = rnorm(100, c(50, 40), sd = 10),
-                      gender = sample(c("Male", "Female"), 100, replace = TRUE),
-                      diffs = rnorm(100, 500, sd = 100),
-                      inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
-                      bmi = rnorm(100, 30, sd = 2))
+Since we will be constructing tables by making multiple calls to the
+\texttt{mutable} function, it pays to describe it here.  The
+\texttt{mutable} function is an S3 generic function, meaning that
+multiple methods are implemented depending on the first argument.  The
+two that have been implemented so far are for \texttt{formula} objects
+and for \texttt{function} objects.  Let us first turn our attention to
+the formula interface. 
 
-label(pead.bl$hiv) <- "HIV Status"
-label(pead.bl$age) <- "Age"
-label(pead.bl$gender) <- "Gender"
-label(pead.bl$diffs) <- "V2 GMT - V1 GMT"
-label(pead.bl$inc4x) <- "$\\frac{V1 GMT}{V2 GMT} >= 4$"
-label(pead.bl$bmi) <- "BMI" 
-                        
+\begin{verbatim}
+mutable(formula, data, summary.function = esummary, 
+        format.function = eformat, 
+        latex.function = elatex, 
+        html.function = ehtml, 
+        colname, 
+        subset = NULL, ...) 
+\end{verbatim}
 
-@ 
+A summary of the arguments is given in \ref{ref:args}. 
+
+
+\begin{table}
+  \label{ref:args}
+  \caption{Arguments to \texttt{mutable.formula}}
+  \begin{tabular}{|p{3cm}|p{8cm}|p{3cm}|}
+    \hline\\
+    argument&description&default\\
+    \hline\\
+    formula* & an R formula, where the left-hand side is a stratification variable
+    and the right-hand side is list of variables to be included as the rows in the table &
+    NA\\
+    &&\\
+    data* & the data.frame where variables in \texttt{formula} are found & NA\\
+    &&\\
+    summary.function & a function to summarize each variable. Can be generic to accomodate 
+    different types of data & esummary \\
+    &&\\
+    format.function & function that will generate plain text the object from \texttt{summary.function}
+    & eformat\\
+    &&\\
+    latex.function & function that will generate latex markup from \texttt{summary.function} & elatex\\
+    &&\\
+    html.function & function that will generate HTML markup from \texttt{summary.function}& ehtml\\
+    &&\\
+    colname* & a character string specifying the name of the column& NA\\
+    &&\\
+    subset & a subset to use of \texttt{data}& NULL\\
+    \hline
+  \end{tabular}
+\end{table}
+
 
 We define a table by calling mutable once for each column. We combine
 columns into single table object with the '+' operator. We need a
@@ -126,8 +175,6 @@ latex(tab1,
      caption = "Baseline Table")
 
 @ 
-
-
 
 This may seem like a lot of work to generate the table, but for common
 types of tables such as this, high-level wrapper functions can be 
