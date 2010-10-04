@@ -89,11 +89,11 @@ muHTMLFooter <- function(x, caption) {
   c("</table>")
 }
 
-muHTML <- function(x, ...) {
-  UseMethod("muHTML")
+muStratHTML <- function(x, ...) {
+  UseMethod("muStratHTML")
 }
 
-muHTML.default <- function(x, name, data, colname, round.digits = 1, ...) {
+muStratHTML.default <- function(x, name, data, colname, round.digits = 1, ...) {
   colname <- gsub(" +", "", colname)
 
   ## png(paste("html/", colname, "-", name, ".png", sep = ""),
@@ -122,7 +122,7 @@ muHTML.default <- function(x, name, data, colname, round.digits = 1, ...) {
   ret
 }
 
-muHTML.table <- function(x, name, data, colname, round.digits = 0, ...) {
+muStratHTML.table <- function(x, name, data, colname, round.digits = 0, ...) {
   colname <- gsub(" +", "", colname)
 
   ## png(paste("html/", colname, "-", name, ".png", sep = ""),

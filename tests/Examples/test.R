@@ -14,12 +14,12 @@ label(pead.bl$bmi) <- "BMI"
                         
 form <- hiv ~ age + gender + diffs + inc4x + bmi
 
-tab1 <- etable(form, data = pead.bl, colname = "",
-              summary.function = erownames) +
-  etable(colname = "Combined Categories") +
-  etable(subset = hiv == "Positive", colname = "Positive") +
-  etable(subset = hiv == "Negative", colname = "Negative") +
-  etable(summary.function = etest, colname = "P-value")
+tab1 <- mutable(form, data = pead.bl, colname = "",
+              summary.function = muRownamesSummary) +
+  mutable(colname = "Combined Categories") +
+  mutable(subset = hiv == "Positive", colname = "Positive") +
+  mutable(subset = hiv == "Negative", colname = "Negative") +
+  mutable(summary.function = muStratTest, colname = "P-value")
 
 html(tab1,
      caption = "Baseline Table",
@@ -28,6 +28,14 @@ html(tab1,
 
 latex(tab1,
      caption = "Baseline Table")
+
+form2 <- age ~ gender + bmi
+
+print(mutable(form2, data = pead.bl,
+              summary.function = muResponseSummary,
+              plain.function = muResponsePlain,
+              colname = "age"),
+      print.rownames = TRUE)
 
 
 
