@@ -1,8 +1,8 @@
 html.mutable <- function(object, na.print = "<td></td>", file = "", headerFunction = muHTMLHeader,
                          footerFunction = muHTMLFooter, caption = "", summary = "",
                          completeDocument = FALSE,
-                         documentHeaderFunction = eHTMLDocHeader,
-                         documentFooterFunction = eHTMLDocFooter,
+                         documentHeaderFunction = muHTMLDocHeader,
+                         documentFooterFunction = muHTMLDocFooter,
                          cssFile = "", 
                          ...) {
   x <- object$html
@@ -154,6 +154,13 @@ muStratHTML.table <- function(x, name, data, colname, round.digits = 0, ...) {
   names(val) <- c(name, paste(name, names(x), sep = ""))
   val
 }
+
+
+muResponseHTML <- function(x, ...) {
+  UseMethod("muResponseHTML")
+}
+
+muResponseHTML.default <- muPrintIdentity
 
 muRownamesHTML <- function(x, ...) {
   UseMethod("muRownamesHTML")

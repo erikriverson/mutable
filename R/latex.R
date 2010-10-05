@@ -19,6 +19,24 @@ muStratLatex.table <- function(x, name, data, round.digits = 0, ...) {
   val
 }
 
+
+muResponseLatex <- function(x, ...) {
+  UseMethod("muResponseLatex")
+}
+
+muResponseLatex.default <- muPrintIdentity
+
+
+muResponseLatex.table <- function(x, name, data, round.digits = 0, ...) {
+  dft <- as.data.frame(x)
+  pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
+  val <- paste(pct, paste(dft[["Freq"]], "/", sum(x), sep = ""))
+  names(val) <- paste(name, names(x), sep = "")
+  val
+}
+
+
+
 muRownamesLatex <- function(x, ...) {
   UseMethod("muRownamesLatex")
 }

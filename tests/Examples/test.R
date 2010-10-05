@@ -34,24 +34,8 @@ form2 <- age ~ gender + bmi
 print(mutable(form2, data = pead.bl,
               summary.function = muResponseSummary,
               plain.function = muResponsePlain,
-              colname = "age"),
+              latex.function = muResponseLatex,
+              html.function = muResponseHTML, 
+              colname = "age",
+              round.digits = 1 ),
       print.rownames = TRUE)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
