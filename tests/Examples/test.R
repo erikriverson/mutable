@@ -31,11 +31,13 @@ latex(tab1,
 
 form2 <- age ~ gender + bmi
 
-print(mutable(form2, data = pead.bl,
-              summary.function = muResponseSummary,
-              plain.function = muResponsePlain,
-              latex.function = muResponseLatex,
-              html.function = muResponseHTML, 
-              colname = "age",
-              round.digits = 1 ),
-      print.rownames = TRUE)
+tab2 <- mutable(form2, data = pead.bl,
+                summary.function = muResponseSummary,
+                plain.function = muResponsePlain,
+                latex.function = muResponseLatex,
+                html.function = muResponseHTML, 
+                colname = "age",
+                round.digits = 1)
+
+latex(tab2)
+

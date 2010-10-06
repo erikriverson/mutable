@@ -3,9 +3,9 @@ muStratLatex <- function(x, ...) {
 }
 
 muStratLatex.default <- function(x, name, data, round.digits = 1, ...) {
-  ret <- paste(round(x[1], round.digits), "/", 
-               round(x[2], round.digits), "/",
-               round(x[3], round.digits),
+  ret <- paste(round(x[2], round.digits), "(", 
+               round(x[1], round.digits), "-",
+               round(x[3], round.digits), ")", 
                sep = " ")
   names(ret) <- name
   ret
@@ -13,8 +13,16 @@ muStratLatex.default <- function(x, name, data, round.digits = 1, ...) {
 
 muStratLatex.table <- function(x, name, data, round.digits = 0, ...) {
   dft <- as.data.frame(x)
+
   pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
-  val <- paste(pct, paste(dft[["Freq"]], "/", sum(x), sep = ""))
+
+  val <- paste(pct, paste("$\\frac{",
+                          dft[["Freq"]],
+                          "}{",
+                          sum(x),
+                          "}$",
+                          sep = ""))
+
   names(val) <- paste(name, names(x), sep = "")
   val
 }
@@ -26,16 +34,11 @@ muResponseLatex <- function(x, ...) {
 
 muResponseLatex.default <- muPrintIdentity
 
-
-muResponseLatex.table <- function(x, name, data, round.digits = 0, ...) {
-  dft <- as.data.frame(x)
-  pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
-  val <- paste(pct, paste(dft[["Freq"]], "/", sum(x), sep = ""))
+muResponseLatex.muResponseSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
+  val <- sapply(x, muStratLatex.default, name, data)
   names(val) <- paste(name, names(x), sep = "")
   val
 }
-
-
 
 muRownamesLatex <- function(x, ...) {
   UseMethod("muRownamesLatex")
