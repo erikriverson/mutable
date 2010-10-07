@@ -9,4 +9,4 @@ attr(muRownamesSummary, "latex.function") <-  muRownamesLatex
 ## what about the plain function? I think it uses muStratPlain.default,
 ## and only works because we give it one argument, 2 should insert a "/"
 attr(muStratTest, "html.function") <- muStratTestHTML
-attr(muStratTest, "latex.function") <- muPrintIdentity
+attr(muStratTest, "latex.function") <- muStratTestLatex

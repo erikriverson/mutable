@@ -1,3 +1,9 @@
+muStratTestLatex <- function(x, name, data, colname...) {
+  val <- if(x < .0001) "< .0001" else x
+  names(val) <- name
+  val
+}
+
 muStratLatex <- function(x, ...) {
   UseMethod("muStratLatex")
 }
@@ -16,11 +22,11 @@ muStratLatex.table <- function(x, name, data, round.digits = 0, ...) {
 
   pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
 
-  val <- paste(pct, paste("$\\frac{",
+  val <- paste(pct, paste("{\\scriptsize~$\\frac{",
                           dft[["Freq"]],
                           "}{",
                           sum(x),
-                          "}$",
+                          "}$}",
                           sep = ""))
 
   names(val) <- paste(name, names(x), sep = "")
@@ -67,12 +73,12 @@ muLatexHeaderTabular <- function(x, caption, collabel.just) {
   
   c("\\begin{table}",
     ps("\\begin{tabular}{", collabel.just, "}"),
-    c(paste("\\multicolumn{1}{c}{", colnames(x), "}", collapse = "&"), "\\\\"),
+    c(paste(paste("\\multicolumn{1}{c}{", colnames(x), "}", collapse = "&"), "\\\\")),
     "\\hline\\\\")
 }
 
 muLatexFooterTabular <- function(x, caption) {
-    c("\\end{tabular}",
+    c("\\hline", "\\end{tabular}",
       ps("\\caption{", caption , "}"),
       "\\end{table}")
   }
