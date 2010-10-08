@@ -63,23 +63,28 @@ latex.mutable <- function(object, na.print = "", file = "", headerFunction = muL
   cat(paste(headerFunction(x, caption, ...), collapse = "\n"), "\n", file = file)
   cat(paste(apply(x, 1, paste, collapse = "&"), collapse = "\\\\\n"), "\\\\\n", file = file,
       append = TRUE)
-  cat(paste(footerFunction(x, caption), collapse = "\n"), "\n", file = file, append = TRUE)
+  cat(paste(footerFunction(x, caption, ...), collapse = "\n"), "\n", file = file, append = TRUE)
   
 }
 
-muLatexHeaderTabular <- function(x, caption, collabel.just) {
+muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2, ...) {
   if(missing(collabel.just))
     collabel.just <- paste(c("l", rep("c", ncol(x) - 1)), collapse = "")
   
-  c("\\begin{table}",
+  c("{\\footnotesize",
+    "\\begin{table} \\small",
+    ps("\\caption{", caption , "}"),
     ps("\\begin{tabular}{", collabel.just, "}"),
+    "\\hline\\hline",
     c(paste(paste("\\multicolumn{1}{c}{", colnames(x), "}", collapse = "&"), "\\\\")),
-    "\\hline\\\\")
+    c(paste(paste("\\multicolumn{1}{c}{", colhead2, "}", collapse = "&"), "\\\\")),
+    "\\hline")
 }
 
-muLatexFooterTabular <- function(x, caption) {
-    c("\\hline", "\\end{tabular}",
-      ps("\\caption{", caption , "}"),
+muLatexFooterTabular <- function(x, caption, footnote, ...) {
+    c("\\hline",
+      ps("\\multicolumn{8}{p{\\linewidth}}{", footnote, "}\\\\"),
+      "\\end{tabular}",
       "\\end{table}")
   }
 

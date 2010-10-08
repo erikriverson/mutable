@@ -8,6 +8,13 @@ muStratPlain.default <- function(x, name, data, round.digits = 2, ... ) {
   val
 }
 
+muStratPlain.character <- function(x, name, data, round.digits = 2, ... ) {
+  val <- x
+  names(val) <- name
+  val
+}
+
+
 muStratPlain.table <- function(x, name, data, round.digits = 0, ...) {
   dft <- as.data.frame(x)
   pct <- paste(round(x / sum(x) * 100, round.digits), "%", sep = "")
