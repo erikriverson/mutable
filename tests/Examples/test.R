@@ -1,3 +1,4 @@
+source.mutable()
 pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
                       age = rnorm(100, c(50, 40), sd = 10),
                       gender = sample(c("Male", "Female"), 100, replace = TRUE),
@@ -32,12 +33,19 @@ latex(tab1,
 form2 <- age ~ gender + bmi
 
 tab2 <- mutable(form2, data = pead.bl,
-                summary.function = muResponseSummary,
-                plain.function = muResponsePlain,
-                latex.function = muResponseLatex,
-                html.function = muResponseHTML, 
-                colname = "age",
-                round.digits = 1)
+                summary.function = muRownamesSummary,
+                colname = "Variable") + 
+  mutable(summary.function = muResponseSummary,
+          plain.function = muResponsePlain,
+          latex.function = muResponseLatex,
+          html.function = muResponseHTML, 
+          colname = "Summary of Difference in Age",
+          round.digits = 1) +
+  mutable(summary.function = muResponseTest,
+          colname = "P-value")
+
+ 
+tab2
 
 latex(tab2)
 

@@ -3,7 +3,7 @@ mutableN <- function(x, strat, data, ...) {
   sum(!is.na(x))
 }
 
-mutableStrat <- function(formula, data, firstcol) {
+mutableStrat <- function(formula, data, firstcol = "Variable") {
   
   first <- mutable(formula, data = data, colname = firstcol,
                    summary.function = muRownamesSummary) +
@@ -25,6 +25,25 @@ mutableStrat <- function(formula, data, firstcol) {
 #  first + middle + last
   first + middle + last
 }
+
+mutableResponse <- function(formula, data, firstcol = "Variable") {
+  mutable(formula, data = data,
+                summary.function = muRownamesSummary,
+                colname = firstcol) +
+  mutable(summary.function = mutableN,
+          latex.function = muPrintIdentity,
+          colname = "N") +
+  mutable(summary.function = muResponseSummary,
+          plain.function = muResponsePlain,
+          latex.function = muResponseLatex,
+          html.function = muResponseHTML, 
+          colname = "Summary Statistics",
+          round.digits = 1) +
+  mutable(summary.function = muResponseTest,
+          colname = "P-value")
+}
+
+
 
 
 

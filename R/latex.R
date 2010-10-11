@@ -1,5 +1,5 @@
 muStratTestLatex <- function(x, name, data, colname...) {
-  val <- if(x < .0001) "< .0001" else x
+  val <- ifelse(x < .0001, "$< .0001$", x)
   names(val) <- name
   val
 }
@@ -38,7 +38,12 @@ muResponseLatex <- function(x, ...) {
   UseMethod("muResponseLatex")
 }
 
-muResponseLatex.default <- muPrintIdentity
+muResponseLatex.default <- function(x, name, data, round.digits = 2, ...) {
+  x <- round(x, round.digits)
+  val <- ps(x[1], " (", x[2], " - ", x[3], ")")
+  names(val) <- name
+  val
+}
 
 muResponseLatex.muResponseSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   val <- sapply(x, muStratLatex.default, name, data)
@@ -67,23 +72,27 @@ latex.mutable <- function(object, na.print = "", file = "", headerFunction = muL
   
 }
 
-muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2, ...) {
+muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2, size = "\\small", ...) {
   if(missing(collabel.just))
     collabel.just <- paste(c("l", rep("c", ncol(x) - 1)), collapse = "")
   
   c("{\\footnotesize",
-    "\\begin{table} \\small",
+    "\\begin{table}", size,
     ps("\\caption{", caption , "}"),
     ps("\\begin{tabular}{", collabel.just, "}"),
     "\\hline\\hline",
     c(paste(paste("\\multicolumn{1}{c}{", colnames(x), "}", collapse = "&"), "\\\\")),
+    if(!missing(colhead2))
     c(paste(paste("\\multicolumn{1}{c}{", colhead2, "}", collapse = "&"), "\\\\")),
     "\\hline")
 }
 
 muLatexFooterTabular <- function(x, caption, footnote, ...) {
     c("\\hline",
-      ps("\\multicolumn{8}{p{\\linewidth}}{", footnote, "}\\\\"),
+      if(!missing(footnote))
+      ps("\\multicolumn{",
+         ncol(x),
+         "}{p{\\linewidth}}{", footnote, "}\\\\"),
       "\\end{tabular}",
       "\\end{table}")
   }

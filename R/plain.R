@@ -1,3 +1,13 @@
+muRownamesPlain <- function(x, ...) {
+  UseMethod("muRownamesPlain")
+}
+
+muRownamesPlain.rowFactor <- function(x, name, data, ...) {
+  ret <- c(x[1], paste("", tail(x, length(x) - 1)))
+  names(ret) <- c(name, paste(name,  levels(data[[name]]), sep = ""))
+  ret
+}
+
 muStratPlain <- function(x, name, data, ... ) {
   UseMethod("muStratPlain")
 }
@@ -28,7 +38,12 @@ muResponsePlain <- function(x, name, data, ... ) {
   UseMethod("muResponsePlain")
 }
 
-muResponsePlain.default <- muPrintIdentity
+muResponsePlain.default <- function(x, name, data, round.digits = 2, ...) {
+  x <- round(x, round.digits)
+  val <- ps(x[1], " (", x[2], " - ", x[3], ")")
+  names(val) <- name
+  val
+}
 
 muResponsePlain.muResponseSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   val <- sapply(x, muStratPlain.default, name, data)

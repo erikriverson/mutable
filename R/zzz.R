@@ -10,3 +10,6 @@ attr(muRownamesSummary, "latex.function") <-  muRownamesLatex
 ## and only works because we give it one argument, 2 should insert a "/"
 attr(muStratTest, "html.function") <- muStratTestHTML
 attr(muStratTest, "latex.function") <- muStratTestLatex
+
+attr(muResponseTest, "html.function") <- muStratTestHTML
+attr(muResponseTest, "latex.function") <- muStratTestLatex
