@@ -1,5 +1,5 @@
 muStratTestLatex <- function(x, name, data, colname...) {
-  val <- ifelse(x < .0001, "$< .0001$", x)
+  val <- ifelse(x$pvalue < .0001, "$< .0001$", x)
   names(val) <- name
   val
 }
