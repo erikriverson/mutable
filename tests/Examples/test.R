@@ -1,4 +1,5 @@
 source.mutable()
+
 pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
                       age = rnorm(100, c(50, 40), sd = 10),
                       gender = sample(c("Male", "Female"), 100, replace = TRUE),
@@ -20,7 +21,8 @@ tab1 <- mutable(form, data = pead.bl, colname = "",
   mutable(colname = "Combined Categories") +
   mutable(subset = hiv == "Positive", colname = "Positive") +
   mutable(subset = hiv == "Negative", colname = "Negative") +
-  mutable(summary.function = muStratTest, colname = "P-value")
+  mutable(form, pead.bl,
+          summary.function = muStratTest, colname = "P-value")
 
 html(tab1,
      caption = "Baseline Table",
@@ -47,5 +49,44 @@ tab2 <- mutable(form2, data = pead.bl,
  
 tab2
 
-latex(tab2)
+
+mutable(form, pead.bl,
+        summary.function = muStratTest,
+        post.summary.hook = print,
+        colname = "P-value")
+
+
+t1 <- list(list(pvalue = 0.01, test = "ttest"),
+           list(pvalue = 0.11, test = "fisher"),
+           list(pvalue = 0.50, test = "fisher"),
+           list(pvalue = 0.50, test = "ttest"))
+
+## how to add just one element to a list, since
+## the function below assumes only x$pvalue will exist
+## and we might want additional slots available in the
+## future
+
+pvalHook <- function(ret) {
+  nms <- unique(sapply(ret, "[[", "test"))
+  unt <- 1:length(nms)
+  names(unt) <- nms
+  
+  lapply(ret, function(x) c(ret[!names(ret) %in% "test"],
+                                test = unt[x$test]))
+}
+
+pvalHook(t1)
+
+
+
+lst <- list(pvalue = .0222, test = "ttest")
+
+c(lst[!names(lst) %in% "test"], test = "hi")
+
+
+
+
+
+
+
 
