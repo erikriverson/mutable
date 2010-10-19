@@ -1,3 +1,9 @@
+muStratTestPlain <- function(x, name, data, ...) {
+  val <- x$pvalue
+  names(val) <- name
+  val
+}
+
 muRownamesPlain <- function(x, ...) {
   UseMethod("muRownamesPlain")
 }
@@ -50,3 +56,5 @@ muResponsePlain.muResponseSummaryFactor <- function(x, name, data, round.digits 
   names(val) <- paste(name, names(x), sep = "")
   val
 }
+
+

@@ -34,59 +34,26 @@ latex(tab1,
 
 form2 <- age ~ gender + bmi
 
-tab2 <- mutable(form2, data = pead.bl,
-                summary.function = muRownamesSummary,
-                colname = "Variable") + 
-  mutable(summary.function = muResponseSummary,
-          plain.function = muResponsePlain,
-          latex.function = muResponseLatex,
-          html.function = muResponseHTML, 
-          colname = "Summary of Difference in Age",
-          round.digits = 1) +
-  mutable(summary.function = muResponseTest,
-          colname = "P-value")
+## tab2 <- mutable(form2, data = pead.bl,
+##                 summary.function = muRownamesSummary,
+##                 colname = "Variable") + 
+##   mutable(summary.function = muResponseSummary,
+##           plain.function = muResponsePlain,
+##           latex.function = muResponseLatex,
+##           html.function = muResponseHTML, 
+##           colname = "Summary of Difference in Age",
+##           round.digits = 1) +
+##   mutable(summary.function = muResponseTest,
+##           colname = "P-value")
 
  
-tab2
-
-
 mutable(form, pead.bl,
         summary.function = muStratTest,
-        post.summary.hook = print,
+        post.summary.hook = pvalHook,
         colname = "P-value")
 
-
-t1 <- list(list(pvalue = 0.01, test = "ttest"),
-           list(pvalue = 0.11, test = "fisher"),
-           list(pvalue = 0.50, test = "fisher"),
-           list(pvalue = 0.50, test = "ttest"))
-
-## how to add just one element to a list, since
-## the function below assumes only x$pvalue will exist
-## and we might want additional slots available in the
-## future
-
-pvalHook <- function(ret) {
-  nms <- unique(sapply(ret, "[[", "test"))
-  unt <- 1:length(nms)
-  names(unt) <- nms
-  
-  lapply(ret, function(x) c(ret[!names(ret) %in% "test"],
-                                test = unt[x$test]))
-}
-
-pvalHook(t1)
-
-
-
-lst <- list(pvalue = .0222, test = "ttest")
-
-c(lst[!names(lst) %in% "test"], test = "hi")
-
-
-
-
-
-
-
+## need to figure out na.action.
+## what is necessary?
+## why is it not getting set to what it was after parseFormula?
+## is it bombing within parseFormula?
 
