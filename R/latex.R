@@ -1,5 +1,6 @@
 muStratTestLatex <- function(x, name, data, colname...) {
-  val <- ps(ifelse(x$pvalue < .0001, "$< .0001$", x$pvalue), "^", x$testsuper)
+  val <- ifelse(x$pvalue < .0001, ps("$< .0001^{", x$testsuper, "}$"),
+                ps("$", x$pvalue, "^{", x$testsuper, "}$"))
   names(val) <- name
   val
 }
