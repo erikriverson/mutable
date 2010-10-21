@@ -12,17 +12,19 @@ mutableStrat <- function(formula, data, firstcol = "Variable") {
                    colname = "N") 
 
 
-  middle <- Reduce("+",
-                   lapply(split(data,
-                                data[[as.character(as.list(formula)[[2]])]]),
-                          function(x) mutable(formula, data = x,
-                                              colname = x[[as.character(formula)[[2]]]][1])))
+  middle <-
+    Reduce("+",
+           lapply(split(data,
+                        data[[as.character(as.list(formula)[[2]])]]),
+                  function(x) mutable(formula, data = x,
+                                      colname = x[[as.character(formula)[[2]]]][1])))
 
 
   last <- mutable(formula, data, colname = "Combined")
                             
 #  last <- mutable(summary.function = muStratTest, colname = "P-value")
 #  first + middle + last
+  
   first + middle + last
 }
 
@@ -42,6 +44,8 @@ mutableResponse <- function(formula, data, firstcol = "Variable") {
   mutable(summary.function = muResponseTest,
           colname = "P-value")
 }
+
+
 
 
 

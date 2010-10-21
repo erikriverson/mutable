@@ -24,6 +24,8 @@ tab1 <- mutable(form, data = pead.bl, colname = "",
   mutable(form, pead.bl,
           summary.function = muStratTest, colname = "P-value")
 
+str(tab1)
+
 html(tab1,
      caption = "Baseline Table",
      completeDocument = TRUE,
@@ -47,11 +49,14 @@ form2 <- age ~ gender + bmi
 ##           colname = "P-value")
 
  
-mutable(form, pead.bl,
-        summary.function = muStratTest,
-        post.summary.hook = pvalHook,
-        colname = "P-value")
+tab <- mutable(form, pead.bl,
+               summary.function = muStratTest,
+               post.summary.hook = pvalSummaryHook,
+               post.markup.hook = pvalMarkupHook, 
+               colname = "P-value")
 
+
+str(tab)
 ## need to figure out na.action.
 ## what is necessary?
 ## why is it not getting set to what it was after parseFormula?
