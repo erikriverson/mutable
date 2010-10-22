@@ -27,9 +27,37 @@ muStratTest.factor <- function(x, strat, data, round.digits = 2, ...) {
        test = "Fisher test")
 }
 
-mulmCoef <- function(formula, data, round.digits = 2, ...) {
-  ret <- round(coef(lm(formula, data, ...))[-1], round.digits)
-  list(plain = ret, latex = ret, html = ret)
+mulmCoef <- function(formula, data, colname, round.digits = 2, ...) {
+  fm <- lm(formula, data, ...)
+  ret <- round(coef(fm)[-1], round.digits)
+  nms <- names(ret)
+  ret <- paste(ret, "$(", round(confint(fm)[-1,1], round.digits),
+               "$ -- $", round(confint(fm)[-1,2], round.digits)
+               , ")$")
+  names(ret) <- nms
+  
+  ret <- as.matrix(ret, ncol = 1)
+  colnames(ret) <- colname
+  ret.list <-   list(plain = ret, latex = ret, html = ret)
+  class(ret.list) <- "mutable"
+  ret.list
+}
+
+muglmCoef <- function(formula, data, colname, round.digits = 2, ...) {
+  fm <- glm(formula, data, family = "binomial", ...)
+  ret <- round(exp(coef(fm))[-1], round.digits)
+
+  nms <- names(ret)
+  ret <- paste(ret, "$(", round(exp(confint(fm)[-1,1]), round.digits),
+               "$ -- $", round(exp(confint(fm)[-1,2]), round.digits)
+               , ")$")
+  names(ret) <- nms
+  
+  ret <- as.matrix(ret, ncol = 1)
+  colnames(ret) <- colname
+  ret.list <-   list(plain = ret, latex = ret, html = ret)
+  class(ret.list) <- "mutable"
+  ret.list
 }
 
 pvalSummaryHook <- function(ret) {

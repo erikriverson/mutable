@@ -40,9 +40,8 @@ mutableResponse <- function(formula, data, firstcol = "Variable") {
           latex.function = muResponseLatex,
           html.function = muResponseHTML, 
           colname = "Summary Statistics",
-          round.digits = 1) +
-  mutable(summary.function = muResponseTest,
-          colname = "P-value")
+          round.digits = 1) 
+
 }
 
 

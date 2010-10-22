@@ -10,9 +10,12 @@ muStratLatex <- function(x, ...) {
 }
 
 muStratLatex.default <- function(x, name, data, round.digits = 1, ...) {
-  ret <- paste(round(x[2], round.digits), "(", 
-               round(x[1], round.digits), "-",
-               round(x[3], round.digits), ")", 
+  ret <- paste(sprintf(ps("%.", round.digits, "f"), x[2]),
+               "$(", 
+               sprintf(ps("%.", round.digits, "f"), x[1]),
+               "$ -- $",
+               sprintf(ps("%.", round.digits, "f"), x[3]),
+               ")$", 
                sep = " ")
   names(ret) <- name
   ret
@@ -21,7 +24,7 @@ muStratLatex.default <- function(x, name, data, round.digits = 1, ...) {
 muStratLatex.table <- function(x, name, data, round.digits = 0, ...) {
   dft <- as.data.frame(x)
 
-  pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
+  pct <- paste(sprintf(ps("%.", round.digits, "f"), x / sum(x) * 100), "\\%", sep = "")
 
   val <- paste(pct, paste("{\\scriptsize~$\\frac{",
                           dft[["Freq"]],
@@ -40,8 +43,8 @@ muResponseLatex <- function(x, ...) {
 }
 
 muResponseLatex.default <- function(x, name, data, round.digits = 2, ...) {
-  x <- round(x, round.digits)
-  val <- ps(x[1], " (", x[2], " - ", x[3], ")")
+  x <- sprintf(ps("%.", round.digits, "f"), x)
+  val <- ps(x[1], " $(", x[2], "$ -- $", x[3], ")$")
   names(val) <- name
   val
 }
