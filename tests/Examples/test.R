@@ -7,6 +7,8 @@ pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRU
                       inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
                       bmi = rnorm(100, 30, sd = 2))
 
+
+is.na(pead.bl$age) <- c(1, 50, 100)
 label(pead.bl$hiv) <- "HIV Status"
 label(pead.bl$age) <- "Age"
 label(pead.bl$gender) <- "Gender"
@@ -23,6 +25,9 @@ tab1 <- mutable(form, data = pead.bl, colname = "",
   mutable(subset = hiv == "Negative", colname = "Negative") +
   mutable(form, pead.bl,
           summary.function = muStratTest, colname = "P-value")
+
+
+mutableStrat(form, pead.bl)
 
 str(tab1)
 
@@ -57,6 +62,8 @@ tab <- mutable(form, pead.bl,
 
 
 str(tab)
+
+tab
 ## need to figure out na.action.
 ## what is necessary?
 ## why is it not getting set to what it was after parseFormula?
