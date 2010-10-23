@@ -19,10 +19,14 @@ label(pead.bl$bmi) <- "BMI"
 form <- hiv ~ age + gender + diffs + inc4x + bmi
 
 tab1 <- mutable(form, data = pead.bl, colname = "",
-              summary.function = muRownamesSummary) +
+                summary.function = muRownamesSummary,
+                markupList = list(plain = muRownamesPlain,
+                  latex = muRownamesLatex,
+                  html = muRownamesHTML)) +
   mutable(colname = "Combined Categories") +
   mutable(subset = hiv == "Positive", colname = "Positive") +
-  mutable(subset = hiv == "Negative", colname = "Negative") +
+  mutable(subset = hiv == "Negative", colname = "Negative")
+
   mutable(form, pead.bl,
           summary.function = muStratTest, colname = "P-value")
 
