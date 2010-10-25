@@ -73,3 +73,43 @@ tab
 ## why is it not getting set to what it was after parseFormula?
 ## is it bombing within parseFormula?
 
+
+
+test <- function(blah2, ...) {
+  mutable(blah2, pead.bl,
+          summary.function = muRownamesSummary,
+          markupList = list(plain = muRownamesPlain,
+            latex = muRownamesLatex,
+            html = muRownamesHTML),
+          colname = "P-value", ...)
+}
+
+test2 <- function(blah, ...) {
+  test(blah, ...)
+}
+
+model.formula <- form
+
+test(model.formula)
+test2(form)
+test(model.formula, subset = age > 20)
+test2(model.formula, subset = age > 20)
+
+
+set.seed(123)
+df1 <- data.frame(age = rnorm(100, 50, 10),
+                  bmi = rnorm(100, 30, sd = 2))
+
+testlm <- function(formula, ...) {
+  lm(formula, data = df1, ...)
+}
+
+testlm(bmi ~ age, subset = age > 50)
+
+testlm2 <- function(formula, subset) {
+  lm(formula, data = df1, subset = subset)
+}
+
+testlm2(bmi ~ age, subset = age > 50)
+
+
