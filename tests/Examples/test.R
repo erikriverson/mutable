@@ -1,6 +1,6 @@
 source.mutable()
 
-pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
+test.df <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
                       age = rnorm(100, c(50, 40), sd = 10),
                       gender = sample(c("Male", "Female"), 100, replace = TRUE),
                       diffs = rnorm(100, 500, sd = 100),
@@ -8,17 +8,17 @@ pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRU
                       bmi = rnorm(100, 30, sd = 2))
 
 
-is.na(pead.bl$age) <- c(1, 50, 100)
-label(pead.bl$hiv) <- "HIV Status"
-label(pead.bl$age) <- "Age"
-label(pead.bl$gender) <- "Gender"
-label(pead.bl$diffs) <- "V2 GMT - V1 GMT"
-label(pead.bl$inc4x) <- "$$\\frac{V1 GMT}{V2 GMT} >= 4$$"
-label(pead.bl$bmi) <- "BMI" 
+is.na(test.df$age) <- c(1, 50, 100)
+label(test.df$hiv) <- "HIV Status"
+label(test.df$age) <- "Age"
+label(test.df$gender) <- "Gender"
+label(test.df$diffs) <- "V2 GMT - V1 GMT"
+label(test.df$inc4x) <- "$$\\frac{V1 GMT}{V2 GMT} >= 4$$"
+label(test.df$bmi) <- "BMI" 
                         
 form <- hiv ~ age + gender + diffs + inc4x + bmi
 
-tab1 <- mutable(form, data = pead.bl, colname = "",
+tab1 <- mutable(form, data = test.df, colname = "",
                 summary.function = muRownamesSummary,
                 markupList = list(plain = muRownamesPlain,
                   latex = muRownamesLatex,
@@ -27,11 +27,15 @@ tab1 <- mutable(form, data = pead.bl, colname = "",
   mutable(subset = hiv == "Positive", colname = "Positive") +
   mutable(subset = hiv == "Negative", colname = "Negative")
 
-  mutable(form, pead.bl,
-          summary.function = muStratTest, colname = "P-value")
+  mutable(form, test.df,
+          summary.function = muStratTest,
+          markupList = list(plain = muStratTestPlain,
+            latex = muStratTestLatex,
+            html = muStratTestHTML),
+          colname = "P-value")
 
 
-mutableStrat(form, pead.bl)
+mutableStrat(form, test.df)
 
 str(tab1)
 
@@ -45,7 +49,7 @@ latex(tab1,
 
 form2 <- age ~ gender + bmi
 
-## tab2 <- mutable(form2, data = pead.bl,
+## tab2 <- mutable(form2, data = test.df,
 ##                 summary.function = muRownamesSummary,
 ##                 colname = "Variable") + 
 ##   mutable(summary.function = muResponseSummary,
@@ -58,16 +62,16 @@ form2 <- age ~ gender + bmi
 ##           colname = "P-value")
 
  
-tab <- mutable(form, pead.bl,
-               summary.function = muStratTest,
-               post.summary.hook = pvalSummaryHook,
-               post.markup.hook = pvalMarkupHook, 
-               colname = "P-value")
+## tab <- mutable(form, test.df,
+##                summary.function = muStratTest,
+##                post.summary.hook = pvalSummaryHook,
+##                post.markup.hook = pvalMarkupHook, 
+##                colname = "P-value")
 
 
-str(tab)
+## str(tab)
 
-tab
+## tab
 ## need to figure out na.action.
 ## what is necessary?
 ## why is it not getting set to what it was after parseFormula?
@@ -76,7 +80,7 @@ tab
 
 
 test <- function(blah2, ...) {
-  mutable(blah2, pead.bl,
+  mutable(blah2, test.df,
           summary.function = muRownamesSummary,
           markupList = list(plain = muRownamesPlain,
             latex = muRownamesLatex,

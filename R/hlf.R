@@ -6,10 +6,15 @@ mutableN <- function(x, strat, data, ...) {
 mutableStrat <- function(formula, data, firstcol = "Variable") {
   
   first <- mutable(formula, data = data, colname = firstcol,
-                   summary.function = muRownamesSummary) +
+                   summary.function = muRownamesSummary,
+                   markupList = list(plain = muRownamesPlain,
+                     latex = muRownamesLatex,
+                     html = muRownamesHTML)) +
            mutable(summary.function = mutableN,
-                   latex.function = muPrintIdentity,
-                   colname = "N") 
+                   markupList = list(plain = muPrintIdentity,
+                     latex = muPrintIdentity,
+                     html = muPrintIdentity),
+                   colname = "N")
 
 
   middle <-
@@ -31,17 +36,21 @@ mutableStrat <- function(formula, data, firstcol = "Variable") {
 mutableResponse <- function(formula, data, firstcol = "Variable") {
   mutable(formula, data = data,
                 summary.function = muRownamesSummary,
+          markupList = list(plain = muRownamesPlain,
+            latex = muRownamesLatex,
+            html = muRownamesHTML),
                 colname = firstcol) +
   mutable(summary.function = mutableN,
-          latex.function = muPrintIdentity,
+          markupList = list(plain = muPrintIdentity,
+            latex = muPrintIdentity,
+            html = muPrintIdentity),
           colname = "N") +
   mutable(summary.function = muResponseSummary,
-          plain.function = muResponsePlain,
-          latex.function = muResponseLatex,
-          html.function = muResponseHTML, 
+          markupList = list(plain = muResponsePlain,
+            latex = muResponseLatex,
+            html = muResponseHTML), 
           colname = "Summary Statistics",
           round.digits = 1) 
-
 }
 
 
