@@ -69,10 +69,20 @@ latex.mutable <- function(object, na.print = "", file = "", headerFunction = muL
                          footerFunction = muLatexFooterTabular, caption = "", ...) {
   x <- object$latex
   x[is.na(x)] <- na.print
-  cat(paste(headerFunction(x, caption, ...), collapse = "\n"), "\n", file = file)
-  cat(paste(apply(x, 1, paste, collapse = "&"), collapse = "\\\\\n"), "\\\\\n", file = file,
-      append = TRUE)
-  cat(paste(footerFunction(x, caption, ...), collapse = "\n"), "\n", file = file, append = TRUE)
+  
+  cat(paste(headerFunction(x, caption, ...),
+            collapse = "\n"), "\n", file = file)
+
+  body <- apply(x, 1, paste, collapse = "&")
+
+  fix.rows <- grep("multicol", body)
+  body[fix.rows] <- x[fix.rows, 1]
+
+  body.vec <- paste(body, collapse = "\\\\\n")
+  cat(body.vec, "\\\\\n", file = file, append = TRUE)
+  
+  cat(paste(footerFunction(x, caption, ...), collapse = "\n"),
+      "\n", file = file, append = TRUE)
   
 }
 
