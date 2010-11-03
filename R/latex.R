@@ -127,5 +127,3 @@ muLatexFooterLongtable <- function(x, caption) {
   c("\\hline",
     "\\end{longtable}")
 }
-
-

@@ -27,13 +27,17 @@ tab1 <- mutable(form, data = test.df, colname = "",
   mutable(subset = hiv == "Positive", colname = "Positive") +
   mutable(subset = hiv == "Negative", colname = "Negative")
 
-  mutable(form, test.df,
-          summary.function = muStratTest,
-          markupList = list(plain = muStratTestPlain,
-            latex = muStratTestLatex,
-            html = muStratTestHTML),
-          colname = "P-value")
+tab1
 
+tab2 <- mutable(form, test.df,
+                summary.function = muStratTest,
+                markupList = list(plain = muStratTestPlain,
+                  latex = muStratTestLatex, 
+                  html = muStratTestHTML),
+                colname = "P-value")
+
+
+tab1 + tab2
 
 mutableStrat(form, test.df)
 
@@ -79,41 +83,39 @@ form2 <- age ~ gender + bmi
 
 
 
-test <- function(blah2, ...) {
-  mutable(blah2, test.df,
-          summary.function = muRownamesSummary,
-          markupList = list(plain = muRownamesPlain,
-            latex = muRownamesLatex,
-            html = muRownamesHTML),
-          colname = "P-value", ...)
-}
+## test <- function(blah2, ...) {
+##   mutable(blah2, test.df,
+##           summary.function = muRownamesSummary,
+##           markupList = list(plain = muRownamesPlain,
+##             latex = muRownamesLatex,
+##             html = muRownamesHTML),
+##           colname = "P-value", ...)
+## }
 
-test2 <- function(blah, ...) {
-  test(blah, ...)
-}
+## test2 <- function(blah, ...) {
+##   test(blah, ...)
+## }
 
-model.formula <- form
+## model.formula <- form
 
-test(model.formula)
-test2(form)
-test(model.formula, subset = age > 20)
-test2(model.formula, subset = age > 20)
-
-
-set.seed(123)
-df1 <- data.frame(age = rnorm(100, 50, 10),
-                  bmi = rnorm(100, 30, sd = 2))
-
-testlm <- function(formula, ...) {
-  lm(formula, data = df1, ...)
-}
-
-testlm(bmi ~ age, subset = age > 50)
-
-testlm2 <- function(formula, subset) {
-  lm(formula, data = df1, subset = subset)
-}
-
-testlm2(bmi ~ age, subset = age > 50)
+## test(model.formula)
+## test2(form)
+## test(model.formula, subset = age > 20)
+## test2(model.formula, subset = age > 20)
 
 
+## set.seed(123)
+## df1 <- data.frame(age = rnorm(100, 50, 10),
+##                   bmi = rnorm(100, 30, sd = 2))
+
+## testlm <- function(formula, ...) {
+##   lm(formula, data = df1, ...)
+## }
+
+## testlm(bmi ~ age, subset = age > 50)
+
+## testlm2 <- function(formula, subset) {
+##   lm(formula, data = df1, subset = subset)
+## }
+
+## testlm2(bmi ~ age, subset = age > 50)
