@@ -66,7 +66,9 @@ muRownamesLatex.rowFactor <- function(x, name, data, ...) {
 }
 
 latex.mutable <- function(object, na.print = "", file = "", headerFunction = muLatexHeaderTabular,
-                         footerFunction = muLatexFooterTabular, caption = "", ...) {
+                         footerFunction = muLatexFooterTabular, caption = "",
+                          no.table.markup.regex = c("multicol"),
+                          ...) {
   x <- object$latex
   x[is.na(x)] <- na.print
   
@@ -75,7 +77,7 @@ latex.mutable <- function(object, na.print = "", file = "", headerFunction = muL
 
   body <- apply(x, 1, paste, collapse = "&")
 
-  fix.rows <- grep("multicol", body)
+  fix.rows <- grep(no.table.markup.regex, body)
   body[fix.rows] <- x[fix.rows, 1]
 
   body.vec <- paste(body, collapse = "\\\\\n")

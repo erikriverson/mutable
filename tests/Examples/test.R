@@ -36,8 +36,6 @@ tab2 <- mutable(form, test.df,
                   html = muStratTestHTML),
                 colname = "P-value")
 
-
-
 tab1 + tab2
 
 tab1 <- mutable(form, data = test.df, colname = "",
@@ -46,10 +44,6 @@ tab1 <- mutable(form, data = test.df, colname = "",
                   html = muRownamesHTML)) +
   mutable(colname = "Combined Categories") +
   mutable(subset = hiv == "Positive", colname = "Positive")
-
-  
-
-
 
 mutableStrat(form, test.df)
 
