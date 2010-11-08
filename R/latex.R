@@ -1,15 +1,20 @@
-muStratTestLatex <- function(x, name, data, colname, ...) {
-  val <- ifelse(x$pvalue < .0001, ps("$< .0001^{", x$testsuper, "}$"),
-                ps("$", x$pvalue, "^{", x$testsuper, "}$"))
+muExportLatex <- function(x, ...) {
+  UseMethod("muExportLatex")
+}
+
+muFormatPvalueLatex <- function(x, name, data, colname, ...) {
+  pval <- muFormatPvalue(x)
+  val <- ps("$", pval, "^{", x$testsuper, "}$"))
   names(val) <- name
   val
 }
 
-muStratLatex <- function(x, ...) {
-  UseMethod("muStratLatex")
-}
+muExportLatex.muStratTestNumeric <- muFormatPvalueLatex
+muExportLatex.muStratTestFactor <- muFormatPvalueLatex
+muExportLatex.muResponseTestNumeric <- muFormatPvalueLatex
+muExportLatex.muResponseTestFactor <- muFormatPvalueLatex
 
-muStratLatex.default <- function(x, name, data, round.digits = 1, ...) {
+muExportLatex.muStratSummaryNumeric <- function(x, name, data, round.digits = 1, ...) {
   ret <- paste(sprintf(ps("%.", round.digits, "f"), x[2]),
                "$(", 
                sprintf(ps("%.", round.digits, "f"), x[1]),
@@ -21,7 +26,7 @@ muStratLatex.default <- function(x, name, data, round.digits = 1, ...) {
   ret
 }
 
-muStratLatex.table <- function(x, name, data, round.digits = 0, ...) {
+muExportLatex.muStratSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   dft <- as.data.frame(x)
 
   pct <- paste(sprintf(ps("%.", round.digits, "f"), x / sum(x) * 100), "\\%", sep = "")
@@ -37,56 +42,26 @@ muStratLatex.table <- function(x, name, data, round.digits = 0, ...) {
   val
 }
 
-
-muResponseLatex <- function(x, ...) {
-  UseMethod("muResponseLatex")
-}
-
-muResponseLatex.default <- function(x, name, data, round.digits = 2, ...) {
+muExportLatex.muResponseSummaryNumeric <- function(x, name, data, round.digits = 2, ...) {
   x <- sprintf(ps("%.", round.digits, "f"), x)
   val <- ps(x[1], " $(", x[2], "$ -- $", x[3], ")$")
   names(val) <- name
   val
 }
 
-muResponseLatex.muResponseSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
-  val <- sapply(x, muStratLatex.default, name, data)
+muExportLatex.muResponseSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
+  val <- sapply(x, muExportLatex.muStratSummaryNumeric, name, data)
   names(val) <- paste(name, names(x), sep = "")
   val
 }
 
-muRownamesLatex <- function(x, ...) {
-  UseMethod("muRownamesLatex")
-}
-
-muRownamesLatex.rowFactor <- function(x, name, data, ...) {
+muExportLatex.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("~~~", tail(x, length(x) - 1)))
   names(ret) <- c(name, paste(name,  levels(data[[name]]), sep = ""))
   ret
 }
 
-latex.mutable <- function(object, na.print = "", file = "", headerFunction = muLatexHeaderTabular,
-                         footerFunction = muLatexFooterTabular, caption = "",
-                          no.table.markup.regex = c("multicol"),
-                          ...) {
-  x <- object$latex
-  x[is.na(x)] <- na.print
-  
-  cat(paste(headerFunction(x, caption, ...),
-            collapse = "\n"), "\n", file = file)
-
-  body <- apply(x, 1, paste, collapse = "&")
-
-  fix.rows <- grep(no.table.markup.regex, body)
-  body[fix.rows] <- x[fix.rows, 1]
-
-  body.vec <- paste(body, collapse = "\\\\\n")
-  cat(body.vec, "\\\\\n", file = file, append = TRUE)
-  
-  cat(paste(footerFunction(x, caption, ...), collapse = "\n"),
-      "\n", file = file, append = TRUE)
-  
-}
+muExportLatex.muRownamesNumeric <- muPrintIdentity
 
 muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2, size = "\\small", ...) {
   if(missing(collabel.just))
@@ -128,4 +103,27 @@ muLatexHeaderLongtable <- function(x, caption, collabel.just) {
 muLatexFooterLongtable <- function(x, caption) {
   c("\\hline",
     "\\end{longtable}")
+}
+
+
+latex.mutable <- function(object, na.print = "", file = "", headerFunction = muLatexHeaderTabular,
+                         footerFunction = muLatexFooterTabular, caption = "",
+                          no.table.markup.regex = c("multicol"),
+                          ...) {
+  x <- object$latex
+  x[is.na(x)] <- na.print
+  
+  cat(paste(headerFunction(x, caption, ...),
+            collapse = "\n"), "\n", file = file)
+
+  body <- apply(x, 1, paste, collapse = "&")
+
+  fix.rows <- grep(no.table.markup.regex, body)
+  body[fix.rows] <- x[fix.rows, 1]
+
+  body.vec <- paste(body, collapse = "\\\\\n")
+  cat(body.vec, "\\\\\n", file = file, append = TRUE)
+  
+  cat(paste(footerFunction(x, caption, ...), collapse = "\n"),
+      "\n", file = file, append = TRUE)
 }

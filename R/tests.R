@@ -1,31 +1,3 @@
-muResponseTest <- function(x, strat, data, ...) {
-  UseMethod("muResponseTest")
-}
-
-muResponseTest.default <- function(x, strat, data, round.digits = 2, ...) {
-  list(pvalue = round(cor.test(x, strat, ...)$p.value, round.digits),
-       test = "Correlation test")
-}
-
-muResponseTest.factor <- function(x, strat, data, round.digits = 2, ...) {
-  list(pvalue = round(coef(summary(lm(strat ~ x, ...)))[2, 4], round.digits),
-       test = "ANOVA F-test")
-}
-
-muStratTest <- function(x, strat, data, ...) {
-  UseMethod("muStratTest")
-}
-
-muStratTest.default <- function(x, strat, data, round.digits = 2, ...) {
-  list(pvalue = round(t.test(x ~ strat, ...)$p.value, round.digits),
-       test = "t-test")
-
-}
-
-muStratTest.factor <- function(x, strat, data, round.digits = 2, ...) {
-  list(pvalue = round(fisher.test(x, strat, ...)$p.value, round.digits),
-       test = "Fisher test")
-}
 
 mulmCoef <- function(formula, data, colname, round.digits = 2, ...) {
   fm <- lm(formula, data, ...)
@@ -73,4 +45,10 @@ pvalSummaryHook <- function(ret) {
 pvalMarkupHook <- function(return.list, ret, ...) {
   attr(return.list, "testnames") <- attr(ret, "testnames")
   return.list
+}
+
+muFormatPvalue <- function(x, name, data, threshold = 0.0001, ...) {
+  val <- ifelse(x$pvalue < threshold, paste("<", threshold, x$pvalue)
+  names(val) <- name
+  val
 }

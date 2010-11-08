@@ -89,11 +89,11 @@ muHTMLFooter <- function(x, caption) {
   c("</table>")
 }
 
-muStratHTML <- function(x, ...) {
-  UseMethod("muStratHTML")
+muExportHTML <- function(x, ...) {
+  UseMethod("muExportHTML")
 }
 
-muStratHTML.default <- function(x, name, data, colname, round.digits = 1, ...) {
+muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.digits = 1, ...) {
   colname <- gsub(" +", "", colname)
 
   ## png(paste("html/", colname, "-", name, ".png", sep = ""),
@@ -122,7 +122,7 @@ muStratHTML.default <- function(x, name, data, colname, round.digits = 1, ...) {
   ret
 }
 
-muStratHTML.table <- function(x, name, data, colname, round.digits = 0, ...) {
+muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digits = 0, ...) {
   colname <- gsub(" +", "", colname)
 
   ## png(paste("html/", colname, "-", name, ".png", sep = ""),
@@ -155,18 +155,10 @@ muStratHTML.table <- function(x, name, data, colname, round.digits = 0, ...) {
   val
 }
 
+muExportHTML.muResponseSummaryNumeric <- muPrintIdentity
+muExportHTML.muResponseSummaryFactor <- muPrintIdentity
 
-muResponseHTML <- function(x, ...) {
-  UseMethod("muResponseHTML")
-}
-
-muResponseHTML.default <- muPrintIdentity
-
-muRownamesHTML <- function(x, ...) {
-  UseMethod("muRownamesHTML")
-}
-
-muRownamesHTML.rowFactor <- function(x, name, data, ...) {
+muExportHTML.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("&nbsp;", tail(x, length(x) - 1)))
 
   ret <- c(paste("<tr class= \"factor-heading factor\"><th scope = \"row\">",
@@ -178,21 +170,21 @@ muRownamesHTML.rowFactor <- function(x, name, data, ...) {
   ret
 }
 
-muRownamesHTML.character <- function(x, name, data, ...) {
+muExportHTML.muRownamesNumeric <- function(x, name, data, ...) {
   ret <- paste("<tr class = \"continuous\"><th scope = \"row\">", x, "</th>")
   names(ret) <- name
   ret
 }
 
-muStratTestHTML <- function(x, name, data, colname, ...) {
-  ret <- paste("<td id = \"pval-", name, "\"", ">$$", x, "$$</td>", sep = "")
+muFormatPvalueHTML <- function(x, name, data, colname, ...) {
+  pval <- muFormatPvalue(x)
+  ret <- paste("<td id = \"pval-", name, "\"", ">$$", pval, "$$</td>", sep = "")
   names(ret) <- name
   ret
 }
 
+muExportHTML.muStratTestNumeric <- muFormatPvalueHTML
+muExportHTML.muStratTestFactor <- muFormatPvalueHTML
+muExportHTML.muResponseTestNumeric <- muFormatPvalueHTML
+muExportHTML.muResponseTestFactor <- muFormatPvalueHTML
 
-
-
-
-
-  

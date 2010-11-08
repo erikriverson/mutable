@@ -1,37 +1,27 @@
-muStratTestPlain <- function(x, name, data, ...) {
-  val <- x$pvalue
-  names(val) <- name
-  val
+muExportPlain <- function(x, name, data, ... ) {
+  UseMethod("muExportPlain")
 }
 
-muRownamesPlain <- function(x, ...) {
-  UseMethod("muRownamesPlain")
-}
+muExportPlain.muStratTestNumeric <- muFormatPvalue
+muExportPlain.muStratTestFactor <- muFormatPvalue
+muExportPlain.muResponseTestNumeric <- muFormatPvalue
+muExportPlain.muResponseTestFactor <- muFormatPvalue
 
-muRownamesPlain.rowFactor <- function(x, name, data, ...) {
+muExportPlain.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("", tail(x, length(x) - 1)))
   names(ret) <- c(name, paste(name,  levels(data[[name]]), sep = ""))
   ret
 }
 
-muStratPlain <- function(x, name, data, ... ) {
-  UseMethod("muStratPlain")
-}
+muExportPlain.muRownamesNumeric <- muPrintIdentity
 
-muStratPlain.default <- function(x, name, data, round.digits = 2, ... ) {
+muExportPlain.muStratSummaryNumeric <- function(x, name, data, round.digits = 2, ... ) {
   val <- paste(round(x, round.digits), collapse = "/")
   names(val) <- name
   val
 }
 
-muStratPlain.character <- function(x, name, data, round.digits = 2, ... ) {
-  val <- x
-  names(val) <- name
-  val
-}
-
-
-muStratPlain.table <- function(x, name, data, round.digits = 0, ...) {
+muExportPlain.muStratSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   dft <- as.data.frame(x)
   pct <- paste(round(x / sum(x) * 100, round.digits), "%", sep = "")
   val <- paste(pct, paste(dft[["Freq"]], "/", sum(x), sep = ""))
@@ -39,22 +29,15 @@ muStratPlain.table <- function(x, name, data, round.digits = 0, ...) {
   val
 }
 
-
-muResponsePlain <- function(x, name, data, ... ) {
-  UseMethod("muResponsePlain")
-}
-
-muResponsePlain.default <- function(x, name, data, round.digits = 2, ...) {
+muExportPlain.muResponseSummaryNumeric <- function(x, name, data, round.digits = 2, ...) {
   x <- round(x, round.digits)
   val <- ps(x[1], " (", x[2], " - ", x[3], ")")
   names(val) <- name
   val
 }
 
-muResponsePlain.muResponseSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
+muExportPlain.muResponseSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   val <- sapply(x, muStratPlain.default, name, data)
   names(val) <- paste(name, names(x), sep = "")
   val
 }
-
-
