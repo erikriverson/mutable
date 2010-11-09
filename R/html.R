@@ -139,7 +139,7 @@ muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digi
   ## print(p1)
   ## dev.off()
   
-  dft <- as.data.frame(x)
+  dft <- as.data.frame(as.table(x))
   pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
 
   val <- c(paste("<td class = \"factor-heading-cell\" id = \"", colname, "-" , name, "\"",

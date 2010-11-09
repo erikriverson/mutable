@@ -1,5 +1,5 @@
 muRownames <- function(x, ...) {
-  UseMethod("muRownamesSummary")
+  UseMethod("muRownames")
 }
 
 muRownames.default <- function(x, ...) {

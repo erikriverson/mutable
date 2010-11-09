@@ -22,7 +22,7 @@ muExportPlain.muStratSummaryNumeric <- function(x, name, data, round.digits = 2,
 }
 
 muExportPlain.muStratSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
-  dft <- as.data.frame(x)
+  dft <- as.data.frame(as.table(x))
   pct <- paste(round(x / sum(x) * 100, round.digits), "%", sep = "")
   val <- paste(pct, paste(dft[["Freq"]], "/", sum(x), sep = ""))
   names(val) <- paste(name, names(x), sep = "")

@@ -4,7 +4,7 @@ muExportLatex <- function(x, ...) {
 
 muFormatPvalueLatex <- function(x, name, data, colname, ...) {
   pval <- muFormatPvalue(x)
-  val <- ps("$", pval, "^{", x$testsuper, "}$"))
+  val <- ps("$", pval, "^{", x$testsuper, "}$")
   names(val) <- name
   val
 }

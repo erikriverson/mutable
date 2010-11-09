@@ -47,8 +47,3 @@ pvalMarkupHook <- function(return.list, ret, ...) {
   return.list
 }
 
-muFormatPvalue <- function(x, name, data, threshold = 0.0001, ...) {
-  val <- ifelse(x$pvalue < threshold, paste("<", threshold, x$pvalue)
-  names(val) <- name
-  val
-}
