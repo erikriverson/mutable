@@ -6,26 +6,30 @@ mutableN <- function(x, strat, data, ...) {
 mutableStrat <- function(formula, data, firstcol = "Variable") {
   
   first <- mutable(formula, data = data, colname = firstcol,
-                   summary.function = muRownamesSummary,
-                   markupList = list(plain = muRownamesPlain,
-                     latex = muRownamesLatex,
-                     html = muRownamesHTML)) +
+                   summary.function = muRownames,
+                   markup.list = list(plain = muExportPlain,
+                     latex = muExportLatex,
+                     html = muExportHTML)) + 
            mutable(summary.function = mutableN,
-                   markupList = list(plain = muPrintIdentity,
-                     latex = muPrintIdentity,
-                     html = muPrintIdentity),
                    colname = "N")
-
 
   middle <-
     Reduce("+",
            lapply(split(data,
                         data[[as.character(as.list(formula)[[2]])]]),
                   function(x) mutable(formula, data = x,
+                                      summary.function = muStratSummary,
+                                      markup.list = list(plain = muExportPlain,
+                                        latex = muExportLatex,
+                                        html = muExportHTML),
                                       colname = x[[as.character(formula)[[2]]]][1])))
 
-
-  last <- mutable(formula, data, colname = "Combined")
+  last <- mutable(formula, data,
+                  summary.function = muStratSummary,
+                  markup.list = list(plain = muExportPlain,
+                    latex = muExportLatex,
+                    html = muExportHTML),
+                  colname = "Combined")
                             
 #  last <- mutable(summary.function = muStratTest, colname = "P-value")
 #  first + middle + last
@@ -35,20 +39,14 @@ mutableStrat <- function(formula, data, firstcol = "Variable") {
 
 mutableResponse <- function(formula, data, firstcol = "Variable") {
   mutable(formula, data = data,
-                summary.function = muRownamesSummary,
-          markupList = list(plain = muRownamesPlain,
-            latex = muRownamesLatex,
-            html = muRownamesHTML),
-                colname = firstcol) +
+          summary.function = muRownames,
+          markup.list = list(plain = muExportPlain,
+            latex = muExportLatex,
+            html = muExportHTML),
+          colname = firstcol) +
   mutable(summary.function = mutableN,
-          markupList = list(plain = muPrintIdentity,
-            latex = muPrintIdentity,
-            html = muPrintIdentity),
           colname = "N") +
   mutable(summary.function = muResponseSummary,
-          markupList = list(plain = muResponsePlain,
-            latex = muResponseLatex,
-            html = muResponseHTML), 
           colname = "Summary Statistics",
           round.digits = 1) 
 }

@@ -177,7 +177,7 @@ muExportHTML.muRownamesNumeric <- function(x, name, data, ...) {
 }
 
 muFormatPvalueHTML <- function(x, name, data, colname, ...) {
-  pval <- muFormatPvalue(x)
+  pval <- muFormatPvalue(x, name, data)
   ret <- paste("<td id = \"pval-", name, "\"", ">$$", pval, "$$</td>", sep = "")
   names(ret) <- name
   ret
@@ -188,3 +188,4 @@ muExportHTML.muStratTestFactor <- muFormatPvalueHTML
 muExportHTML.muResponseTestNumeric <- muFormatPvalueHTML
 muExportHTML.muResponseTestFactor <- muFormatPvalueHTML
 
+muExportHTML.default <- muPrintIdentity

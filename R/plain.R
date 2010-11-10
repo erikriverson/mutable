@@ -37,7 +37,9 @@ muExportPlain.muResponseSummaryNumeric <- function(x, name, data, round.digits =
 }
 
 muExportPlain.muResponseSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
-  val <- sapply(x, muStratPlain.default, name, data)
+  val <- sapply(x, muExportPlain.muStratSummaryNumeric, name, data)
   names(val) <- paste(name, names(x), sep = "")
   val
 }
+
+muExportPlain.default <- muPrintIdentity

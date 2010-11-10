@@ -23,9 +23,9 @@ tab1 <- mutable(form, data = test.df, colname = "",
                 markup.list = list(plain = muExportPlain,
                   html = muExportHTML)) +
   mutable(summary.function = muStratSummary,
-          colname = "Combined Categories") +
+          colname = "Combined Categories") 
 
-  mutable(form, data = test.df, subset = hiv == "Positive", colname = "Positive")
+mutable(form, data = test.df, subset = hiv == "Positive", colname = "Positive")
 
   mutable(subset = hiv == "Negative", colname = "Negative")
 
@@ -33,9 +33,9 @@ tab1
 
 tab2 <- mutable(form, test.df,
                 summary.function = muStratTest,
-                markupList = list(plain = muStratTestPlain,
-                  latex = muStratTestLatex, 
-                  html = muStratTestHTML),
+                markup.list = list(plain = muExportPlain,
+                  latex = muExportLatex, 
+                  html = muExportHTML),
                 colname = "P-value")
 
 tab1 + tab2

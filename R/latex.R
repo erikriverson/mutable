@@ -3,7 +3,7 @@ muExportLatex <- function(x, ...) {
 }
 
 muFormatPvalueLatex <- function(x, name, data, colname, ...) {
-  pval <- muFormatPvalue(x)
+  pval <- muFormatPvalue(x, name, data)
   val <- ps("$", pval, "^{", x$testsuper, "}$")
   names(val) <- name
   val
@@ -27,7 +27,7 @@ muExportLatex.muStratSummaryNumeric <- function(x, name, data, round.digits = 1,
 }
 
 muExportLatex.muStratSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
-  dft <- as.data.frame(x)
+  dft <- as.data.frame(as.table(x))
 
   pct <- paste(sprintf(ps("%.", round.digits, "f"), x / sum(x) * 100), "\\%", sep = "")
 
@@ -127,3 +127,5 @@ latex.mutable <- function(object, na.print = "", file = "", headerFunction = muL
   cat(paste(footerFunction(x, caption, ...), collapse = "\n"),
       "\n", file = file, append = TRUE)
 }
+
+muExportLatex.default <- muPrintIdentity
