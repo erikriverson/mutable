@@ -47,8 +47,7 @@ mutableResponse <- function(formula, data, firstcol = "Variable") {
   mutable(summary.function = mutableN,
           colname = "N") +
   mutable(summary.function = muResponseSummary,
-          colname = "Summary Statistics",
-          round.digits = 1) 
+          colname = "Summary Statistics")
 }
 
 

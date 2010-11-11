@@ -33,12 +33,14 @@ muglmCoef <- function(formula, data, colname, round.digits = 2, ...) {
 }
 
 pvalSummaryHook <- function(ret) {
+  cls <- class(ret[[1]])
   nms <- unique(sapply(ret, "[[", "test"))
   unt <- 1:length(nms)
   names(unt) <- nms
 
   ret <- lapply(ret, function(x) c(x, testsuper = as.vector(unt[x$test])))
   attr(ret, "testnames") <- nms
+  lapply(ret, "class<-", cls)
   ret 
 }
 

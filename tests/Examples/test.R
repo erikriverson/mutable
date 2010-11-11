@@ -36,7 +36,9 @@ tab2 <- mutable(form, test.df,
                 markup.list = list(plain = muExportPlain,
                   latex = muExportLatex, 
                   html = muExportHTML),
-                colname = "P-value")
+                colname = "P-value",
+                post.summary.hook = pvalSummaryHook,
+                post.markup.hook = pvalMarkupHook)
 
 tab1 + tab2
 
