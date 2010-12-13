@@ -13,6 +13,7 @@ mutableStrat <- function(formula, data, firstcol = "Variable") {
            mutable(summary.function = mutableN,
                    colname = "N")
 
+
   middle <-
     Reduce("+",
            lapply(split(data,
@@ -24,17 +25,20 @@ mutableStrat <- function(formula, data, firstcol = "Variable") {
                                         html = muExportHTML),
                                       colname = x[[as.character(formula)[[2]]]][1])))
 
-  last <- mutable(formula, data,
-                  summary.function = muStratSummary,
-                  markup.list = list(plain = muExportPlain,
-                    latex = muExportLatex,
-                    html = muExportHTML),
-                  colname = "Combined")
-                            
-#  last <- mutable(summary.function = muStratTest, colname = "P-value")
-#  first + middle + last
-  
-  first + middle + last
+  table <- first + middle
+
+  if(length(unique(data[[as.character(as.list(formula)[[2]])]])) > 1) {
+    last <- mutable(formula, data,
+                    summary.function = muStratSummary,
+                    markup.list = list(plain = muExportPlain,
+                      latex = muExportLatex,
+                      html = muExportHTML),
+                    colname = "Combined")
+
+    table <- table + last
+  }
+
+  table
 }
 
 mutableResponse <- function(formula, data, firstcol = "Variable") {
