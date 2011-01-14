@@ -3,7 +3,7 @@ muResponseSummary <- function(x, strat, data, ...) {
 }
  
 muResponseSummary.default <- function(x, strat, data, ...) {
-  ct <- cor.test(x, strat)
+  ct <- cor.test(x, strat, ...)
   ret <- c(ct$estimate, ct$conf.int)
   class(ret) <- "muResponseSummaryNumeric"
   ret
