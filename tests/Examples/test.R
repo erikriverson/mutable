@@ -91,8 +91,6 @@ form2 <- age ~ gender + bmi
 ## why is it not getting set to what it was after parseFormula?
 ## is it bombing within parseFormula?
 
-
-
 ## test <- function(blah2, ...) {
 ##   mutable(blah2, test.df,
 ##           summary.function = muRownamesSummary,
