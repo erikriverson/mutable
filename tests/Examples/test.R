@@ -27,8 +27,6 @@ tab1 <- mutable(form, data = test.df, colname = "",
 
 mutable(form, data = test.df, subset = hiv == "Positive", colname = "Positive")
 
-  mutable(subset = hiv == "Negative", colname = "Negative")
-
 tab1
 
 tab2 <- mutable(form, test.df,

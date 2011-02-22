@@ -70,7 +70,7 @@ font used in the table.
 
 The main issue with this approach is that \LaTeX{} tables can be
 configured to a very fine degree, and introducing a new parameter
-every time you want to change a small bit of output was a painstaking
+every time I want to change a small bit of output is a painstaking
 process.
 
 Another issue related to the first was that I could not obtain an R
@@ -90,7 +90,7 @@ In short, these functions take an omnibus approach to generating
 markup.  If you want to alter the resulting markup code, you have to
 dig into the function or introduce a new parameter.
 
-\subsection{How does mutable fix this?}
+\subsection{How does mutable differ?}
 The mutable package takes a very modular, function-based approach to
 generating markup tables.  Instead of defining and setting lots of
 parameters to control the final output, you pass small, user-defined
@@ -106,7 +106,7 @@ Since we will be constructing tables by making multiple calls to the
 multiple methods are implemented depending on the first argument.  The
 two that have been implemented so far are for \texttt{formula} objects
 and for \texttt{function} objects.  Let us first turn our attention to
-the formula interface. 
+the formula interface, since this is the more common use case. 
 
 \begin{verbatim}
 mutable(formula, data, summary.function = esummary, 
@@ -153,12 +153,23 @@ A summary of the arguments is given in \ref{ref:args}.
 
 We define a table by calling mutable once for each column. We combine
 columns into single table object with the '+' operator. We need a
-formula and a data.frame, which will proprogate from the first column
-to subsequent columns if they are not specified by further columns.
+formula and a data.frame, which will proprogate from the first call to
+subsequent calls if they are not specified. This is similar in style
+to how ggplot2 currently functions. In ggplot2, you combine different
+'layers' to generate a statistical graphic. The layers are combined
+using the '+' operator, and subsequent layers will use the data
+specified by the first if not overridden.
 
-Each column needs a summary.function, and functions to generate the
-markup. There are defaults for these. Finally, the colname argument
-must be specified.
+Each column (i.e., call to mutable) needs a summary.function, and
+functions to generate the markup. The summary.function will operate on
+your data, and return useful summary statistics.  For example, the
+summary.function might return a list of the quantiles of continuous
+data, and counts for categorical variables. Since the summary.function
+can be generic, you can pass one function and have it operate
+completely differently depending on what data it is summarizing. There
+is a useful defult summary.function, which not coincidentally operates
+in much the same way as summary.formula in the Hmisc package. Finally,
+the colname argument must be specified.
 
 <<demo2, results=tex>>=
 
@@ -177,9 +188,9 @@ latex(tab1,
 @ 
 
 This may seem like a lot of work to generate the table, but for common
-types of tables such as this, high-level wrapper functions can be 
-constructed to do all the work for you.  Something else has also happened,
-The tab1 object also contains an HTML version of the table.
+types of tables such as this, wrapper functions can be constructed to
+do all the work for you.  Something else has also happened, The tab1
+object also contains an HTML version of the table.
 
 \end{document}
 
