@@ -20,8 +20,8 @@ muExportLatex.muStratSummaryNumeric <- function(x, name, data, round.digits = 1,
                sprintf(ps("%.", round.digits, "f"), x[1]),
                "$ -- $",
                sprintf(ps("%.", round.digits, "f"), x[3]),
-               ")$", 
-               sep = " ")
+               ")$")
+
   names(ret) <- name
   ret
 }
@@ -29,16 +29,15 @@ muExportLatex.muStratSummaryNumeric <- function(x, name, data, round.digits = 1,
 muExportLatex.muStratSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   dft <- as.data.frame(as.table(x))
 
-  pct <- paste(sprintf(ps("%.", round.digits, "f"), x / sum(x) * 100), "\\%", sep = "")
+  pct <- ps(sprintf(ps("%.", round.digits, "f"), x / sum(x) * 100), "\\%")
 
-  val <- paste(pct, paste("{\\scriptsize~$\\frac{",
-                          dft[["Freq"]],
-                          "}{",
-                          sum(x),
-                          "}$}",
-                          sep = ""))
+  val <- ps(pct, paste("{\\scriptsize~$\\frac{",
+                       dft[["Freq"]],
+                       "}{",
+                       sum(x),
+                       "}$}"))
 
-  names(val) <- paste(name, names(x), sep = "")
+  names(val) <- ps(name, names(x))
   val
 }
 
@@ -51,13 +50,13 @@ muExportLatex.muResponseSummaryNumeric <- function(x, name, data, round.digits =
 
 muExportLatex.muResponseSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   val <- sapply(x, muExportLatex.muStratSummaryNumeric, name, data)
-  names(val) <- paste(name, names(x), sep = "")
+  names(val) <- ps(name, names(x))
   val
 }
 
 muExportLatex.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("~~~", tail(x, length(x) - 1)))
-  names(ret) <- c(name, paste(name,  levels(data[[name]]), sep = ""))
+  names(ret) <- c(name, ps(name,  levels(data[[name]])))
   ret
 }
 

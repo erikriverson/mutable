@@ -78,7 +78,7 @@ muHTMLHeader <- function(x, caption, summary, ...) {
   c(paste("<table summary = \"", summary, "\">"),
     paste("<caption>", caption, "</caption>"),
     "<colgroup>",
-    paste("<col id = \"", gsub(" +", "", colnames(x)), "\" />", sep = ""),
+    ps("<col id = \"", gsub(" +", "", colnames(x)), "\" />"),
     "</colgroup>",
     "<tr>",
     paste("<th scope = \"col\">", colnames(x), "</th>"),
@@ -110,14 +110,14 @@ muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.dig
   ## print(p1)
   ## dev.off()
 
-  ret <- paste(paste("<td class = \"continuous-cell\" id = \"", colname, "-", name,
+  ret <- paste(ps("<td class = \"continuous-cell\" id = \"", colname, "-", name,
                      "\" style = \"background-image : url(\'", colname, "-", name, ".png\'",
                      ");\"",
-                     ">$$\\scriptsize{", sep = ""),
+                     ">$$\\scriptsize{"),
                round(x[1], round.digits), "}\\;\\normalsize{", 
                round(x[2], round.digits), "}\\;\\scriptsize{",
-               round(x[3], round.digits), "}$$</td>",
-               sep = " ")
+               round(x[3], round.digits), "}$$</td>")
+
   names(ret) <- name
   ret
 }
@@ -140,18 +140,16 @@ muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digi
   ## dev.off()
   
   dft <- as.data.frame(as.table(x))
-  pct <- paste(round(x / sum(x) * 100, round.digits), "\\%", sep = "")
+  pct <- ps(round(x / sum(x) * 100, round.digits), "\\%")
 
-  val <- c(paste("<td class = \"factor-heading-cell\" id = \"", colname, "-" , name, "\"",
-                 "style = \"background-image : url(\'", colname, "-", name, ".png\'",
-                 ");\"></td>", sep = ""),
-           paste(paste("<td class = \"factor-level-cell\" id = \"", colname, "-", name, names(x), sep = ""),
-                 "\"> $$", pct,
-                 "\\;\\;\\frac{", paste(dft[["Freq"]],
-                                        "}{", sum(x), "}$$ </td>",
-                                        sep = ""), sep = ""))
+  val <- c(ps("<td class = \"factor-heading-cell\" id = \"", colname, "-" , name, "\"",
+              "style = \"background-image : url(\'", colname, "-", name, ".png\'",
+              ");\"></td>"),
+           ps(ps("<td class = \"factor-level-cell\" id = \"", colname, "-", name, names(x)),
+              "\"> $$", pct,
+              "\\;\\;\\frac{", ps(dft[["Freq"]], "}{", sum(x), "}$$ </td>")))
 
-  names(val) <- c(name, paste(name, names(x), sep = ""))
+  names(val) <- c(name, ps(name, names(x)))
   val
 }
 
@@ -166,7 +164,7 @@ muExportHTML.muRownamesFactor <- function(x, name, data, ...) {
            paste("<tr class= \"factor-level factor\"><th scope = \"row\">",
                  tail(ret, length(ret) - 1), "</th>"))
   
-  names(ret) <- c(name, paste(name,  levels(data[[name]]), sep = ""))
+  names(ret) <- c(name, ps(name,  levels(data[[name]])))
   ret
 }
 
@@ -178,7 +176,7 @@ muExportHTML.muRownamesNumeric <- function(x, name, data, ...) {
 
 muFormatPvalueHTML <- function(x, name, data, colname, ...) {
   pval <- muFormatPvalue(x, name, data)
-  ret <- paste("<td id = \"pval-", name, "\"", ">$$", pval, "$$</td>", sep = "")
+  ret <- ps("<td id = \"pval-", name, "\"", ">$$", pval, "$$</td>")
   names(ret) <- name
   ret
 }

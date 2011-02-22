@@ -56,8 +56,7 @@ html(tab1,
      completeDocument = TRUE,
      cssFile = "main.css")
 
-latex(tab1,
-     caption = "Baseline Table")
+latex(tab1, caption = "Baseline Table")
 
 form2 <- age ~ gender + bmi
 
