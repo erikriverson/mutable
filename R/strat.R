@@ -1,34 +1,34 @@
-muStratSummary <- function(x, strat, data, ...) {
+muStratSummary <- function(x, stratVariable, data, ...) {
   UseMethod("muStratSummary")
 }
 
 
-muStratSummary.default <- function(x, strat, data, ...) {
+muStratSummary.default <- function(x, stratVariable, data, ...) {
   quant <- quantile(x, probs = c(.25, .5, .75), na.rm = TRUE, ...)
   class(quant) <- "muStratSummaryNumeric"
   quant
 }
 
 
-muStratSummary.factor <- function(x, strat, data, ...) {
+muStratSummary.factor <- function(x, stratVariable, data, ...) {
   tbl <- table(x, ...)
   class(tbl) <- "muStratSummaryFactor"
   tbl
 }
 
-muStratTest <- function(x, strat, data, ...) {
+muStratTest <- function(x, stratVariable, data, ...) {
   UseMethod("muStratTest")
 }
 
-muStratTest.default <- function(x, strat, data, round.digits = 2, ...) {
-  ret <- list(pvalue = round(t.test(x ~ strat, ...)$p.value, round.digits),
+muStratTest.default <- function(x, stratVariable, data, round.digits = 2, ...) {
+  ret <- list(pvalue = round(t.test(x ~ stratVariable, ...)$p.value, round.digits),
               test = "t-test")
   class(ret) <- "muStratTestNumeric"
   ret
 }
 
-muStratTest.factor <- function(x, strat, data, round.digits = 2, ...) {
-  ret <- list(pvalue = round(fisher.test(x, strat, ...)$p.value, round.digits),
+muStratTest.factor <- function(x, stratVariable, data, round.digits = 2, ...) {
+  ret <- list(pvalue = round(fisher.test(x, stratVariable, ...)$p.value, round.digits),
               test = "Fisher test")
   class(ret) <- "muStratTestFactor"
   ret

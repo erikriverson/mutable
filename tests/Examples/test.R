@@ -1,11 +1,13 @@
 source.mutable()
 
-test.df <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
+test.df <- data.frame(hiv = sample(c("Positive", "Negative", "Undetermined"), 100, replace = TRUE),
                       age = rnorm(100, c(50, 40), sd = 10),
-                      gender = sample(c("Male", "Female"), 100, replace = TRUE),
+                      gender = sample(c("Male", "Female", "Undetermined"), 100, replace = TRUE),
                       diffs = rnorm(100, 500, sd = 100),
                       inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
                       bmi = rnorm(100, 30, sd = 2))
+
+test.df <- subset(test.df, hiv != "Undetermined" & gender != "Undetermined")
 
 
 is.na(test.df$age) <- c(1, 50, 100)
@@ -23,7 +25,9 @@ tab1 <- mutable(form, data = test.df, colname = "",
                 markup.list = list(plain = muExportPlain,
                   html = muExportHTML)) +
   mutable(summary.function = muStratSummary,
-          colname = "Combined Categories") 
+          colname = "Combined Categories")
+
+mutableStrat(form, test.df, drop = FALSE)
 
 mutable(form, data = test.df, subset = hiv == "Positive", colname = "Positive")
 
@@ -47,7 +51,7 @@ tab1 <- mutable(form, data = test.df, colname = "",
   mutable(colname = "Combined Categories") +
   mutable(subset = hiv == "Positive", colname = "Positive")
 
-mutableStrat(form, test.df)
+
 
 str(tab1)
 
