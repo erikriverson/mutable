@@ -47,7 +47,8 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
   table
 }
 
-mutableResponse <- function(formula, data, firstColumn = "Variable",
+mutableResponse <- function(formula, data,
+                            firstColumn = "Variable",
                             summaryColumn = "Summary Statistics",
                             drop = FALSE, ...) {
   if(drop) {
@@ -60,7 +61,7 @@ mutableResponse <- function(formula, data, firstColumn = "Variable",
           markup.list = list(plain = muExportPlain,
             latex = muExportLatex,
             html = muExportHTML),
-          colname = firstcol, ...) +
+          colname = firstColumn, ...) +
   mutable(summary.function = mutableN,
           colname = "N", ...) +
   mutable(summary.function = muResponseSummary,
