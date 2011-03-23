@@ -14,8 +14,7 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
   first <- mutable(formula, data = data, colname = firstcol,
                    summary.function = muRownames,
                    markup.list = list(plain = muExportPlain,
-                     latex = muExportLatex,
-                     html = muExportHTML), ...) + 
+                     latex = muExportLatex)) + 
            mutable(summary.function = mutableN,
                    colname = "N", ...)
 
@@ -27,8 +26,7 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
                   function(x) mutable(formula, data = x,
                                       summary.function = muStratSummary,
                                       markup.list = list(plain = muExportPlain,
-                                        latex = muExportLatex,
-                                        html = muExportHTML),
+                                        latex = muExportLatex),
                                       colname = x[[as.character(formula)[[2]]]][1], ...)))
 
   table <- first + middle
@@ -37,8 +35,7 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
     last <- mutable(formula, data,
                     summary.function = muStratSummary,
                     markup.list = list(plain = muExportPlain,
-                      latex = muExportLatex,
-                      html = muExportHTML),
+                      latex = muExportLatex),
                     colname = "Overall", ...)
 
     table <- table + last
