@@ -69,6 +69,7 @@ muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2, size = "\\
   c("{\\footnotesize",
     "\\begin{table}", size,
     ps("\\caption{", caption , "}"),
+    "\\begin{center}", 
     ps("\\begin{tabular}{", collabel.just, "}"),
     "\\hline\\hline",
     c(paste(paste("\\multicolumn{1}{c}{", colnames(x), "}", collapse = "&"), "\\\\")),
@@ -84,6 +85,7 @@ muLatexFooterTabular <- function(x, caption, footnote, ...) {
          ncol(x),
          "}{p{\\linewidth}}{", footnote, "}\\\\"),
       "\\end{tabular}",
+      "\\end{center}", 
       "\\end{table}")
   }
 
