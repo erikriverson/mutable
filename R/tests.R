@@ -20,9 +20,9 @@ muglmCoef <- function(formula, data, colname, round.digits = 2, ...) {
   ret <- round(exp(coef(fm))[-1], round.digits)
 
   nms <- names(ret)
-  ret <- paste(ret, "$(", round(exp(confint(fm)[-1,1]), round.digits),
-               "$ -- $", round(exp(confint(fm)[-1,2]), round.digits)
-               , ")$")
+  ret <- paste("<td>$$", ret, " (", round(exp(confint(fm)[-1,1]), round.digits),
+               " - ", round(exp(confint(fm)[-1,2]), round.digits)
+               , ")$$", "</td>")
   names(ret) <- nms
   
   ret <- as.matrix(ret, ncol = 1)
