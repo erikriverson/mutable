@@ -1,8 +1,11 @@
 source.mutable()
+library(Hmisc)
 
-test.df <- data.frame(hiv = sample(c("Positive", "Negative", "Undetermined"), 100, replace = TRUE),
+test.df <- data.frame(hiv = sample(c("Positive", "Negative", "Undetermined"), 100,
+                        replace = TRUE),
                       age = rnorm(100, c(50, 40), sd = 10),
-                      gender = sample(c("Male", "Female", "Undetermined"), 100, replace = TRUE),
+                      gender = sample(c("Male", "Female", "Undetermined"), 100,
+                        replace = TRUE),
                       diffs = rnorm(100, 500, sd = 100),
                       inc4x = sample(c("Yes", "No"), 100, replace = TRUE),
                       bmi = rnorm(100, 30, sd = 2))
@@ -27,38 +30,20 @@ tab1 <- mutable(form, data = test.df, colname = "",
   mutable(summary.function = muStratSummary,
           colname = "Combined Categories")
 
-mutableStrat(form, test.df, drop = FALSE)
-
-mutable(form, data = test.df, subset = hiv == "Positive", colname = "Positive")
-
-tab1
-
-tab2 <- mutable(form, test.df,
+tab2 <- mutable(form,
+                test.df,
                 summary.function = muStratTest,
                 markup.list = list(plain = muExportPlain,
-                  latex = muExportLatex, 
                   html = muExportHTML),
                 colname = "P-value",
                 post.summary.hook = pvalSummaryHook,
                 post.markup.hook = pvalMarkupHook)
 
-tab1 + tab2
-
-tab1 <- mutable(form, data = test.df, colname = "",
-                summary.function = muRownamesSummary,
-                markupList = list(plain = muRownamesPlain,
-                  html = muRownamesHTML)) +
-  mutable(colname = "Combined Categories") +
-  mutable(subset = hiv == "Positive", colname = "Positive")
-
-
-
-str(tab1)
-
-html(tab1,
+html(tab1 + tab2,
      caption = "Baseline Table",
      completeDocument = TRUE,
-     cssFile = "main.css")
+     cssFile = "main.css",
+     file = "html/test.html")
 
 latex(tab1, caption = "Baseline Table")
 

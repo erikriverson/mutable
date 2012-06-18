@@ -75,7 +75,8 @@ muHTMLDocFooter <- function() {
 }
 
 muHTMLHeader <- function(x, caption, summary, ...) {
-  c(paste("<table summary = \"", summary, "\">"),
+  c(paste("<h2> mutable Output </h2>", 
+      "<table summary = \"", summary, "\">"),
     paste("<caption>", caption, "</caption>"),
     "<colgroup>",
     ps("<col id = \"", gsub(" +", "", colnames(x)), "\" />"),
@@ -96,19 +97,20 @@ muExportHTML <- function(x, ...) {
 muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.digits = 1, ...) {
   colname <- gsub(" +", "", colname)
 
-  ## png(paste("html/", colname, "-", name, ".png", sep = ""),
-  ##     width = 200, height = 50, bg = "transparent")
-  ## p1 <- qplot(data[[name]], geom = "density", colour = I("grey90"), fill = I("grey90")) +
-  ##   opts(axis.text.x = theme_blank(),
-  ##        axis.text.y = theme_blank(),
-  ##        axis.ticks = theme_blank(),
-  ##        plot.background = theme_rect("transparent", size = 0),
-  ##        panel.background = theme_rect("transparent", size = 0),
-  ##        plot.margin = unit(c(0, 0, -2, -2), "lines"),
-  ##        axis.ticks.margin = unit(0, "lines")) +
-  ##          labs(x = "", y = "")
-  ## print(p1)
-  ## dev.off()
+  png(paste("html/", colname, "-", name, ".png", sep = ""),
+      width = 200, height = 50, bg = "transparent")
+  p1 <- qplot(data[[name]], geom = "density", colour = I("steelblue1"),
+              fill = I("steelblue1")) +
+    opts(axis.text.x = theme_blank(),
+         axis.text.y = theme_blank(),
+         axis.ticks = theme_blank(),
+         plot.background = theme_rect("transparent", size = 0),
+         panel.background = theme_rect("transparent", size = 0),
+         plot.margin = unit(c(0, 0, -2, -2), "lines"),
+         axis.ticks.margin = unit(0, "lines")) +
+           labs(x = "", y = "")
+  print(p1)
+  dev.off()
 
   ret <- paste(ps("<td class = \"continuous-cell\" id = \"", colname, "-", name,
                      "\" style = \"background-image : url(\'", colname, "-", name, ".png\'",
@@ -125,19 +127,20 @@ muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.dig
 muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digits = 0, ...) {
   colname <- gsub(" +", "", colname)
 
-  ## png(paste("html/", colname, "-", name, ".png", sep = ""),
-  ##     width = 200, height = 50, bg = "transparent")
+  png(paste("html/", colname, "-", name, ".png", sep = ""),
+      width = 200, height = 50, bg = "transparent")
   
-  ## p1 <-qplot(data[[name]]) +
-  ##   opts(axis.text.x = theme_blank(),
-  ##        axis.text.y = theme_blank(),
-  ##        axis.ticks = theme_blank(),
-  ##        plot.background = theme_rect("transparent", size = 0),
-  ##        panel.background = theme_rect("transparent", size = 0),
-  ##        plot.margin = unit(c(0, 0, -2, -2), "lines")) +
-  ##          labs(x = "", y = "")
-  ## print(p1)
-  ## dev.off()
+  p1 <- qplot(data[[name]], binwidth = .05, fill = I("steelblue1"),
+              alpha = I(1)) +
+    opts(axis.text.x = theme_blank(),
+         axis.text.y = theme_blank(),
+         axis.ticks = theme_blank(),
+         plot.background = theme_rect("transparent", size = 0),
+         panel.background = theme_rect("transparent", size = 0),
+         plot.margin = unit(c(0, 0, -2, -2), "lines")) +
+           labs(x = "", y = "")
+  print(p1)
+  dev.off()
   
   dft <- as.data.frame(as.table(x))
   pct <- ps(round(x / sum(x) * 100, round.digits), "\\%")

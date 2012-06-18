@@ -107,8 +107,9 @@ muLatexFooterLongtable <- function(x, caption) {
 }
 
 
-latex.mutable <- function(object, na.print = "", file = "", headerFunction = muLatexHeaderTabular,
-                         footerFunction = muLatexFooterTabular, caption = "",
+latex.mutable <- function(object, na.print = "", file = "",
+                          headerFunction = muLatexHeaderTabular,
+                          footerFunction = muLatexFooterTabular, caption = "",
                           no.table.markup.regex = c("multicol|hline"),
                           ...) {
   x <- object$latex
