@@ -25,7 +25,7 @@ muHTMLDocHeader <- function(cssFile) {
   c("<html>",
     "<head>",
     paste("<link rel = \"stylesheet\" type = \"text/css\" href = \"", cssFile, "\" </>"),
-    "<script type=\"text/javascript\" src=\"http://orgmode.org/mathjax/MathJax.js\">",
+    "<script type=\"text/javascript\" src=\"../../../../../../misc/mathjax/MathJax.js\">",
     "<!--/*--><![CDATA[/*><!--*/",
     "MathJax.Hub.Config({",
     "// Only one of the two following lines, depending on user settings",
@@ -98,7 +98,7 @@ muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.dig
   colname <- gsub(" +", "", colname)
 
   png(paste("html/", colname, "-", name, ".png", sep = ""),
-      width = 200, height = 50, bg = "transparent")
+      width = 100, height = 30, bg = "transparent")
   p1 <- qplot(data[[name]], geom = "density", colour = I("steelblue1"),
               fill = I("steelblue1")) +
     opts(axis.text.x = theme_blank(),
@@ -113,8 +113,8 @@ muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.dig
   dev.off()
 
   ret <- paste(ps("<td class = \"continuous-cell\" id = \"", colname, "-", name,
-                     "\" style = \"background-image : url(\'", colname, "-", name, ".png\'",
-                     ");\"",
+                     " \" style = \"background-image : url(\'", colname, "-", name, ".png\'",
+                     ") ; background-repeat: no-repeat;\"",
                      ">$$\\scriptsize{"),
                round(x[1], round.digits), "}\\;\\normalsize{", 
                round(x[2], round.digits), "}\\;\\scriptsize{",
@@ -127,20 +127,20 @@ muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.dig
 muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digits = 0, ...) {
   colname <- gsub(" +", "", colname)
 
-  png(paste("html/", colname, "-", name, ".png", sep = ""),
-      width = 200, height = 50, bg = "transparent")
+  ## png(paste("html/", colname, "-", name, ".png", sep = ""),
+  ##     width = 200, height = 50, bg = "transparent")
   
-  p1 <- qplot(data[[name]], binwidth = .05, fill = I("steelblue1"),
-              alpha = I(1)) +
-    opts(axis.text.x = theme_blank(),
-         axis.text.y = theme_blank(),
-         axis.ticks = theme_blank(),
-         plot.background = theme_rect("transparent", size = 0),
-         panel.background = theme_rect("transparent", size = 0),
-         plot.margin = unit(c(0, 0, -2, -2), "lines")) +
-           labs(x = "", y = "")
-  print(p1)
-  dev.off()
+  ## p1 <- qplot(data[[name]], binwidth = .05, fill = I("steelblue1"),
+  ##             alpha = I(1)) +
+  ##   opts(axis.text.x = theme_blank(),
+  ##        axis.text.y = theme_blank(),
+  ##        axis.ticks = theme_blank(),
+  ##        plot.background = theme_rect("transparent", size = 0),
+  ##        panel.background = theme_rect("transparent", size = 0),
+  ##        plot.margin = unit(c(0, 0, -2, -2), "lines")) +
+  ##          labs(x = "", y = "")
+  ## print(p1)
+  ## dev.off()
   
   dft <- as.data.frame(as.table(x))
   pct <- ps(round(x / sum(x) * 100, round.digits), "\\%")
