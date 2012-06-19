@@ -25,7 +25,7 @@ muHTMLDocHeader <- function(cssFile) {
   c("<html>",
     "<head>",
     paste("<link rel = \"stylesheet\" type = \"text/css\" href = \"", cssFile, "\" </>"),
-    "<script type=\"text/javascript\" src=\"../../../../../../misc/mathjax/MathJax.js\">",
+    "<script type=\"text/javascript\" src=\"../../../../../../../mathjax/MathJax.js\">",
     "<!--/*--><![CDATA[/*><!--*/",
     "MathJax.Hub.Config({",
     "// Only one of the two following lines, depending on user settings",
