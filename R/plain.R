@@ -9,7 +9,7 @@ muExportPlain.muResponseTestFactor <- muFormatPvalue
 
 muExportPlain.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("", tail(x, length(x) - 1)))
-  names(ret) <- c(name, ps(name,  levels(data[[name]])))
+  names(ret) <- c(name, ps(name, tail(x, length(x) - 1)))
   ret
 }
 
@@ -23,8 +23,8 @@ muExportPlain.muStratSummaryNumeric <- function(x, name, data, round.digits = 2,
 
 muExportPlain.muStratSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   dft <- as.data.frame(as.table(x))
-  pct <- ps(round(x / sum(x) * 100, round.digits), "%")
-  val <- ps(pct, paste(dft[["Freq"]], "/", sum(x)))
+  pct <- ps(round(x / sum(x) * 100, round.digits), "% ")
+  val <- ps(pct, ps(dft[["Freq"]], "/", sum(x)))
   names(val) <- ps(name, names(x))
   val
 }

@@ -56,7 +56,7 @@ muExportLatex.muResponseSummaryFactor <- function(x, name, data, round.digits = 
 
 muExportLatex.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("~~~", tail(x, length(x) - 1)))
-  names(ret) <- c(name, ps(name,  levels(data[[name]])))
+  names(ret) <- c(name, ps(name, length(x) - 1))
   ret
 }
 
