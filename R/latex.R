@@ -56,18 +56,19 @@ muExportLatex.muResponseSummaryFactor <- function(x, name, data, round.digits = 
 
 muExportLatex.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("~~~", tail(x, length(x) - 1)))
-  names(ret) <- c(name, ps(name,  levels(data[[name]])))
+  names(ret) <- c(name, ps(name, length(x) - 1))
   ret
 }
 
 muExportLatex.muRownamesNumeric <- muPrintIdentity
 
-muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2, size = "\\small", ...) {
+muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2,
+                                 location = "h", size = "\\small", ...) {
   if(missing(collabel.just))
     collabel.just <- paste(c("l", rep("c", ncol(x) - 1)), collapse = "")
   
   c("{\\footnotesize",
-    "\\begin{table}", size,
+    "\\begin{table}[", location, "]", size,
     ps("\\caption{", caption , "}"),
     "\\begin{center}", 
     ps("\\begin{tabular}{", collabel.just, "}"),
