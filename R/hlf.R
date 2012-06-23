@@ -13,7 +13,7 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
   
   first <- mutable(formula, data = data, colname = firstcol,
                    summary.function = muRownames,
-                   markup.list = list(plain = muExportPlain,
+                   markup.functions = list(plain = muExportPlain,
                      latex = muExportLatex)) + 
            mutable(summary.function = mutableN,
                    colname = "N", ...)
@@ -25,7 +25,7 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
                         data[[as.character(as.list(formula)[[2]])]]),
                   function(x) mutable(formula, data = x,
                                       summary.function = muStratSummary,
-                                      markup.list = list(plain = muExportPlain,
+                                      markup.functions = list(plain = muExportPlain,
                                         latex = muExportLatex),
                                       colname = x[[as.character(formula)[[2]]]][1], ...)))
 
@@ -34,7 +34,7 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
   if(length(unique(data[[as.character(as.list(formula)[[2]])]])) > 1 & overall) {
     last <- mutable(formula, data,
                     summary.function = muStratSummary,
-                    markup.list = list(plain = muExportPlain,
+                    markup.functions = list(plain = muExportPlain,
                       latex = muExportLatex),
                     colname = "Overall", ...)
 
@@ -55,7 +55,7 @@ mutableResponse <- function(formula, data,
 
   mutable(formula, data = data,
           summary.function = muRownames,
-          markup.list = list(plain = muExportPlain,
+          markup.functions = list(plain = muExportPlain,
             latex = muExportLatex,
             html = muExportHTML),
           colname = firstColumn, ...) +
