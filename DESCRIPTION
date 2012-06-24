@@ -12,8 +12,8 @@ Description: The mutable package allows users to construct objects
   included.  Users can supply their own format functions for these
   output types, and easily create their own.  For example, the
   provided LaTeX output style can be completely changed if the user
-  specifies their own format.latex function. The modular design of the
-  package allows every design decision to be overridden easily and
+  specifies their own muExportLatex function. The modular design of the
+  package allows every markup decision to be overridden easily and
   consistently. The result is that the user is in complete control
   over the final markup produced, and that multiple versions of
   the same table can easily be produced from the same data simultaneously.
