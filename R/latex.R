@@ -56,7 +56,7 @@ muExportLatex.muResponseSummaryFactor <- function(x, name, data, round.digits = 
 
 muExportLatex.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("~~~", tail(x, length(x) - 1)))
-  names(ret) <- c(name, ps(name, length(x) - 1))
+  names(ret) <- c(name, ps(name, tail(x, length(x) - 1)))
   ret
 }
 
@@ -113,7 +113,7 @@ latex.mutable <- function(object, na.print = "", file = "",
                           footerFunction = muLatexFooterTabular, caption = "",
                           no.table.markup.regex = c("multicol|hline"),
                           ...) {
-  x <- object$latex
+  x <- object$markup$latex
   x[is.na(x)] <- na.print
   
   cat(paste(headerFunction(x, caption, ...),
