@@ -63,7 +63,7 @@ muExportLatex.muRownamesFactor <- function(x, name, data, ...) {
 muExportLatex.muRownamesNumeric <- muPrintIdentity
 
 muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2,
-                                 location = "h", size = "\\small", ...) {
+                                 location = "h!", size = "\\small", ...) {
   if(missing(collabel.just))
     collabel.just <- paste(c("l", rep("c", ncol(x) - 1)), collapse = "")
   
