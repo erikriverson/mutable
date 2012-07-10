@@ -11,14 +11,17 @@
 
 ps <- function(...) paste(..., sep = "")
 
+#' @export
 generateRowNames <- function(var, ...) {
   UseMethod("generateRowNames")
 }
 
+#' @S3method generateRowNames default
 generateRowNames.default <- function(var, varName , ...) {
   varName
 }
 
+#' @S3method generateRowNames factor
 generateRowNames.factor <- function(var, varName, ...) {
   c(varName, ps(varName, names(table(var))))
 }
@@ -35,12 +38,14 @@ muInsertRow <- function(mat, row, after) {
     rbind(row, mat)
 }
 
+#' @export
 mutable <- function(x, ...) {
   if(missing(x))
     x <- NULL 
   UseMethod("mutable", x)
 }
 
+#' @S3method mutable function
 mutable.function <- function(x, ...) {
   do.call(x, list(...))
 }
@@ -106,6 +111,7 @@ To combine two tables, they must contain the same markup elements.",
   ret
 }
 
+#' @S3method mutable default
 mutable.default <- function(x, ...) {
   m <- as.list(match.call())[-1]
   if(!"data" %in% names(m))
@@ -118,6 +124,7 @@ mutable.default <- function(x, ...) {
   lst
 }
 
+#' @S3method mutable formula
 mutable.formula <- function(formula, data,
                             summary.function,
                             markup.functions, 
@@ -209,6 +216,7 @@ mutable.formula <- function(formula, data,
   return.list
 }
 
+#' @S3method print mutable
 print.mutable <- function(x, quote = FALSE, na.print = "--", print.rownames = FALSE, ...) {
   x <- x$markup[["plain"]]
   if(!print.rownames)
@@ -228,6 +236,7 @@ muFormatPvalue <- function(x, name, data, threshold = 0.0001, ...) {
   val
 }
 
+#' @S3method summary mutable
 summary.mutable <- function(x) {
   cat("\nCall:\n", deparse(x$formula), "\n\n")
 
