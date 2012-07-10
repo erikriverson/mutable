@@ -1,3 +1,8 @@
+muPrintIdentityHTML <- function(...) {
+  ps("<td>", muPrintIdentity(...), "</td>")
+}
+
+
 html.mutable <- function(object, na.print = "<td></td>", file = "", headerFunction = muHTMLHeader,
                          footerFunction = muHTMLFooter, caption = "", summary = "",
                          completeDocument = FALSE,
@@ -25,7 +30,7 @@ muHTMLDocHeader <- function(cssFile) {
   c("<html>",
     "<head>",
     paste("<link rel = \"stylesheet\" type = \"text/css\" href = \"", cssFile, "\" </>"),
-    "<script type=\"text/javascript\" src=\"../../../../../../../mathjax/MathJax.js\">",
+    "<script type=\"text/javascript\" src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js\">",
     "<!--/*--><![CDATA[/*><!--*/",
     "MathJax.Hub.Config({",
     "// Only one of the two following lines, depending on user settings",
@@ -97,9 +102,7 @@ muExportHTML <- function(x, ...) {
 muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.digits = 1, ...) {
   colname <- gsub(" +", "", colname)
 
-  ret <- paste(ps("<td class = \"continuous-cell\" id = \"", colname, "-", name,
-                     " \" style = \"background-image : url(\'", colname, "-", name, ".png\'",
-                     ") ; background-repeat: no-repeat;\"",
+  ret <- paste(ps('<td class = "continuous-cell" id = "', colname, '-', name, '"',
                      ">$$\\scriptsize{"),
                round(x[1], round.digits), "}\\;\\normalsize{", 
                round(x[2], round.digits), "}\\;\\scriptsize{",
@@ -116,7 +119,7 @@ muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digi
   pct <- ps(round(x / sum(x) * 100, round.digits), "\\%")
 
   val <- c(ps("<td class = \"factor-heading-cell\" id = \"", colname, "-" , name, "\"",
-              "style = \"background-image : url(\'", colname, "-", name, ".png\'",
+
               ");\"></td>"),
            ps(ps("<td class = \"factor-level-cell\" id = \"", colname, "-", name, names(x)),
               "\"> $$", pct,
@@ -126,8 +129,8 @@ muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digi
   val
 }
 
-muExportHTML.muResponseSummaryNumeric <- muPrintIdentity
-muExportHTML.muResponseSummaryFactor <- muPrintIdentity
+muExportHTML.muResponseSummaryNumeric <- muPrintIdentityHTML
+muExportHTML.muResponseSummaryFactor <- muPrintIdentityHTML
 
 muExportHTML.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("&nbsp;", tail(x, length(x) - 1)))
@@ -159,4 +162,4 @@ muExportHTML.muStratTestFactor <- muFormatPvalueHTML
 muExportHTML.muResponseTestNumeric <- muFormatPvalueHTML
 muExportHTML.muResponseTestFactor <- muFormatPvalueHTML
 
-muExportHTML.default <- muPrintIdentity
+muExportHTML.default <- muPrintIdentityHTML
