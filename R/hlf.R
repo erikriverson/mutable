@@ -10,13 +10,16 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
     data[ind] <- lapply(data[ind], "[", drop = TRUE)
   }
 
-  
+
+  markup.functions <- list(plain = muExportPlain,
+                     latex = muExportLatex,
+                     html  = muExportHTML)
+
   first <- mutable(formula, data = data, colname = firstcol,
                    summary.function = muRownames,
-                   markup.functions = list(plain = muExportPlain,
-                     latex = muExportLatex)) + 
-           mutable(summary.function = mutableN,
-                   colname = "N", ...)
+                   markup.functions =  markup.functions) + 
+                     mutable(summary.function = mutableN,
+                             colname = "N", ...)
 
 
   middle <-
@@ -25,17 +28,16 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
                         data[[as.character(as.list(formula)[[2]])]]),
                   function(x) mutable(formula, data = x,
                                       summary.function = muStratSummary,
-                                      markup.functions = list(plain = muExportPlain,
-                                        latex = muExportLatex),
-                                      colname = x[[as.character(formula)[[2]]]][1], ...)))
+                                      markup.functions = markup.functions,
+                                      colname = x[[as.character(formula)[[2]]]][1],
+                                      ...)))
 
   table <- first + middle
 
   if(length(unique(data[[as.character(as.list(formula)[[2]])]])) > 1 & overall) {
     last <- mutable(formula, data,
                     summary.function = muStratSummary,
-                    markup.functions = list(plain = muExportPlain,
-                      latex = muExportLatex),
+                    markup.functions = markup.functions, 
                     colname = "Overall", ...)
 
     table <- table + last
