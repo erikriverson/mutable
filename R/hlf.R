@@ -17,10 +17,9 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
 
   first <- mutable(formula, data = data, colname = firstcol,
                    summary.function = muRownames,
-                   markup.functions =  markup.functions) + 
+                   markup.functions =  markup.functions, useVarName = FALSE) + 
                      mutable(summary.function = mutableN,
                              colname = "N", ...)
-
 
   middle <-
     Reduce("+",
