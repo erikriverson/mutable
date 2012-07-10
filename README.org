@@ -1,0 +1,11 @@
+
+* mutable
+The mutable package provides a flexible method for generating markup
+tables from the R programming language. 
+
+* Installation
+
+* Introduction 
+
+* Examples
+
