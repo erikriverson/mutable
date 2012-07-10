@@ -1,5 +1,7 @@
-muPrintIdentityHTML <- function(...) {
-  ps("<td>", muPrintIdentity(...), "</td>")
+muPrintIdentityHTML <- function(x, name, data, ...) {
+  ret <- ps("<td>", muPrintIdentity(x, name, data...), "</td>")
+  names(ret) <- name
+  ret
 }
 
 
