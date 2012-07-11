@@ -1,20 +1,34 @@
 Package: mutable
 Version: 0.0-1
 Date: 2011-02-25
-Title: Modular approach to generating customized tables in markup languages (LaTeX, HTML, plain text, ...)
+Title: Modular approach to generating customized tables in markup languages
+    (LaTeX, HTML, plain text, ...)
 Author: Erik Iverson <erik@sigmafield.org>
 Maintainer: Erik Iverson <erik@sigmafield.org>
-Suggests: ggplot2, Hmisc
-Imports: grDevices
+Suggests:
+    ggplot2,
+    Hmisc
+Imports:
+    grDevices
 Description: The mutable package allows users to construct objects
-  representing arbitrary tabular material and output the object into a
-  variety of formats. LaTeX, HTML, and plain text output functions are
-  included.  Users can supply their own format functions for these
-  output types, and easily create their own.  For example, the
-  provided LaTeX output style can be completely changed if the user
-  specifies their own muExportLatex function. The modular design of the
-  package allows every markup decision to be overridden easily and
-  consistently. The result is that the user is in complete control
-  over the final markup produced, and that multiple versions of
-  the same table can easily be produced from the same data simultaneously.
+    representing arbitrary tabular material and output the object into a
+    variety of formats. LaTeX, HTML, and plain text output functions are
+    included.  Users can supply their own format functions for these
+    output types, and easily create their own.  For example, the
+    provided LaTeX output style can be completely changed if the user
+    specifies their own muExportLatex function. The modular design of the
+    package allows every markup decision to be overridden easily and
+    consistently. The result is that the user is in complete control
+    over the final markup produced, and that multiple versions of
+    the same table can easily be produced from the same data simultaneously.
 License: GPL (>= 2)
+Collate:
+    'hlf.R'
+    'html.R'
+    'latex.R'
+    'mutable.R'
+    'plain.R'
+    'response.R'
+    'rownames.R'
+    'strat.R'
+    'tests.R'

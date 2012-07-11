@@ -1,0 +1,24 @@
+
+* mutable
+The mutable package provides a flexible method for generating markup
+tables from the R programming language.  It allows users to construct
+objects representing arbitrary tabular material and output the object
+into a variety of formats. LaTeX, HTML, and plain text output
+functions are included by default.
+
+Users can supply their own formatting functions for these output
+types, and easily create their own.  For example, the provided LaTeX
+output style for factors (percentage and fraction) can be completely
+changed if the user specifies their own muExportLatex function. The
+modular design of the package allows every markup decision to be
+overridden easily and consistently. The result is that the user is in
+complete control over the final markup produced, and that multiple
+versions of the same table can easily be produced from the same data
+simultaneously.
+
+* Installation
+
+* Introduction 
+
+* Examples
+
