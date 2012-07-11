@@ -6,9 +6,11 @@
 \begin{document}
 
 <<foo,include=FALSE,echo=FALSE>>=
+
 options(keep.source = TRUE, width = 60)
 foo <- packageDescription("mutable")
 library(mutable)
+library(Hmisc)
 
 pead.bl <- data.frame(hiv = sample(c("Positive", "Negative"), 100, replace = TRUE),
                       age = rnorm(100, c(50, 40), sd = 10),
@@ -76,7 +78,7 @@ process.
 Another issue related to the first was that I could not obtain an R
 object with a representation of the LaTeX code that would be written
 out to a file upon calling the latex function.  If this were available,
-I could have finely tuned the LaTeX code 'by hand' as it were, without
+I could have finely tuned the LaTeX code ``by hand'' as it were, without
 introducing new parameters to the latex function. 
 
 More substantial changes to the output required even more challenging
@@ -84,7 +86,7 @@ procedures.  When dealing with categorical variables, I find it useful
 to prohibit pagebreaks in the middle of the levels of the variable.
 Adding this functionality required tracking down the appropriate
 places in the function to make the change, and then hoping that it
-didn't break anything else.
+did not break anything else.
 
 In short, these functions take an omnibus approach to generating
 markup.  If you want to alter the resulting markup code, you have to
@@ -152,12 +154,12 @@ A summary of the arguments is given in \ref{ref:args}.
 
 
 We define a table by calling mutable once for each column. We combine
-columns into single table object with the '+' operator. We need a
+columns into single table object with the ``+'' operator. We need a
 formula and a data.frame, which will proprogate from the first call to
 subsequent calls if they are not specified. This is similar in style
 to how ggplot2 currently functions. In ggplot2, you combine different
-'layers' to generate a statistical graphic. The layers are combined
-using the '+' operator, and subsequent layers will use the data
+``layers'' to generate a statistical graphic. The layers are combined
+using the ``+'' operator, and subsequent layers will use the data
 specified by the first if not overridden.
 
 Each column (i.e., call to mutable) needs a summary.function, and
@@ -175,12 +177,12 @@ the colname argument must be specified.
 
 form <- hiv ~ age + gender + diffs + inc4x + bmi
 
-tab1 <- etable(form, data = pead.bl, colname = "Variable",
+tab1 <- mutable(form, data = pead.bl, colname = "Variable",
               summary.function = erownames) +
-  etable(colname = "Combined Categories") +
-  etable(subset = hiv == "Positive", colname = "Positive") +
-  etable(subset = hiv == "Negative", colname = "Negative") +
-  etable(summary.function = etest, colname = "P-value")
+  mutable(colname = "Combined Categories") +
+  mutable(subset = hiv == "Positive", colname = "Positive") +
+  mutable(subset = hiv == "Negative", colname = "Negative") +
+  mutable(summary.function = etest, colname = "P-value")
 
 latex(tab1,
      caption = "Baseline Table")

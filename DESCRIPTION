@@ -6,10 +6,10 @@ Title: Modular approach to generating customized tables in markup languages
 Author: Erik Iverson <erik@sigmafield.org>
 Maintainer: Erik Iverson <erik@sigmafield.org>
 Suggests:
-    ggplot2,
-    Hmisc
+    ggplot2
 Imports:
-    grDevices
+    grDevices,
+    Hmisc
 Description: The mutable package allows users to construct objects
     representing arbitrary tabular material and output the object into a
     variety of formats. LaTeX, HTML, and plain text output functions are
@@ -32,3 +32,4 @@ Collate:
     'rownames.R'
     'strat.R'
     'tests.R'
+    'themes.R'
