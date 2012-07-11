@@ -21,14 +21,21 @@ simultaneously.
 * Introduction 
 
 * Examples
-```R
-load(url('http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/support.sav'))
-label(support$sex) <- "Gender"
-label(support$income) <- "Income"
+Load the data
+: load(url('http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/support.sav'))
 
-m1 <- mutableStrat(dzclass ~ age + sex + income, data = support)
-m1 
-html(m1, completeDocument = TRUE, file = "mutable.html")
-```
+Give unlabeled variables appropriate labels
+: label(support$sex) <- "Gender"
+: label(support$income) <- "Income"
+
+Use a high-level mutable function to create a complete table, by default in plain text, LaTeX, and HTML formats
+: m1 <- mutableStrat(dzclass ~ age + sex + income, data = support)
+
+Print the table in the running R session
+: m1 
+
+Write out HTML file, which uses MathJax by default
+:html(m1, completeDocument = TRUE, file = "mutable.html")
+
 
 
