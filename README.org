@@ -21,7 +21,7 @@ simultaneously.
 * Introduction 
 
 * Examples
-#+begin_example
+
 load(url('http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/support.sav'))
 label(support$sex) <- "Gender"
 label(support$income) <- "Income"
@@ -29,6 +29,6 @@ label(support$income) <- "Income"
 m1 <- mutableStrat(dzclass ~ age + sex + income, data = support)
 m1 
 html(m1, completeDocument = TRUE, file = "mutable.html")
-#+end_example
+
 
 
