@@ -1,8 +1,6 @@
 \documentclass{article}
-
 \usepackage{graphics}
 \usepackage{lmodern}
-
 %\VignetteIndexEntry{mutable}
 
 \begin{document}
@@ -28,7 +26,7 @@ label(pead.bl$bmi) <- "BMI"
 
 @
 
-\title{Creating Markup Tables with the \texttt{mutable} Package (Version \Sexpr{foo[["Version"]]})}
+\title{Design Goals of the \texttt{mutable} Package (Version \Sexpr{foo[["Version"]]})}
 
 \author{Erik Iverson}
 \maketitle
@@ -37,30 +35,32 @@ label(pead.bl$bmi) <- "BMI"
 
 \texttt{mutable} is: 
 \begin{itemize}
-  \item An R package to create statistical tables ($\mu$ table)
-  \item Tables are completely user-defined, and easily changed to meet the user's exact needs
-  \item Tables can be exported to several different markup languages
+  \item An R package to create statistical tables: ($\mu$ tables)
+  \item Table defaults are easily changed (mutated) to meet the your exact needs 
+  \item Multiple \textbf{m}ark\textbf{u}p \textbf{tables} can be produced simultaneously 
 \end{itemize}
 
-\section{How does \texttt{mutable} differ from other table packages?}
+\section{How does \texttt{mutable} differ from other table-generating R packages?}
 
 There are already several packages on CRAN that generate
-tables. Several of these even generate markup so that you can
-display the resulting table in \LaTeX{} or HTML. 
+tables. Several of these packages contain functions that generate a
+markup version of the table. For example, you can then view the
+resulting table in a PDF file compiled from \LaTeX{} or in a web
+browser using HTML.
 
+\subsection{The Hmisc package}
+Perhaps the most well-known of these markup-table-producing functions are
+contained in the \texttt{Hmisc} package, through the
+\texttt{summary.formula} and \texttt{latex} functions.  I have used
+these functions for a long time to generate \LaTeX{} tables for my
+statistical reports.  They have served me and countless others very
+well, and will continue to do so.
 
-\subsection{Hmisc}
-Perhaps the most well-known of these functions are contained in the
-\texttt{Hmisc} package, through the \texttt{summary.formula} and
-\texttt{latex} functions.  I have used these functions for a long time
-to generate \LaTeX{} tables for my statistical reports.  They have
-served me and countless others very well, and will continue to do so.
-
-However, I continually ran into problems when the output wasn't just
+However, I began to encounter situations where the output was not just
 as I had hoped. There are \texttt{latex} methods for the objects
 created by \texttt{summary.formula}.  The general approach is to
 create an object using summary.formula, and then pass it to the latex
-function. 
+function.
 
 There are literally dozens of parameters to the latex function, many
 of which control some small piece of the resulting latex output.  For
