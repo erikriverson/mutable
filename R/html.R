@@ -114,6 +114,18 @@ muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.dig
   ret
 }
 
+muExportHTML.muStratSummaryMean <- function(x, name, data, colname, round.digits = 1, ...) {
+  colname <- gsub(" +", "", colname)
+
+  ret <- paste(ps('<td class = "continuous-cell" id = "', colname, '-', name, '"',
+                     ">$$"),
+               round(x[1], round.digits), "$$($$",
+               round(x[2], round.digits), "$$)</td>")
+
+  names(ret) <- name
+  ret
+}
+
 muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digits = 0, ...) {
   colname <- gsub(" +", "", colname)
 
@@ -162,5 +174,4 @@ muExportHTML.muStratTestNumeric <- muFormatPvalueHTML
 muExportHTML.muStratTestFactor <- muFormatPvalueHTML
 muExportHTML.muResponseTestNumeric <- muFormatPvalueHTML
 muExportHTML.muResponseTestFactor <- muFormatPvalueHTML
-
 muExportHTML.default <- muPrintIdentityHTML

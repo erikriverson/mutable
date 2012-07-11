@@ -9,6 +9,14 @@ muStratSummary.default <- function(x, stratVariable, data, ...) {
   quant
 }
 
+muStratSummary.default <- function(x, stratVariable, data, ...) {
+  mn <- mean(x, na.rm = TRUE)
+  sd <- sd(x, na.rm = TRUE)
+  ret <- c(mn, sd)
+  class(ret) <- "muStratSummaryMean"
+  ret
+}
+
 
 muStratSummary.factor <- function(x, stratVariable, data, ...) {
   tbl <- table(x, ...)

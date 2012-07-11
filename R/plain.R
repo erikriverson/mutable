@@ -21,6 +21,12 @@ muExportPlain.muStratSummaryNumeric <- function(x, name, data, round.digits = 2,
   val
 }
 
+muExportPlain.muStratSummaryMean <- function(x, name, data, round.digits = 2, ... ) {
+  val <- paste(round(x, round.digits), collapse = "/")
+  names(val) <- name
+  val
+}
+
 muExportPlain.muStratSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   dft <- as.data.frame(as.table(x))
   pct <- ps(round(x / sum(x) * 100, round.digits), "% ")

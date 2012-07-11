@@ -26,6 +26,16 @@ muExportLatex.muStratSummaryNumeric <- function(x, name, data, round.digits = 1,
   ret
 }
 
+muExportLatex.muStratSummaryMean <- function(x, name, data, round.digits = 1, ...) {
+  ret <- paste(sprintf(ps("%.", round.digits, "f"), x[1]),
+               "$(", 
+               sprintf(ps("%.", round.digits, "f"), x[2]),
+               ")$")
+
+  names(ret) <- name
+  ret
+}
+
 muExportLatex.muStratSummaryFactor <- function(x, name, data, round.digits = 0, ...) {
   dft <- as.data.frame(as.table(x))
 
