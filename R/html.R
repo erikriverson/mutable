@@ -1,5 +1,5 @@
 muPrintIdentityHTML <- function(x, name, data, ...) {
-  ret <- ps("<td>$$", muPrintIdentity(x, name, data...), "$$</td>")
+  ret <- ps("<td> \\(", muPrintIdentity(x, name, data...), "\\) </td>")
   names(ret) <- name
   ret
 }
@@ -10,11 +10,11 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
                          footerFunction = muHTMLFooter,
                          documentHeaderFunction = muHTMLDocHeader,
                          documentFooterFunction = muHTMLDocFooter,
-                         caption = "", summary = "",
+                         caption = "", 
                          completeDocument = FALSE,
-                         cssFile = "", 
+                         cssFile = "",
                          ...) {
-  
+
   x <- object$markup[["html"]]
 
   if(is.null(x)) {
@@ -23,24 +23,26 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
   }
   
   x[is.na(x)] <- na.print
+  newline <- "\n"
 
   if(completeDocument)
-    cat(paste(documentHeaderFunction(cssFile), collapse = "\n"),
-        "\n", file = file, append = FALSE)
+    cat(paste(documentHeaderFunction(cssFile), collapse = newline),
+        newline, file = file, append = FALSE)
       
-  cat(paste(headerFunction(x, caption, summary, ...),
-            collapse = "\n"), "\n",
+  cat(paste(headerFunction(x, caption, ...),
+            collapse = newline), newline,
       file = file, append = completeDocument)
   
   cat(paste("", apply(x, 1, paste, collapse = " "),
-            collapse = "</tr>\n"), "</tr>\n", file = file,
-      append = TRUE)
+            collapse = ps("</tr>", newline)),
+            ps("</tr>", newline), file = file,
+            append = TRUE)
   
-  cat(paste(footerFunction(x, caption), collapse = "\n"), "\n",
+  cat(paste(footerFunction(x, caption), collapse = newline), newline,
       file = file, append = TRUE)
 
   if(completeDocument)
-    cat(paste(documentFooterFunction(), collapse = "\n"), "\n",
+    cat(paste(documentFooterFunction(), collapse = newline), newline,
         file = file, append = TRUE)
 }
 
@@ -58,8 +60,8 @@ muHTMLDocHeader <- function(cssFile) {
     "    extensions: [\"tex2jax.js\",\"TeX/AMSmath.js\",\"TeX/AMSsymbols.js\",",
     "                 \"TeX/noUndefined.js\"],",
     "    tex2jax: {",
-    "        inlineMath: [ [\"\\(\",\"\\)\"] ],",
-    "        displayMath: [ ['$$','$$'], [\"\\[\",\"\\]\"] ],",
+    "        inlineMath: [ ['\\\\(','\\\\)'] ]", 
+    "        displayMath: [ ['$$','$$'], ['\\[','\\]'] ],",
     "        skipTags: [\"script\",\"noscript\",\"style\",\"textarea\",\"pre\",\"code\"],",
     "        ignoreClass: \"tex2jax_ignore\",",
     "        processEscapes: false,",
@@ -97,16 +99,16 @@ muHTMLDocFooter <- function() {
     "</html>")
 }
 
-muHTMLHeader <- function(x, caption, summary, ...) {
-  c(paste("<h2> mutable Output </h2>", 
-      "<table summary = \"", summary, "\">"),
-    paste("<caption>", caption, "</caption>"),
-    "<colgroup>",
-    ps("<col id = \"", gsub(" +", "", colnames(x)), "\" />"),
-    "</colgroup>",
-    "<tr>",
-    paste("<th scope = \"col\">", colnames(x), "</th>"),
-    "</tr>")
+muHTMLHeader <- function(x, caption, ...) {
+  c(paste(
+      "<table>", 
+      paste("<caption>", caption, "</caption>"),
+      "<colgroup>",
+      ps("<col id = \"", gsub(" +", "", colnames(x)), "\" />"),
+      "</colgroup>",
+      "<tr>",
+      paste("<th scope = \"col\">", colnames(x), "</th>"),
+      "</tr>")
 }
 
 muHTMLFooter <- function(x, caption) {
@@ -121,10 +123,10 @@ muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.dig
   colname <- gsub(" +", "", colname)
 
   ret <- paste(ps('<td class = "continuous-cell" id = "', colname, '-', name, '"',
-                     ">$$\\scriptsize{"),
+                     "> \\( \\scriptsize{"),
                round(x[1], round.digits), "}\\;\\normalsize{", 
                round(x[2], round.digits), "}\\;\\scriptsize{",
-               round(x[3], round.digits), "}$$</td>")
+               round(x[3], round.digits), "} \\) </td>")
 
   names(ret) <- name
   ret
@@ -134,9 +136,9 @@ muExportHTML.muStratSummaryMean <- function(x, name, data, colname, round.digits
   colname <- gsub(" +", "", colname)
 
   ret <- paste(ps('<td class = "continuous-cell" id = "', colname, '-', name, '"',
-                     ">$$"),
-               round(x[1], round.digits), "$$($$",
-               round(x[2], round.digits), "$$)</td>")
+                     "> \\( "),
+               round(x[1], round.digits), " \\) ( \\(",
+               round(x[2], round.digits), " \\) )</td>")
 
   names(ret) <- name
   ret
@@ -151,8 +153,8 @@ muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digi
   val <- c(ps("<td class = \"factor-heading-cell\" id = \"", colname, "-" , name, "\"",
               ");\"></td>"),
            ps(ps("<td class = \"factor-level-cell\" id = \"", colname, "-", name, names(x)),
-              "\"> $$", pct,
-              "\\;\\;\\frac{", ps(dft[["Freq"]], "}{", sum(x), "}$$ </td>")))
+              "\"> \\( ", pct,
+              "\\;\\;\\frac{", ps(dft[["Freq"]], "}{", sum(x), "} \\) </td>")))
 
   names(val) <- c(name, ps(name, names(x)))
   val
@@ -181,7 +183,7 @@ muExportHTML.muRownamesNumeric <- function(x, name, data, ...) {
 
 muFormatPvalueHTML <- function(x, name, data, colname, ...) {
   pval <- muFormatPvalue(x, name, data)
-  ret <- ps("<td id = \"pval-", name, "\"", ">$$", pval, "$$</td>")
+  ret <- ps("<td id = \"pval-", name, "\"", "> \\(", pval, "\\) </td>")
   names(ret) <- name
   ret
 }
