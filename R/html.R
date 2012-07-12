@@ -100,15 +100,14 @@ muHTMLDocFooter <- function() {
 }
 
 muHTMLHeader <- function(x, caption, ...) {
-  c(paste(
-      "<table>", 
-      paste("<caption>", caption, "</caption>"),
-      "<colgroup>",
-      ps("<col id = \"", gsub(" +", "", colnames(x)), "\" />"),
-      "</colgroup>",
-      "<tr>",
-      paste("<th scope = \"col\">", colnames(x), "</th>"),
-      "</tr>")
+  c("<table>", 
+    paste("<caption>", caption, "</caption>"),
+    "<colgroup>",
+    ps("<col id = \"", gsub(" +", "", colnames(x)), "\" />"),
+    "</colgroup>",
+    "<tr>",
+    paste("<th scope = \"col\">", colnames(x), "</th>"),
+    "</tr>")
 }
 
 muHTMLFooter <- function(x, caption) {
