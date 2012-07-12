@@ -5,27 +5,43 @@ muPrintIdentityHTML <- function(x, name, data, ...) {
 }
 
 
-html.mutable <- function(object, na.print = "<td></td>", file = "", headerFunction = muHTMLHeader,
-                         footerFunction = muHTMLFooter, caption = "", summary = "",
-                         completeDocument = FALSE,
+html.mutable <- function(object, na.print = "<td></td>", file = "",
+                         headerFunction = muHTMLHeader,
+                         footerFunction = muHTMLFooter,
                          documentHeaderFunction = muHTMLDocHeader,
                          documentFooterFunction = muHTMLDocFooter,
+                         caption = "", summary = "",
+                         completeDocument = FALSE,
                          cssFile = "", 
                          ...) {
-  x <- object$markup$html
+  
+  x <- object$markup[["html"]]
+
+  if(is.null(x)) {
+    cat("No HTML table present in this object\n")
+    return()
+  }
+  
   x[is.na(x)] <- na.print
 
   if(completeDocument)
-    cat(paste(documentHeaderFunction(cssFile), collapse = "\n"), "\n", file = file, append = FALSE)
+    cat(paste(documentHeaderFunction(cssFile), collapse = "\n"),
+        "\n", file = file, append = FALSE)
       
-  cat(paste(headerFunction(x, caption, summary, ...), collapse = "\n"), "\n",
+  cat(paste(headerFunction(x, caption, summary, ...),
+            collapse = "\n"), "\n",
       file = file, append = completeDocument)
-  cat(paste("",apply(x, 1, paste, collapse = " "), collapse = "</tr>\n"), "</tr>\n", file = file,
+  
+  cat(paste("", apply(x, 1, paste, collapse = " "),
+            collapse = "</tr>\n"), "</tr>\n", file = file,
       append = TRUE)
-  cat(paste(footerFunction(x, caption), collapse = "\n"), "\n", file = file, append = TRUE)
+  
+  cat(paste(footerFunction(x, caption), collapse = "\n"), "\n",
+      file = file, append = TRUE)
 
   if(completeDocument)
-    cat(paste(documentFooterFunction(), collapse = "\n"), "\n", file = file, append = TRUE)
+    cat(paste(documentFooterFunction(), collapse = "\n"), "\n",
+        file = file, append = TRUE)
 }
 
 muHTMLDocHeader <- function(cssFile) {
