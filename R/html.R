@@ -3,9 +3,10 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
                          footerFunction = muHTMLFooter,
                          documentHeaderFunction = muHTMLDocHeader,
                          documentFooterFunction = muHTMLDocFooter,
-                         caption = "", 
+                         caption = "",
+                         footnote = "", 
                          completeDocument = FALSE,
-                         cssFile = "",
+                         cssFile = NULL,
                          ...) {
 
   x <- object$markup[["html"]]
@@ -22,7 +23,7 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
     cat(paste(documentHeaderFunction(cssFile), collapse = newline),
         newline, file = file, append = FALSE)
       
-  cat(paste(headerFunction(x, caption, ...),
+  cat(paste(headerFunction(x, caption, footnote, ...),
             collapse = newline), newline,
       file = file, append = completeDocument)
   
@@ -31,7 +32,7 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
             ps("</tr>", newline), file = file,
             append = TRUE)
   
-  cat(paste(footerFunction(x, caption), collapse = newline), newline,
+  cat(paste(footerFunction(x), collapse = newline), newline,
       file = file, append = TRUE)
 
   if(completeDocument)
@@ -47,8 +48,10 @@ muPrintIdentityHTML <- function(x, name, data, ...) {
 }
 
 muHTMLDocHeader <- function(cssFile) {
-  c("<html>",
+  c("<!DOCTYPE HTML>",
+    "<html>",
     "<head>",
+    if(!is.null(cssFile))
     ps('<link rel = "stylesheet" type = "text/css" href = "', cssFile, '" </>'),
     "</head>",
     "<body>")
@@ -59,19 +62,31 @@ muHTMLDocFooter <- function() {
     "</html>")
 }
 
-muHTMLHeader <- function(x, caption, ...) {
+muHTMLHeader <- function(x, caption, footnote, ...) {
   c("<table>", 
     paste("<caption>", caption, "</caption>"),
     "<colgroup>",
     ps("<col id = \"", gsub(" +", "", colnames(x)), "\" />"),
     "</colgroup>",
+    "<thead>",
     "<tr>",
     paste("<th scope = \"col\">", colnames(x), "</th>"),
-    "</tr>")
+    "</tr>",
+    "</thead>",
+    "<tfoot>",
+    "<tr>",
+    "<td></td>",
+    "<td colspan=0>", 
+    footnote,
+    "</td>",
+    "</tr>",
+    "</tfoot>",
+    "<tbody>")
 }
 
-muHTMLFooter <- function(x, caption) {
-  c("</table>")
+muHTMLFooter <- function(x) {
+  c("</tbody>",
+    "</table>")
 }
 
 muExportHTML <- function(x, ...) {
@@ -113,7 +128,7 @@ muExportHTML.muStratSummaryFactor <- function(x, name, data, colname,
   pct <- ps(round(x / sum(x) * 100, round.digits), "\\%")
 
   val <- c(ps("<td class = \"factor-heading-cell\" id = \"", colname, "-" , name, "\"",
-              ");\"></td>"),
+              "></td>"),
            ps(ps("<td class = \"factor-level-cell\" id = \"", colname, "-", name, names(x)),
               "\">  ",
               muExportPlain(x, name, data, round.digits, ...),
