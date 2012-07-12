@@ -1,10 +1,3 @@
-muPrintIdentityHTML <- function(x, name, data, ...) {
-  ret <- ps("<td> \\(", muPrintIdentity(x, name, data...), "\\) </td>")
-  names(ret) <- name
-  ret
-}
-
-
 html.mutable <- function(object, na.print = "<td></td>", file = "",
                          headerFunction = muHTMLHeader,
                          footerFunction = muHTMLFooter,
@@ -46,50 +39,17 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
         file = file, append = TRUE)
 }
 
+
+muPrintIdentityHTML <- function(x, name, data, ...) {
+  ret <- ps("<td>", muPrintIdentity(x, name, data...), "</td>")
+  names(ret) <- name
+  ret
+}
+
 muHTMLDocHeader <- function(cssFile) {
   c("<html>",
     "<head>",
-    paste("<link rel = \"stylesheet\" type = \"text/css\" href = \"", cssFile, "\" </>"),
-    "<script type=\"text/javascript\" src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js\">",
-    "<!--/*--><![CDATA[/*><!--*/",
-    "MathJax.Hub.Config({",
-    "// Only one of the two following lines, depending on user settings",
-    "// First allows browser-native MathML display, second forces HTML/CSS",
-    "//  config: [\"MMLorHTML.js\"], jax: [\"input/TeX\"],",
-    "    jax: [\"input/TeX\", \"output/HTML-CSS\"],",
-    "    extensions: [\"tex2jax.js\",\"TeX/AMSmath.js\",\"TeX/AMSsymbols.js\",",
-    "                 \"TeX/noUndefined.js\"],",
-    "    tex2jax: {",
-    "        inlineMath: [ ['\\\\(','\\\\)'] ]", 
-    "        displayMath: [ ['$$','$$'], ['\\[','\\]'] ],",
-    "        skipTags: [\"script\",\"noscript\",\"style\",\"textarea\",\"pre\",\"code\"],",
-    "        ignoreClass: \"tex2jax_ignore\",",
-    "        processEscapes: false,",
-    "        processEnvironments: true,",
-    "        preview: \"TeX\"",
-    "    },",
-    "    showProcessingMessages: true,",
-    "    displayAlign: \"center\",",
-    "    displayIndent: \"2em\",",
-    "    \"HTML-CSS\": {",
-    "         scale: 100,",
-    "         availableFonts: [\"STIX\",\"TeX\"],",
-    "         preferredFont: \"TeX\",",
-    "         webFont: \"TeX\",",
-    "         imageFont: \"TeX\",",
-    "         showMathMenu: true,",
-    "    },",
-    "    MMLorHTML: {",
-    "         prefer: {",
-    "             MSIE:    \"MML\",",
-    "             Firefox: \"MML\",",
-    "             Opera:   \"HTML\",",
-    "             other:   \"HTML\"",
-    "         }",
-    "    }",
-    "});",
-    "/*]]>*///-->",
-    "</script>",
+    ps('<link rel = "stylesheet" type = "text/css" href = "', cssFile, '" </>'),
     "</head>",
     "<body>")
 }
@@ -118,32 +78,35 @@ muExportHTML <- function(x, ...) {
   UseMethod("muExportHTML")
 }
 
-muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname, round.digits = 1, ...) {
+muExportHTML.muStratSummaryNumeric <- function(x, name, data, colname,
+                                               round.digits = 1, ...) {
   colname <- gsub(" +", "", colname)
 
   ret <- paste(ps('<td class = "continuous-cell" id = "', colname, '-', name, '"',
-                     "> \\( \\scriptsize{"),
+                     ">  \\scriptsize{"),
                round(x[1], round.digits), "}\\;\\normalsize{", 
                round(x[2], round.digits), "}\\;\\scriptsize{",
-               round(x[3], round.digits), "} \\) </td>")
+               round(x[3], round.digits), "}  </td>")
 
   names(ret) <- name
   ret
 }
 
-muExportHTML.muStratSummaryMean <- function(x, name, data, colname, round.digits = 1, ...) {
+muExportHTML.muStratSummaryMean <- function(x, name, data, colname,
+                                            round.digits = 1, ...) {
   colname <- gsub(" +", "", colname)
 
   ret <- paste(ps('<td class = "continuous-cell" id = "', colname, '-', name, '"',
-                     "> \\( "),
-               round(x[1], round.digits), " \\) ( \\(",
-               round(x[2], round.digits), " \\) )</td>")
+                     ">  "),
+               round(x[1], round.digits), "  ( ",
+               round(x[2], round.digits), "  )</td>")
 
   names(ret) <- name
   ret
 }
 
-muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digits = 0, ...) {
+muExportHTML.muStratSummaryFactor <- function(x, name, data, colname,
+                                              round.digits = 0, ...) {
   colname <- gsub(" +", "", colname)
 
   dft <- as.data.frame(as.table(x))
@@ -152,15 +115,13 @@ muExportHTML.muStratSummaryFactor <- function(x, name, data, colname, round.digi
   val <- c(ps("<td class = \"factor-heading-cell\" id = \"", colname, "-" , name, "\"",
               ");\"></td>"),
            ps(ps("<td class = \"factor-level-cell\" id = \"", colname, "-", name, names(x)),
-              "\"> \\( ", pct,
-              "\\;\\;\\frac{", ps(dft[["Freq"]], "}{", sum(x), "} \\) </td>")))
+              "\">  ",
+              muExportPlain(x, name, data, round.digits, ...),
+              "</td>"))
 
   names(val) <- c(name, ps(name, names(x)))
   val
 }
-
-muExportHTML.muResponseSummaryNumeric <- muPrintIdentityHTML
-muExportHTML.muResponseSummaryFactor <- muPrintIdentityHTML
 
 muExportHTML.muRownamesFactor <- function(x, name, data, ...) {
   ret <- c(x[1], paste("&nbsp;", tail(x, length(x) - 1)))
@@ -182,7 +143,7 @@ muExportHTML.muRownamesNumeric <- function(x, name, data, ...) {
 
 muFormatPvalueHTML <- function(x, name, data, colname, ...) {
   pval <- muFormatPvalue(x, name, data)
-  ret <- ps("<td id = \"pval-", name, "\"", "> \\(", pval, "\\) </td>")
+  ret <- ps("<td id = \"pval-", name, "\"", "> ", pval, " </td>")
   names(ret) <- name
   ret
 }
@@ -191,4 +152,7 @@ muExportHTML.muStratTestNumeric <- muFormatPvalueHTML
 muExportHTML.muStratTestFactor <- muFormatPvalueHTML
 muExportHTML.muResponseTestNumeric <- muFormatPvalueHTML
 muExportHTML.muResponseTestFactor <- muFormatPvalueHTML
+
 muExportHTML.default <- muPrintIdentityHTML
+muExportHTML.muResponseSummaryNumeric <- muPrintIdentityHTML
+muExportHTML.muResponseSummaryFactor <- muPrintIdentityHTML

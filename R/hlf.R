@@ -4,16 +4,16 @@ mutableN <- function(x, columnVariable, data, ...) {
 }
 
 mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
-                         drop = FALSE, ...) {
+                         drop = FALSE, markup.functions = NULL, ...) {
   if(drop) {
     ind <- sapply(data, is.factor)
     data[ind] <- lapply(data[ind], "[", drop = TRUE)
   }
 
-
-  markup.functions <- list(plain = muExportPlain,
-                     latex = muExportLatex,
-                     html  = muExportHTML)
+  if(is.null(markup.functions))
+    markup.functions <- list(plain = muExportPlain,
+                             latex = muExportLatex,
+                             html  = muExportHTML)
 
   first <- mutable(formula, data = data, colname = firstcol,
                    summary.function = muRownames,

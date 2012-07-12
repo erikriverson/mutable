@@ -25,6 +25,7 @@ License: GPL (>= 2)
 Collate:
     'hlf.R'
     'html.R'
+    'mathjax.R'
     'latex.R'
     'mutable.R'
     'plain.R'
