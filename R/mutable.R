@@ -31,12 +31,6 @@ muInsertRow <- function(mat, row, after) {
 
 #' @export
 mutable <- function(x, ...) {
-  if(missing(x))
-    x <- NULL 
-  UseMethod("mutable", x)
-}
-
-mutable <- function(x, ...) {
   UseMethod("mutable")
 }
 
