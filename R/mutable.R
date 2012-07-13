@@ -38,7 +38,7 @@ mutable <- function(x, ...) {
 mutable.function <- function(x, ...) {
   if(!missing(x)) {
     do.call(x, list(...))
-  } else
+  } else ## a named function argument (e.g., summary.function)
     mutable.default(...)  
 }
 

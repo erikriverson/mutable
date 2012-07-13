@@ -1,5 +1,5 @@
 
-mulmCoef <- function(formula, data, colname, round.digits = 2, ...) {
+mutableLMCoef <- function(formula, data, colname, round.digits = 2, ...) {
   fm <- lm(formula, data, ...)
   ret <- round(coef(fm)[-1], round.digits)
   nms <- names(ret)
@@ -15,19 +15,23 @@ mulmCoef <- function(formula, data, colname, round.digits = 2, ...) {
   ret.list
 }
 
-muglmCoef <- function(formula, data, colname, round.digits = 2, ...) {
+mutableGLMCoef <- function(formula, data, colname, round.digits = 2, ...) {
+  
   fm <- glm(formula, data, family = "binomial", ...)
   ret <- round(exp(coef(fm))[-1], round.digits)
 
   nms <- names(ret)
-  ret <- paste("<td>$$", ret, " (", round(exp(confint(fm)[-1,1]), round.digits),
-               " - ", round(exp(confint(fm)[-1,2]), round.digits)
-               , ")$$", "</td>")
+  ret <- paste(ret, "(", round(exp(confint(fm)[-1,1]), round.digits),
+               "-", round(exp(confint(fm)[-1,2]), round.digits)
+               , ")")
   names(ret) <- nms
   
   ret <- as.matrix(ret, ncol = 1)
   colnames(ret) <- colname
-  ret.list <-   list(plain = ret, latex = ret, html = ret)
+
+  ret.list <- list()
+  ret.list$markup <- list(plain = ret, latex = ret, html = ret)
+
   class(ret.list) <- "mutable"
   ret.list
 }

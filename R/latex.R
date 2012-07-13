@@ -70,8 +70,6 @@ muExportLatex.muRownamesFactor <- function(x, name, data, ...) {
   ret
 }
 
-muExportLatex.muRownamesNumeric <- muPrintIdentity
-
 muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2,
                                  location = "h!", size = "\\small", ...) {
   if(missing(collabel.just))
@@ -117,7 +115,6 @@ muLatexFooterLongtable <- function(x, caption) {
     "\\end{longtable}")
 }
 
-
 latex.mutable <- function(object, na.print = "", file = "",
                           headerFunction = muLatexHeaderTabular,
                           footerFunction = muLatexFooterTabular, caption = "",
@@ -143,3 +140,4 @@ latex.mutable <- function(object, na.print = "", file = "",
 }
 
 muExportLatex.default <- muPrintIdentity
+muExportLatex.muRownamesNumeric <- muPrintIdentity
