@@ -177,7 +177,8 @@ form <- hiv ~ age + gender + diffs + inc4x + bmi
 
 tab1 <- mutable(form, data = pead.bl, colname = "Variable",
                 summary.function = muStratSummary,
-                markup.functions = list(plain = muExportPlain)) + 
+                markup.functions = list(plain = muExportPlain,
+                  latex = muExportLatex)) + 
   mutable(colname = "Combined Categories") +
   mutable(subset = hiv == "Positive", colname = "Positive") +
   mutable(subset = hiv == "Negative", colname = "Negative") +

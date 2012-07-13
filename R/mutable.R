@@ -59,11 +59,6 @@ mutable.function <- function(x, ...) {
     if(is.null(y$formula))
       y$formula <- x$formula
 
-    if("subset" %in% names(y)) {
-      y$data <- y$data[eval(y$subset, y$data),]
-      y$subset <- NULL
-    }
-
     if(is.null(y$summary.function)) {
       y$summary.function <- x$summary.function
     }
@@ -140,7 +135,6 @@ mutable.formula <- function(formula, data,
                             post.summary.hook,
                             post.markup.hook, 
                             colname,
-                            subset,
                             na.action,
                             drop = FALSE,
                             ...) {
@@ -159,7 +153,7 @@ mutable.formula <- function(formula, data,
 
 
   mf.call <- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data", "subset", "na.action"), names(mf.call), 0L)
+  m <- match(c("formula", "data", "na.action"), names(mf.call), 0L)
   mf.call <- mf.call[c(1L, m)]
 
   if(missing(na.action))
