@@ -1,7 +1,8 @@
+
+#' @export
 muStratSummary <- function(x, stratVariable, data, ...) {
   UseMethod("muStratSummary")
 }
-
 
 muStratSummary.default <- function(x, stratVariable, data, ...) {
   quant <- quantile(x, probs = c(.25, .5, .75), na.rm = TRUE, ...)

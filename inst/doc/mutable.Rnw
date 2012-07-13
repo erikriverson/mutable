@@ -180,8 +180,10 @@ tab1 <- mutable(form, data = pead.bl, colname = "Variable",
                 markup.functions = list(plain = muExportPlain,
                   latex = muExportLatex)) + 
   mutable(colname = "Combined Categories") +
-  mutable(subset = hiv == "Positive", colname = "Positive") +
-  mutable(subset = hiv == "Negative", colname = "Negative") +
+  mutable(data = pead.bl[pead.bl$hiv == "Positive",], 
+          colname = "Positive") +
+  mutable(data = pead.bl[pead.bl$hiv == "Negative",], 
+          colname = "Negative") +
   mutable(summary.function = muStratTest, colname = "P-value")
 
 latex(tab1,
