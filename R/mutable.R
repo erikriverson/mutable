@@ -36,9 +36,16 @@ mutable <- function(x, ...) {
   UseMethod("mutable", x)
 }
 
+mutable <- function(x, ...) {
+  UseMethod("mutable")
+}
+
 #' @S3method mutable function
 mutable.function <- function(x, ...) {
-  do.call(x, list(...))
+  if(!missing(x)) {
+    do.call(x, list(...))
+  } else
+    mutable.default(...)  
 }
 
 #' @export
@@ -91,15 +98,15 @@ mutable.function <- function(x, ...) {
   }
   mapvars.x <- names(x$markup)
   mapvars.y <- names(y$markup)
-  
+
   if((length(mapvars.x) != length(mapvars.y)) ||
      (any(sort(mapvars.x) != sort(mapvars.y))))
     stop(paste("There are different markup elements in the tables. The left-hand table contains
-markup for (", paste(mapvars.x, collapse = " "), ").",
+markup for (", ps(mapvars.x, collapse = " "), ").",
                "The right-hand table contains markup for (",
                paste(mapvars.y, collapse = " "), ").
 To combine two tables, they must contain the same markup elements.",
-               collapse = " "))
+               collapse = ""))
 
   ret <- list()
 

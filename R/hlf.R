@@ -1,4 +1,4 @@
-## try to replicate an Hmisc type table with a function
+
 mutableN <- function(x, columnVariable, data, ...) {
   sum(!is.na(x))
 }
@@ -18,7 +18,7 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
   first <- mutable(formula, data = data, colname = firstcol,
                    summary.function = muRownames,
                    markup.functions =  markup.functions,
-                   useVarName = FALSE) + 
+                   useVarName = TRUE) + 
                      mutable(summary.function = mutableN,
                              colname = "N", ...)
 
