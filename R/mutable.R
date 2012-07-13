@@ -50,6 +50,7 @@ mutable.function <- function(x, ...) {
 
 #' @export
 `+.mutable` <- function(x, y) {
+
   frame <- y$frame
   y$frame <- NULL
 
@@ -155,7 +156,8 @@ mutable.formula <- function(formula, data,
   ## since we know `+.mutable.` must have been called. 
   
   if(missing(data) || missing(markup.functions)) {
-    lst <- as.list(match.call()[-1])
+    lst <- c(as.list(match.call()[-1]),
+             frame = parent.frame())
     attr(lst, "resolve") <- TRUE
     class(lst) <- "mutable"
     return(lst)
