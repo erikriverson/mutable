@@ -7,13 +7,13 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
                          footnote = "", 
                          completeDocument = FALSE,
                          cssFile = NULL,
+                         markupElement = "html", 
                          ...) {
 
-  x <- object$markup[["html"]]
+  x <- object$markup[[markupElement]]
 
   if(is.null(x)) {
-    cat("No HTML table present in this object\n")
-    return()
+    stop("No HTML table present in this object\n")
   }
   
   x[is.na(x)] <- na.print

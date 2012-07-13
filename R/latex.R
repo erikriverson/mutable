@@ -122,8 +122,9 @@ latex.mutable <- function(object, na.print = "", file = "",
                           headerFunction = muLatexHeaderTabular,
                           footerFunction = muLatexFooterTabular, caption = "",
                           no.table.markup.regex = c("multicol|hline"),
+                          markupElement = "latex",
                           ...) {
-  x <- object$markup$latex
+  x <- object$markup[[markupElement]]
   x[is.na(x)] <- na.print
   
   cat(paste(headerFunction(x, caption, ...),

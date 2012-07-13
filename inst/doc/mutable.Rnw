@@ -111,16 +111,14 @@ and for \texttt{function} objects.  Let us first turn our attention to
 the formula interface, since this is the more common use case. 
 
 \begin{verbatim}
-mutable(formula, data, summary.function = esummary, 
-        format.function = eformat, 
-        latex.function = elatex, 
-        html.function = ehtml, 
-        colname, 
-        subset = NULL, ...) 
+mutable(formula, data, 
+        summary.function = muStratSummary, 
+        markup.functions = list(plain = muExportPlain,
+                                html  = muExportHTML),
+        colname = "Summary Statistics")
 \end{verbatim}
 
 A summary of the arguments is given in \ref{ref:args}. 
-
 
 \begin{table}
   \label{ref:args}
@@ -178,11 +176,12 @@ the colname argument must be specified.
 form <- hiv ~ age + gender + diffs + inc4x + bmi
 
 tab1 <- mutable(form, data = pead.bl, colname = "Variable",
-              summary.function = erownames) +
+                summary.function = muStratSummary,
+                markup.functions = list(plain = muExportPlain)) + 
   mutable(colname = "Combined Categories") +
   mutable(subset = hiv == "Positive", colname = "Positive") +
   mutable(subset = hiv == "Negative", colname = "Negative") +
-  mutable(summary.function = etest, colname = "P-value")
+  mutable(summary.function = muStratTest, colname = "P-value")
 
 latex(tab1,
      caption = "Baseline Table")
@@ -190,9 +189,8 @@ latex(tab1,
 @ 
 
 This may seem like a lot of work to generate the table, but for common
-types of tables such as this, wrapper functions can be constructed to
-do all the work for you.  Something else has also happened, The tab1
-object also contains an HTML version of the table.
+types of tables such as this, wrapper functions have been and
+constructed, and the user is encouraged to write their own.
 
 \end{document}
 

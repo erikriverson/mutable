@@ -50,18 +50,28 @@ mutable.function <- function(x, ...) {
     
     if(is.null(y$data))
       y$data <- x$data
+
     if(is.symbol(y$data))
       y$data <- eval(y$data)
+
     if(is.null(y$formula))
       y$formula <- x$formula
+
     if("subset" %in% names(y)) {
       y$data <- y$data[eval(y$subset, y$data),]
       y$subset <- NULL
     }
+
+    if(is.null(y$summary.function)) {
+      y$summary.function <- x$summary.function
+    }
+    
     if(is.null(y$markup.functions))
       y$markup.functions <- x$markup.functions
+
     y <- do.call(mutable.formula, y, envir = frame)
   }
+  
   addelement <- function(x, y) {
     if(!is.matrix(y))
       y <- as.matrix(y)
@@ -92,12 +102,16 @@ To combine two tables, they must contain the same markup elements.",
                collapse = " "))
 
   ret <- list()
+
   ret$markup <- mapply(addelement, x$markup[mapvars.x], y$markup[mapvars.x],
                        SIMPLIFY = FALSE)
   ret$formula <- x$formula
   ret$data <- x$data
+
   ret$markup.functions <- x$markup.functions
+  ret$summary.function <- x$summary.function
   ret$summaries <- c(x["summaries"], y["summaries"])
+  
   attr(ret, "resolve") <- FALSE
   class(ret) <- c("mutable")
   ret
@@ -200,6 +214,7 @@ mutable.formula <- function(formula, data,
                    formula = formula,
                    data = list(data),
                    markup.functions = list(markup.functions),
+                   summary.function = summary.function,
                    summaries = list(ret))
 
   if(!missing(post.markup.hook))
@@ -215,8 +230,7 @@ print.mutable <- function(x, quote = FALSE, na.print = "--", print.rownames = FA
   x <- x$markup[["plain"]]
 
   if(is.null(x)) {
-    cat("No plain text table present in this object\n")
-    return()
+    stop("No plain text table present in this object\n")
   }
   
   if(!print.rownames)
@@ -241,7 +255,7 @@ summary.mutable <- function(x) {
   cat("\nCall:\n", deparse(x$formula), "\n\n")
 
   cat(paste("Columns:", length(x$summaries)), "\n")
-  cat("  ", paste(colnames(x$markup$plain), collapse = "  "), "\n")
+  cat("  ", paste(colnames(x$markup[["plain"]]), collapse = "  "), "\n")
 
   cat(paste("\nMarkup objects:", length(x$markup), "\n"))
   cat("  ", names(x$markup), "\n")
