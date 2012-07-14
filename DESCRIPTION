@@ -23,11 +23,11 @@ Description: The mutable package allows users to construct objects
     the same table can easily be produced from the same data simultaneously.
 License: GPL (>= 2)
 Collate:
+    'mutable.R'
     'hlf.R'
     'html.R'
     'mathjax.R'
     'latex.R'
-    'mutable.R'
     'plain.R'
     'response.R'
     'rownames.R'

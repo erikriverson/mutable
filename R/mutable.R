@@ -235,6 +235,7 @@ print.mutable <- function(x, quote = FALSE, na.print = "--", print.rownames = FA
   print.default(unclass(x), quote = quote, na.print = na.print, ...)
 }
 
+#' @export
 muPrintIdentity <- function(x, name, data, ...) {
   ret <- x
   names(ret) <- name
