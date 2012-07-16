@@ -26,10 +26,10 @@ Load sample data
 : data(airquality)
 
 Give unlabeled variables appropriate labels
-: label(airquality$Ozone)	  <- 'Ozone (ppb)'
-: label(airquality$Solar.R)     <- 'Solar R (lang)'
-: label(airquality$Wind)	  <- 'Wind (mph)'
-: label(airquality$Temp)	  <- 'Temperature (degrees F)'
+: label(airquality$Ozone)   <- 'Ozone (ppb)'
+: label(airquality$Solar.R) <- 'Solar R (lang)'
+: label(airquality$Wind)    <- 'Wind (mph)'
+: label(airquality$Temp)    <- 'Temperature (degrees F)'
 : airquality$Month <- factor(airquality$Month,
 :                            labels = month.abb[5:9])
 :
