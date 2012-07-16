@@ -1,3 +1,4 @@
+#' @S3method html mutable
 html.mutable <- function(object, na.print = "<td></td>", file = "",
                          headerFunction = muHTMLHeader,
                          footerFunction = muHTMLFooter,
@@ -40,7 +41,7 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
         file = file, append = TRUE)
 }
 
-
+#' @export
 muPrintIdentityHTML <- function(x, name, data, ...) {
   ret <- ps("<td>", muPrintIdentity(x, name, data...), "</td>")
   names(ret) <- name

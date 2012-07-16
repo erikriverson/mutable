@@ -242,6 +242,7 @@ muPrintIdentity <- function(x, name, data, ...) {
   ret
 }
 
+#' @export
 muFormatPvalue <- function(x, name, data, threshold = 0.0001, ...) {
   val <- ifelse(x$pvalue < threshold, paste("<", threshold), x$pvalue)
   names(val) <- name

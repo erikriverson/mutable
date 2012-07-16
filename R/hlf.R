@@ -3,6 +3,7 @@ mutableN <- function(x, columnVariable, data, ...) {
   sum(!is.na(x))
 }
 
+#' @export
 mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
                          drop = FALSE, markup.functions = NULL, ...) {
   if(drop) {
@@ -46,6 +47,7 @@ mutableStrat <- function(formula, data, firstcol = "Variable", overall = TRUE,
   table
 }
 
+#' @export
 mutableResponse <- function(formula, data,
                             firstColumn = "Variable",
                             summaryColumn = "Summary Statistics",

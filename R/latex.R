@@ -1,3 +1,29 @@
+#' @S3method latex mutable
+latex.mutable <- function(object, na.print = "", file = "",
+                          headerFunction = muLatexHeaderTabular,
+                          footerFunction = muLatexFooterTabular, caption = "",
+                          no.table.markup.regex = c("multicol|hline"),
+                          markupElement = "latex",
+                          ...) {
+  x <- object$markup[[markupElement]]
+  x[is.na(x)] <- na.print
+  
+  cat(paste(headerFunction(x, caption, ...),
+            collapse = "\n"), "\n", file = file)
+
+  body <- apply(x, 1, paste, collapse = "&")
+
+  fix.rows <- grep(no.table.markup.regex, body)
+  body[fix.rows] <- x[fix.rows, 1]
+
+  body.vec <- paste(body, collapse = "\\\\\n")
+  cat(body.vec, "\\\\\n", file = file, append = TRUE)
+  
+  cat(paste(footerFunction(x, caption, ...), collapse = "\n"),
+      "\n", file = file, append = TRUE)
+}
+
+
 muExportLatex <- function(x, ...) {
   UseMethod("muExportLatex")
 }
@@ -115,29 +141,6 @@ muLatexFooterLongtable <- function(x, caption) {
     "\\end{longtable}")
 }
 
-latex.mutable <- function(object, na.print = "", file = "",
-                          headerFunction = muLatexHeaderTabular,
-                          footerFunction = muLatexFooterTabular, caption = "",
-                          no.table.markup.regex = c("multicol|hline"),
-                          markupElement = "latex",
-                          ...) {
-  x <- object$markup[[markupElement]]
-  x[is.na(x)] <- na.print
-  
-  cat(paste(headerFunction(x, caption, ...),
-            collapse = "\n"), "\n", file = file)
-
-  body <- apply(x, 1, paste, collapse = "&")
-
-  fix.rows <- grep(no.table.markup.regex, body)
-  body[fix.rows] <- x[fix.rows, 1]
-
-  body.vec <- paste(body, collapse = "\\\\\n")
-  cat(body.vec, "\\\\\n", file = file, append = TRUE)
-  
-  cat(paste(footerFunction(x, caption, ...), collapse = "\n"),
-      "\n", file = file, append = TRUE)
-}
 
 muExportLatex.default <- muPrintIdentity
 muExportLatex.muRownamesNumeric <- muPrintIdentity
