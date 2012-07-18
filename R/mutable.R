@@ -107,7 +107,7 @@ To combine two tables, they must contain the same markup elements.",
 
   ret$markup.functions <- x$markup.functions
   ret$summary.function <- x$summary.function
-  ret$summaries <- c(x["summaries"], y["summaries"])
+  ret$summaries <- c(x[["summaries"]], y[["summaries"]])
   
   attr(ret, "resolve") <- FALSE
   class(ret) <- c("mutable")
@@ -212,7 +212,7 @@ mutable.formula <- function(formula, data,
                    data = list(data),
                    markup.functions = list(markup.functions),
                    summary.function = summary.function,
-                   summaries = list(ret))
+                   summaries = list(list(ret)))
 
   if(!missing(post.markup.hook))
     return.list <- post.markup.hook(return.list, ret, ...)
@@ -253,9 +253,9 @@ muFormatPvalue <- function(x, name, data, threshold = 0.0001, ...) {
 summary.mutable <- function(x) {
   cat("\nCall:\n", deparse(x$formula), "\n\n")
 
-  cat(paste("Columns:", length(x$summaries)), "\n")
-  cat("  ", paste(colnames(x$markup[["plain"]]), collapse = "  "), "\n")
+  cat(paste(length(x$summaries), "Columns:"), "\n")
+  cat(paste(" ", colnames(x$markup[["plain"]]), collapse = "\n"), "\n\n")
 
-  cat(paste("\nMarkup objects:", length(x$markup), "\n"))
-  cat("  ", names(x$markup), "\n")
+  cat(paste(length(x$markup), "markup objects:", "\n"))
+  cat(paste(" ", names(x$markup), collapse = "\n"), "\n")
 }
