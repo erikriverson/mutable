@@ -2,17 +2,17 @@
 ps <- function(...) paste(..., sep = "")
 
 #' @export
-generateRowNames <- function(var, ...) {
-  UseMethod("generateRowNames")
+generateRownames <- function(var, ...) {
+  UseMethod("generateRownames")
 }
 
-#' @S3method generateRowNames default
-generateRowNames.default <- function(var, varName , ...) {
+#' @S3method generateRownames default
+generateRownames.default <- function(var, varName , ...) {
   varName
 }
 
-#' @S3method generateRowNames factor
-generateRowNames.factor <- function(var, varName, ...) {
+#' @S3method generateRownames factor
+generateRownames.factor <- function(var, varName, ...) {
   c(varName, ps(varName, names(table(var))))
 }
 
@@ -183,7 +183,7 @@ mutable.formula <- function(formula, data,
   tableData <- list(rowVariables = df.vars,
                     columnVariable = mf[[columnVariable]])
 
-  internalRowNames <- unlist(mapply(generateRowNames, tableData$rowVariables,
+  internalRownames <- unlist(mapply(generateRownames, tableData$rowVariables,
                                     names(tableData$rowVariables),
                                     SIMPLIFY = FALSE))
 
@@ -199,8 +199,8 @@ mutable.formula <- function(formula, data,
       val <- mf(ret[[i]], names(ret)[i], data, colname = colname)
       markup.ret <- c(markup.ret, val)
     }
-    markup.ret <- as.matrix(markup.ret[internalRowNames], ncol = 1)
-    rownames(markup.ret) <- internalRowNames
+    markup.ret <- as.matrix(markup.ret[internalRownames], ncol = 1)
+    rownames(markup.ret) <- internalRownames
     colnames(markup.ret) <- colname
     markup.ret
   }
