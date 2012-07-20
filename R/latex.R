@@ -6,6 +6,11 @@ latex.mutable <- function(object, na.print = "", file = "",
                           markupElement = "latex",
                           ...) {
   x <- object$markup[[markupElement]]
+
+  if(is.null(x)) {
+    stop("No LaTeX table present in this object\n")
+  }
+  
   x[is.na(x)] <- na.print
   
   cat(paste(headerFunction(x, caption, ...),
