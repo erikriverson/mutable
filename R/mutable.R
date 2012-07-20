@@ -72,11 +72,17 @@ mutable.function <- function(x, ...) {
   addelement <- function(x, y) {
     if(!is.matrix(y))
       y <- as.matrix(y)
-    un <- union(rownames(x), rownames(y))
+
+    rx <- rownames(x, do.NULL = FALSE)
+    ry <- rownames(y, do.NULL = FALSE)
+    
+    un <- union(rx, ry)
+
     xx <- as.data.frame(unclass(as.matrix(x)))
     yy <- as.data.frame(unclass(as.matrix(y)))
-    xx[[".rns"]] <- rownames(x)
-    yy[[".rns"]] <- rownames(y)
+
+    xx[[".rns"]] <- rx
+    yy[[".rns"]] <- ry
 
     ## base::merge because of my own merge with message()
     mydf <- base::merge(xx, yy, by = ".rns", all = TRUE) 
