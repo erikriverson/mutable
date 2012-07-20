@@ -12,20 +12,30 @@ latex.mutable <- function(object, na.print = "", file = "",
   }
   
   x[is.na(x)] <- na.print
+
+  latexHeader <- paste(headerFunction(x, caption, ...),
+                     collapse = "\n")
   
-  cat(paste(headerFunction(x, caption, ...),
-            collapse = "\n"), "\n", file = file)
+  cat(latexHeader, "\n", file = file)
 
   body <- apply(x, 1, paste, collapse = "&")
 
   fix.rows <- grep(no.table.markup.regex, body)
   body[fix.rows] <- x[fix.rows, 1]
 
-  body.vec <- paste(body, collapse = "\\\\\n")
-  cat(body.vec, "\\\\\n", file = file, append = TRUE)
+  latexBody <- paste(body, collapse = "\\\\\n")
+
+  cat(latexBody, "\\\\\n", file = file, append = TRUE)
+
+  latexFooter <- paste(footerFunction(x, caption, ...), collapse = "\n")
   
-  cat(paste(footerFunction(x, caption, ...), collapse = "\n"),
-      "\n", file = file, append = TRUE)
+  cat(latexFooter, "\n", file = file, append = TRUE)
+
+  latexTable <- paste(latexHeader, latexBody, latexFooter,
+                      collapse = "\n")
+
+  class(latexTable) <- "mulatex"
+  invisible(latexTable)
 }
 
 
