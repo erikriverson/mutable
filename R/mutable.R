@@ -251,10 +251,13 @@ muFormatPvalue <- function(x, name, data, threshold = 0.0001, ...) {
 
 #' @S3method summary mutable
 summary.mutable <- function(x) {
-  cat("\nCall:\n", deparse(x$formula), "\n\n")
+  if(!is.null(x$formula)) {
+    cat("\nCall:\n", deparse(x$formula), "\n\n")
+  }
 
   cat(paste(length(x$summaries), "Columns:"), "\n")
-  cat(paste(" ", colnames(x$markup[["plain"]]), collapse = "\n"), "\n\n")
+  cat(paste(" ", colnames(x$markup[["plain"]]), collapse = "\n"),
+      "\n\n")
 
   cat(paste(length(x$markup), "markup objects:", "\n"))
   cat(paste(" ", names(x$markup), collapse = "\n"), "\n")
