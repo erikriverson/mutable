@@ -259,3 +259,9 @@ summary.mutable <- function(x) {
   cat(paste(length(x$markup), "markup objects:", "\n"))
   cat(paste(" ", names(x$markup), collapse = "\n"), "\n")
 }
+
+is.mutable <- function(x) {
+  if("mutable" %in% class(x))
+    TRUE
+  else FALSE
+}
