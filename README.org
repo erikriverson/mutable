@@ -35,9 +35,9 @@ Give unlabeled variables appropriate labels
 :
 
 
-Use a high-level mutable function to create a complete table, by default in plain text, LaTeX, and HTML formats
+Use the mutable formula interface to create a complete table, by default in plain text, LaTeX, and HTML formats
 : library(mutable)
-: m1 <- mutableStrat(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality)
+: m1 <- mutable(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality)
 
 Print the table in the running R session
 : m1 
