@@ -34,12 +34,17 @@ mutable <- function(x, ...) {
   UseMethod("mutable")
 }
 
-#' @S3method mutable function
-mutable.function <- function(x, ...) {
+#' @export
+muColumn <- function(x, ...) {
+  UseMethod("muColumn")
+}
+
+#' @S3method muColumn function
+muColumn.function <- function(x, ...) {
   if(!missing(x)) {
     do.call(x, list(...))
   } else ## a named function argument (e.g., summary.function)
-    mutable.default(...)  
+    muColumn.default(...)  
 }
 
 #' @export
@@ -66,7 +71,7 @@ mutable.function <- function(x, ...) {
     if(is.null(y$markup.functions))
       y$markup.functions <- x$markup.functions
 
-    y <- do.call(mutable.formula, y, envir = frame)
+    y <- do.call(muColumn.formula, y, envir = frame)
   }
   
   addelement <- function(x, y) {
@@ -120,8 +125,8 @@ To combine two tables, they must contain the same markup elements.",
   ret
 }
 
-#' @S3method mutable default
-mutable.default <- function(x, ...) {
+#' @S3method muColumn default
+muColumn.default <- function(x, ...) {
   m <- as.list(match.call())[-1]
   if(!"data" %in% names(m))
     lst <- c(list(formula = NULL, data = NULL), m)
@@ -134,8 +139,8 @@ mutable.default <- function(x, ...) {
   lst
 }
 
-#' @S3method mutable formula
-mutable.formula <- function(formula, data,
+#' @S3method muColumn formula
+muColumn.formula <- function(formula, data,
                             summary.function,
                             markup.functions, 
                             post.summary.hook,

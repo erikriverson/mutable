@@ -64,7 +64,7 @@ muHTMLDocFooter <- function() {
 }
 
 muHTMLHeader <- function(x, caption, footnote, ...) {
-  c("<table>", 
+  c("<table class = \"data table\">", 
     paste("<caption>", caption, "</caption>"),
     "<colgroup>",
     ps("<col id = \"", gsub(" +", "", colnames(x)), "\" />"),
