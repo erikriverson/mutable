@@ -304,10 +304,32 @@ mutable.list <- function(x) {
 #' @export
 mutableMatrixMarkup <- function(x, use.names, ...) {
 
-  htmlMatrix <- as.matrix(apply(x, 2, muPrintIdentityHTML, rownames(x), x))
-  dim(htmlMatrix) <- dim(x)             #in case result is coerced to vector
-  htmlComponent <- cbind(paste("<tr>", htmlMatrix[,1]), htmlMatrix[,-1])
- 
+  if(!use.names) {
+
+    htmlMatrix <- as.matrix(apply(x, 2, muPrintIdentityHTML, rownames(x), x))
+    dim(htmlMatrix) <- dim(x)             #in case result is coerced to vector
+    
+    htmlComponent <- cbind(paste("<tr>", htmlMatrix[,1, drop = FALSE]),
+                           htmlMatrix[,-1, drop = FALSE])
+
+    print(htmlComponent)
+    
+  } else {
+    xdat <- x[,-1, drop = FALSE]
+    ## now htmlMatrix will have all data minus the first column, which
+    ## we know are names
+    htmlMatrix <- as.matrix(apply(xdat, 2,
+                                  muPrintIdentityHTML,
+                                  rownames(xdat), xdat))
+    dim(htmlMatrix) <- dim(xdat)
+    
+    htmlComponent <- cbind(paste("<tr><th scope = \"row\">",
+                                 x[,1, drop = FALSE],
+                                 "</th>"),
+                           htmlMatrix)
+    
+  }
+   
   colnames(htmlComponent) <-
     if(!is.null(colnames(x)))
       colnames(x)
