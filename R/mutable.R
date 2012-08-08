@@ -1,3 +1,4 @@
+#' @import Hmisc
 
 ps <- function(...) paste(..., sep = "")
 
@@ -278,4 +279,43 @@ is.mutable <- function(x) {
   if("mutable" %in% class(x))
     TRUE
   else FALSE
+}
+
+#' @export
+mutable.default <- function(x, use.names = TRUE, transpose = FALSE, ...) {
+  xmat <- as.matrix(x)
+ 
+  if(transpose)
+    xmat <- t(xmat)
+ 
+  if(use.names & !is.null(rownames(xmat)))
+    xmat <- cbind(rownames(xmat), xmat)
+ 
+  ret <- mutableMatrixMarkup(xmat, use.names, ...)
+  class(ret) <- "mutable"
+  ret
+}
+
+#' @export
+mutable.list <- function(x) {
+  stop("Cannot create mutable object from an arbitrary list")
+}
+
+#' @export
+mutableMatrixMarkup <- function(x, use.names, ...) {
+
+  htmlMatrix <- as.matrix(apply(x, 2, muPrintIdentityHTML, rownames(x), x))
+  dim(htmlMatrix) <- dim(x)             #in case result is coerced to vector
+  htmlComponent <- cbind(paste("<tr>", htmlMatrix[,1]), htmlMatrix[,-1])
+ 
+  colnames(htmlComponent) <-
+    if(!is.null(colnames(x)))
+      colnames(x)
+    else
+      ps("Column", 1:ncol(x))
+ 
+  list(markup.list =
+       list(plain = x,
+            html  = htmlComponent,
+            latex = x))
 }
