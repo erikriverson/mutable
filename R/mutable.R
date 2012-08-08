@@ -291,7 +291,7 @@ mutable.default <- function(x, use.names = TRUE, transpose = FALSE, ...) {
   if(use.names & !is.null(rownames(xmat)))
     xmat <- cbind(rownames(xmat), xmat)
  
-  ret <- mutableMatrixMarkup(xmat, ...)
+  ret <- mutableMatrixMarkup(xmat, use.names, ...)
   class(ret) <- "mutable"
   ret
 }
@@ -302,13 +302,11 @@ mutable.list <- function(x) {
 }
 
 #' @export
-mutableMatrixMarkup <- function(x, ...) {
- 
-  htmlComponent <- as.matrix(apply(x, 2,
-                                   muPrintIdentityHTML,
-                                   rownames(x), x))
- 
-  dim(htmlComponent) <- dim(x)
+mutableMatrixMarkup <- function(x, use.names, ...) {
+
+  htmlMatrix <- as.matrix(apply(x, 2, muPrintIdentityHTML, rownames(x), x))
+  dim(htmlMatrix) <- dim(x)             #in case result is coerced to vector
+  htmlComponent <- cbind(paste("<tr>", htmlMatrix[,1]), htmlMatrix[,-1])
  
   colnames(htmlComponent) <-
     if(!is.null(colnames(x)))
