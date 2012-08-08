@@ -1,7 +1,7 @@
 #' @S3method html mutable
 html.mutable <- function(object, na.print = "<td></td>", file = "",
-                         headerFunction = muHTMLHeader,
-                         footerFunction = muHTMLFooter,
+                         headerFunction = muHTMLTableHeader,
+                         footerFunction = muHTMLTableFooter,
                          documentHeaderFunction = muHTMLDocHeader,
                          documentFooterFunction = muHTMLDocFooter,
                          caption = "",
@@ -63,7 +63,7 @@ muHTMLDocFooter <- function() {
     "</html>")
 }
 
-muHTMLHeader <- function(x, caption, footnote, ...) {
+muHTMLTableHeader <- function(x, caption, footnote, ...) {
   c("<table class = \"data table\">", 
     paste("<caption>", caption, "</caption>"),
     "<colgroup>",
@@ -85,7 +85,7 @@ muHTMLHeader <- function(x, caption, footnote, ...) {
     "<tbody>")
 }
 
-muHTMLFooter <- function(x) {
+muHTMLTableFooter <- function(x) {
   c("</tbody>",
     "</table>")
 }
