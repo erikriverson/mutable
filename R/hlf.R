@@ -3,8 +3,6 @@ mutableN <- function(x, columnVariable, data, ...) {
   sum(!is.na(x))
 }
 
-
-
 #' @export
 mutable.formula <- function(formula, data, firstcol = "Variable", overall = TRUE,
                          drop = FALSE, markup.functions = NULL, ...) {
