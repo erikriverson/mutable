@@ -267,9 +267,10 @@ summary.mutable <- function(x) {
     cat("\nCall:\n", deparse(x$formula), "\n\n")
   }
 
-  cat(paste(length(x$summaries), "Columns:"), "\n")
-  cat(paste(" ", colnames(x$markup[["plain"]]), collapse = "\n"),
-      "\n\n")
+  ncols <- ncol(x$markup[["plain"]])
+  cat(paste(ncols, "Columns:"), "\n")
+  cat(paste(" ", colnames(x$markup[["plain"]]),
+            collapse = "\n"), "\n\n")
 
   cat(paste(length(x$markup), "markup objects:", "\n"))
   cat(paste(" ", names(x$markup), collapse = "\n"), "\n")
@@ -327,15 +328,15 @@ mutableMatrixMarkup <- function(x, use.names, ...) {
                            htmlMatrix)
     
   }
-   
+
+  ## expand this for all markup types (lapply)
   colnames(htmlComponent) <-
     if(!is.null(colnames(x)))
       colnames(x)
     else
       ps("Column", 1:ncol(x))
  
-  list(markup.list =
-       list(plain = x,
+  list(markup = list(plain = x,
             html  = htmlComponent,
             latex = x))
 }
