@@ -311,8 +311,6 @@ mutableMatrixMarkup <- function(x, use.names, ...) {
     
     htmlComponent <- cbind(paste("<tr>", htmlMatrix[,1, drop = FALSE]),
                            htmlMatrix[,-1, drop = FALSE])
-
-    print(htmlComponent)
     
   } else {
     xdat <- x[,-1, drop = FALSE]
