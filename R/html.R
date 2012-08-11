@@ -39,7 +39,28 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
   if(completeDocument)
     cat(paste(documentFooterFunction(), collapse = newline), newline,
         file = file, append = TRUE)
+
+  ret <- list(file = file, object = object)
+  class(ret) <- "mutableHTML"
+  invisible(ret)
 }
+
+print.mutableHTML <- function(x, completeDocument = TRUE, browser) {
+
+  if(x$file == "") {
+    filename <- tempfile(pattern = "mutable", fileext = ".html")
+    ## but need to write out the HTML to the file, and how do we get
+    ## it?
+    html(x$object, file = filename, completeDocument = completeDocument)
+  } else
+    filename <- x$file
+
+  if(missing(browser))
+    browser <- getOption("browser")
+
+  browseURL(ps("file://", filename), browser)
+}
+
 
 #' @export
 muPrintIdentityHTML <- function(x, name, data, ...) {
