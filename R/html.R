@@ -45,6 +45,7 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
   invisible(ret)
 }
 
+#' @export
 print.mutableHTML <- function(x, completeDocument = TRUE, browser) {
 
   if(x$file == "") {
@@ -53,7 +54,7 @@ print.mutableHTML <- function(x, completeDocument = TRUE, browser) {
     ## it?
     html(x$object, file = filename, completeDocument = completeDocument)
   } else
-    filename <- x$file
+    filename <- normalizePath(x$file)
 
   if(missing(browser))
     browser <- getOption("browser")
