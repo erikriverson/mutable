@@ -175,19 +175,19 @@ the colname argument must be specified.
 
 form <- hiv ~ age + gender + diffs + inc4x + bmi
 
-tab1 <- mutable(form, data = pead.bl, colname = "Variable",
-                summary.function = muStratSummary,
-                markup.functions = list(plain = muExportPlain,
-                  latex = muExportLatex)) + 
-  mutable(colname = "Combined Categories") +
-  mutable(data = pead.bl[pead.bl$hiv == "Positive",], 
-          colname = "Positive") +
-  mutable(data = pead.bl[pead.bl$hiv == "Negative",], 
-          colname = "Negative") +
-  mutable(summary.function = muStratTest, colname = "P-value")
+## tab1 <- mutable(form, data = pead.bl, colname = "Variable",
+##                 summary.function = muStratSummary,
+##                 markup.functions = list(plain = muExportPlain,
+##                   latex = muExportLatex)) + 
+##   mutable(colname = "Combined Categories") +
+##   mutable(data = pead.bl[pead.bl$hiv == "Positive",], 
+##           colname = "Positive") +
+##   mutable(data = pead.bl[pead.bl$hiv == "Negative",], 
+##           colname = "Negative") +
+##   mutable(summary.function = muStratTest, colname = "P-value")
 
-latex(tab1,
-     caption = "Baseline Table")
+## latex(tab1,
+##      caption = "Baseline Table")
 
 @ 
 
