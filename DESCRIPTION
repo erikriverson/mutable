@@ -9,6 +9,7 @@ Suggests:
     ggplot2
 Imports:
     grDevices,
+    RJSONIO,
     Hmisc
 Description: The mutable package allows users to construct objects
     representing arbitrary tabular material and output the object into a
@@ -27,6 +28,7 @@ Collate:
     'hlf.R'
     'html.R'
     'mathjax.R'
+    'slickgrid.R'
     'latex.R'
     'plain.R'
     'response.R'

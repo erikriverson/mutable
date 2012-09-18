@@ -1,6 +1,7 @@
 #' @S3method html mutable
 html.mutable <- function(object, na.print = "<td></td>", file = "",
                          headerFunction = muHTMLTableHeader,
+                         markupFunction = muHTMLMarkupGenerator, 
                          footerFunction = muHTMLTableFooter,
                          documentHeaderFunction = muHTMLDocHeader,
                          documentFooterFunction = muHTMLDocFooter,
@@ -27,11 +28,8 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
   cat(paste(headerFunction(x, caption, footnote, ...),
             collapse = newline), newline,
       file = file, append = completeDocument)
-  
-  cat(paste("", apply(x, 1, paste, collapse = " "),
-            collapse = ps("</tr>", newline)),
-            ps("</tr>", newline), file = file,
-            append = TRUE)
+
+  markupFunction(x, file)
   
   cat(paste(footerFunction(x), collapse = newline), newline,
       file = file, append = TRUE)
@@ -43,6 +41,14 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
   ret <- list(file = file, object = object)
   class(ret) <- "mutableHTML"
   invisible(ret)
+}
+
+muHTMLMarkupGenerator <- function(x, file) {
+  cat(paste("", apply(x, 1, paste, collapse = " "),
+            collapse = ps("</tr>", newline)),
+            ps("</tr>", newline), file = file,
+            append = TRUE)
+
 }
 
 #' @export
