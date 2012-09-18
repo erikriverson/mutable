@@ -5,7 +5,8 @@ muSlickGridMarkupGenerator <- function(x, file) {
 }
 
 muSlickGridHeader <- function(x, caption, footnote) {
-  c('<script>',
+  c('<div id="myGrid" style="width:700px;height:500px;"></div>',
+    '<script>',
     'var grid;',
     'var columns = [',
     paste('{id: "',

@@ -1,6 +1,18 @@
 An Introduction to the **mutable** Package
 ========================================================
 
+```{r, echo=FALSE, results="hide"}
+options(rstudio.markdownToHTML = 
+  function(inputFile, outputFile) {      
+    require(markdown)
+    htmlOptions <- markdownHTMLOptions(defaults=TRUE)
+    htmlOptions <- htmlOptions[htmlOptions != "hard_wrap"]
+    markdownToHTML(inputFile, outputFile, options = htmlOptions) 
+  }
+) 
+```
+
+
 We have all been there. 
 
 Your data has been collected, cleaned, and analyzed.  You have the
@@ -40,7 +52,7 @@ install devtools so that you can install the latest version of mutable
 from its Github repository. The following lines take care of all this
 housekeeping. 
 
-```{r}
+```{r, results="hide", message=TRUE}
  library(devtools)
  install_github("mutable", "erikriverson")
  library(mutable)
@@ -60,7 +72,7 @@ By default, mutable has created an object that contains markup for
 plain text, HTML, and LaTeX using its default markup functions! 
 
 
-```{r}
+```{r, comment=NA}
 summary(m1)
 ```
 
@@ -101,21 +113,25 @@ html(m2)
 
 Want MathJax? 
 ```{r, results = "asis"}
-m2 <- mutable(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality,
+m3 <- mutable(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality,
               markup.functions = list(html = muExportHTMLMathJax))
-html(m2)
+html(m3)
 ```
 
+Or how about Slickgrid? 
 
-html(m2,
-     documentHeaderFunction = muSlickGridDocHeader,
+
+
+```{r, results = "asis"}
+m4 <- mutable(mtcars)
+html(m4,
      headerFunction = muSlickGridHeader,
      markupFunction = muSlickGridMarkupGenerator,
      footerFunction = muSlickGridFooter,
-     documentFooterFunction = muSlickGridDocFooter,
-     completeDocument = TRUE,
-     markupElement = "plain",
-     file = "/work/eiverson/projects/src/SlickGrid/examples/mut1.html")
+     completeDocument = FALSE,
+     markupElement = "plain")
+``
+
 
 
 
