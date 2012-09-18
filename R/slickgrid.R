@@ -1,32 +1,3 @@
-library(Hmisc)
-library(RJSONIO)
-
-df1 <- data.frame(a = 1:10, b = 2:11, c = gl(2,10))
-summary(df1)
-
-##
-################################################################################
-
-################################################################################
-## markup generation
-
-html(mutable(df1))
-m1 <- mutable(c ~ a + b, data = df1)
-
-m2 <- mutable(mtcars)
-
-html(m2,
-     documentHeaderFunction = muSlickGridDocHeader,
-     headerFunction = muSlickGridHeader,
-     markupFunction = muSlickGridMarkupGenerator,
-     footerFunction = muSlickGridFooter,
-     documentFooterFunction = muSlickGridDocFooter,
-     completeDocument = TRUE,
-     markupElement = "plain",
-     file = "/work/eiverson/projects/src/SlickGrid/examples/mut1.html")
-
-##
-################################################################################
 
 muSlickGridMarkupGenerator <- function(x, file) {
   cat(c('var data = ',
