@@ -45,8 +45,8 @@ html.mutable <- function(object, na.print = "<td></td>", file = "",
 
 muHTMLMarkupGenerator <- function(x, file) {
   cat(paste("", apply(x, 1, paste, collapse = " "),
-            collapse = ps("</tr>", newline)),
-            ps("</tr>", newline), file = file,
+            collapse = ps("</tr>", "\n")),
+            ps("</tr>", "\n"), file = file,
             append = TRUE)
 
 }

@@ -1,3 +1,48 @@
-An Introduction to the mutable package
+An Introduction to the **mutable** Package
 ========================================================
+
+We have all been there. 
+
+Your data has been collected, cleaned, and analyzed.  You have the
+results of a regression model or want to compare groups in a
+randomized study. All you want to do is create a basic table that you
+can quickly share with colleagues, students, or clients. It would be
+nice if you could define how the table looked with minimal time and
+effort. Oh yeah, and it should look good.
+
+Enter mutable. 
+
+Inspired heavily by xtable and Hmisc's summary.formula, the mutable
+package (https://github.com/erikriverson/mutable) provides a flexible
+method for generating markup tables from the R programming
+language. It allows users to construct objects of arbitrary tabular
+material such as data.frames, matrices, coefficient tables, and
+summaries of multiple variables. You can then output the object into a
+variety of formats. LaTeX, HTML, and plain text output functions are
+included by default.
+
+But you don't have to trust that the author gave you the best way to
+represent a table in each markup language. You can supply your own
+formatting functions for all of these types. For example, the provided
+HTML output style for factors (percentages and fractions) can be
+completely changed if you specify your ownown muExportHTML
+function. The modular design of the package allows every markup
+decision to be overridden easily and consistently. The result is that
+the user is in complete control over the final markup produced, and
+that multiple versions of the same table can easily be produced from
+the same data simultaneously.
+
+Sound interesting? Let's walk through the basics! 
+
+First thing is first, let's install the package. It currently relies
+on a couple of other packages (Hmisc and RJSONIO). We also need to
+install devtools so that you can install the latest version of mutable
+from its Github repository. The following lines take care of all this
+housekeeping.
+
+```{r}
+ require(devtools)
+ install_github("mutable", "erikriverson")
+```
+
 
