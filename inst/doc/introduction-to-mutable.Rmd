@@ -66,19 +66,19 @@ label(airquality$Wind)    <- 'Wind (mph)'
 label(airquality$Temp)    <- 'Temperature (degrees F)'
 airquality$Month <- factor(airquality$Month, labels = month.abb[5:9])
 ```
-Now, use mutable's formula interface to create a summary table. This syntax follows Hmisc's summary.formula.  Create an R formula with your stratification (column) variable on the left-hand side, and the list of variables you want to summarize on the right-hand side, separated with the `+` operator.  This examples only uses numeric (continuous) variables, but mutable handles all the common object classes. 
+Now, use mutable's formula interface to create a summary table. This syntax follows Hmisc's summary.formula.  Create an R formula with your stratification (column) variable on the left-hand side, and the list of variables you want to summarize on the right-hand side, separated with the `+` operator.  This example only uses numeric (continuous) variables, but mutable handles all the common object classes. 
 
 ```{r}
 m2 <- mutable(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality)
 ```
 
-And here is the HTML. 
+And here is the HTML result. 
 
 ```{r, results = "asis"}
 html(m2) 
 ``` 
 
-Want to use MathJax?  No problem, just specify a new list of markup.functions.  Since we only need to use the HTML version for this example, you can simply specify only one type of markup. The idea is that markup.functions can be arbitrarily long, and contain all sorts of different types of markup functions that will generate versions of your table. 
+Want to use MathJax?  No problem, mutable has an argument called **markup.functions** that you can specify to override the defaults. Since we only need to use the HTML version for this example, you can specify only one type of markup, html. However, the main idea is that markup.functions can be arbitrarily long, and contain all sorts of different types of markup-generating functions that will produce versions of your table. 
 
 ```{r, results = "asis"}
 m3 <- mutable(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality,
@@ -90,8 +90,8 @@ How about a SlickGrid table? SlickGrid is an exciting new JavaScript library wit
 
 ```{r, eval=FALSE}
 
-m2 <- mutable(mtcars)
-html(m2,
+m4 <- mutable(mtcars)
+html(m4,
      documentHeaderFunction = muSlickGridDocHeader,
      headerFunction = muSlickGridHeader,
      markupFunction = muSlickGridMarkupGenerator,
