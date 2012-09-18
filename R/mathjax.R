@@ -52,6 +52,7 @@ muHTMLMathJaxDocHeader <- function(cssFile) {
     "<body>")
 }
 
+#' @export
 muExportHTMLMathJax <- function(x, ...) {
   UseMethod("muExportHTMLMathJax")
 }

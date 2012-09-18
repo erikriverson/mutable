@@ -38,11 +38,84 @@ First thing is first, let's install the package. It currently relies
 on a couple of other packages (Hmisc and RJSONIO). We also need to
 install devtools so that you can install the latest version of mutable
 from its Github repository. The following lines take care of all this
-housekeeping.
+housekeeping. 
 
 ```{r}
- require(devtools)
+ library(devtools)
  install_github("mutable", "erikriverson")
+ library(mutable)
+ library(Hmisc)
+ library(RJSONIO)
 ```
+
+Mutable can create markup tables from common R objects. For example, a
+data.frame. Simply call the **mutable** function on any data.frame,
+let's use the **mtcars** data.frame in this example. 
+
+```{r}
+m1 <- mutable(mtcars)
+```
+
+By default, mutable has created an object that contains markup for
+plain text, HTML, and LaTeX using its default markup functions! 
+
+
+```{r}
+summary(m1)
+```
+
+Since I am writing this demo using Markdown and using knitr to process
+it to HTML, I want to simply extract the HTML
+
+```{r, results="asis"}
+html(m1)
+```
+
+Well that's about as basic an HTML table as you can get. But behind
+the scenes, mutable has generated not only the HTML markup to get you that table, but assigned eachrow and column its own CSS ID for you to customize. 
+
+Let's look at something a little more complex, summarizing multiple
+variables with columns for each value of a stratification
+variable. First, let's add variable labels to a different built-in
+data.frame.
+
+```{r}
+data(airquality)
+label(airquality$Ozone)   <- 'Ozone (ppb)'
+label(airquality$Solar.R) <- 'Solar R (lang)'
+label(airquality$Wind)    <- 'Wind (mph)'
+label(airquality$Temp)    <- 'Temperature (degrees F)'
+airquality$Month <- factor(airquality$Month, labels = month.abb[5:9])
+```
+Now, use mutable's formula interface to create a summary table. 
+
+```{r}
+m2 <- mutable(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality)
+```
+
+And view the HTML. 
+
+```{r, results = "asis"}
+html(m2) 
+``` 
+
+Want MathJax? 
+```{r, results = "asis"}
+m2 <- mutable(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality,
+              markup.functions = list(html = muExportHTMLMathJax))
+html(m2)
+```
+
+
+html(m2,
+     documentHeaderFunction = muSlickGridDocHeader,
+     headerFunction = muSlickGridHeader,
+     markupFunction = muSlickGridMarkupGenerator,
+     footerFunction = muSlickGridFooter,
+     documentFooterFunction = muSlickGridDocFooter,
+     completeDocument = TRUE,
+     markupElement = "plain",
+     file = "/work/eiverson/projects/src/SlickGrid/examples/mut1.html")
+
 
 
