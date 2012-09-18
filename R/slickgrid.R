@@ -1,9 +1,11 @@
 
+#' @export
 muSlickGridMarkupGenerator <- function(x, file) {
   cat(c('var data = ',
         toJSON(x) , ";\n"), file = file, append = TRUE)
 }
 
+#' @export
 muSlickGridHeader <- function(x, caption, footnote) {
   c('<div id="myGrid" style="width:700px;height:500px;"></div>',
     '<script>',
@@ -25,6 +27,7 @@ muSlickGridHeader <- function(x, caption, footnote) {
     '')
 }
 
+#' @export
 muSlickGridFooter <- function(x) {
   c('$(function () {',
     'grid = new Slick.Grid("#myGrid", data, columns, options);',
@@ -32,8 +35,10 @@ muSlickGridFooter <- function(x) {
     '</script>')
 }
 
+#' @export
 muSlickGridDocFooter <- muHTMLDocFooter
 
+#' @export
 muSlickGridDocHeader <- function(cssFile) {
   c('<!DOCTYPE HTML>',
     '<html>',
