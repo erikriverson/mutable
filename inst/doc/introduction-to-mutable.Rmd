@@ -25,7 +25,7 @@ But you don't have to trust that the author gave you the best way to represent a
 
 Sound interesting? Let's walk through the basics! 
 
-First things first, let's install the package. It currently relies on a couple of other packages (Hmisc and RJSONIO). We also need to install devtools so that you can install the latest version of mutable from its Github repository. The following lines take care of all this housekeeping. 
+First things first, let's install the package. It currently relies on a couple of other packages (Hmisc and RJSONIO) that you should make sure are installed so that the rest of the examples work. We also need to install devtools so that you can install the latest version of mutable from its Github repository. The following lines take care of all this housekeeping. 
 
 ```{r, results="hide", message=FALSE}
  library(devtools)
