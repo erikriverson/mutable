@@ -15,44 +15,19 @@ options(rstudio.markdownToHTML =
 
 We have all been there. 
 
-Your data has been collected, cleaned, and analyzed.  You have the
-results of a regression model or want to compare groups in a
-randomized study. All you want to do is create a basic table that you
-can quickly share with colleagues, students, or clients. It would be
-nice if you could define how the table looked with minimal time and
-effort. Oh yeah, and it should look good.
+Your data have been collected, cleaned, and analyzed.  You have the results of a regression model or want to compare summaries of groups in a randomized study. All you want to do is create a basic table that you can quickly share with colleagues, students, or clients. It would be nice if you could define how the table looked with minimal time and effort. Oh yeah, it should be able to look as nice as you want.
 
 Enter mutable. 
 
-Inspired heavily by xtable and Hmisc's summary.formula, the mutable
-package (https://github.com/erikriverson/mutable) provides a flexible
-method for generating markup tables from the R programming
-language. It allows users to construct objects of arbitrary tabular
-material such as data.frames, matrices, coefficient tables, and
-summaries of multiple variables. You can then output the object into a
-variety of formats. LaTeX, HTML, and plain text output functions are
-included by default.
+Inspired heavily by xtable and Hmisc's summary.formula, the mutable package (https://github.com/erikriverson/mutable) provides a flexible suite of functions for generating markup tables from the R programming language. It allows users to construct objects of arbitrary tabular material such as data.frames, matrices, coefficient tables, and summaries of multiple variables. You can then output the object into a variety of formats. LaTeX, HTML, and plain text output functions are included by default.
 
-But you don't have to trust that the author gave you the best way to
-represent a table in each markup language. You can supply your own
-formatting functions for all of these types. For example, the provided
-HTML output style for factors (percentages and fractions) can be
-completely changed if you specify your ownown muExportHTML
-function. The modular design of the package allows every markup
-decision to be overridden easily and consistently. The result is that
-the user is in complete control over the final markup produced, and
-that multiple versions of the same table can easily be produced from
-the same data simultaneously.
+But you don't have to trust that the author gave you the best way to represent a table in each markup language. You can supply your own formatting functions for all of these types of output. For example, the provided HTML output style for factors (percentages and fractions) can be completely changed if you specify your own muExportHTML function for objects of class factor. The modular design of the package allows every markup  decision to be overridden easily and consistently. The result is that the user is in complete control over the final markup produced, and that multiple versions of the same table can easily be produced from the same data simultaneously.
 
 Sound interesting? Let's walk through the basics! 
 
-First thing is first, let's install the package. It currently relies
-on a couple of other packages (Hmisc and RJSONIO). We also need to
-install devtools so that you can install the latest version of mutable
-from its Github repository. The following lines take care of all this
-housekeeping. 
+First things first, let's install the package. It currently relies on a couple of other packages (Hmisc and RJSONIO). We also need to install devtools so that you can install the latest version of mutable from its Github repository. The following lines take care of all this housekeeping. 
 
-```{r, results="hide", message=TRUE}
+```{r, results="hide", message=FALSE}
  library(devtools)
  install_github("mutable", "erikriverson")
  library(mutable)
@@ -60,36 +35,28 @@ housekeeping.
  library(RJSONIO)
 ```
 
-Mutable can create markup tables from common R objects. For example, a
-data.frame. Simply call the **mutable** function on any data.frame,
-let's use the **mtcars** data.frame in this example. 
+Mutable can create markup tables from common R objects. For example, a data.frame. Simply call the **mutable** function on any data.frame. For this demo, we will use the **mtcars** data.frame that is built into base R. 
 
 ```{r}
 m1 <- mutable(mtcars)
 ```
 
-By default, mutable has created an object that contains markup for
-plain text, HTML, and LaTeX using its default markup functions! 
+Mutable has created an object (m1) that contains markup for plain text, HTML, and LaTeX using its default markup functions! 
 
 
 ```{r, comment=NA}
 summary(m1)
 ```
 
-Since I am writing this demo using Markdown and using knitr to process
-it to HTML, I want to simply extract the HTML
+Since I am writing this demo using Markdown and using knitr to process it to HTML, I want to simply extract the HTML component. I can do this using the **html** function, which produces markup that generates the following table. 
 
 ```{r, results="asis"}
 html(m1)
 ```
 
-Well that's about as basic an HTML table as you can get. But behind
-the scenes, mutable has generated not only the HTML markup to get you that table, but assigned eachrow and column its own CSS ID for you to customize. 
+That's about as basic an HTML table as you can get. But behind the scenes, mutable has generated not only the HTML markup to get you that table, but assigned each row and column its own CSS ID  for you to customize. 
 
-Let's look at something a little more complex, summarizing multiple
-variables with columns for each value of a stratification
-variable. First, let's add variable labels to a different built-in
-data.frame.
+Let's look at something a little more complex, summarizing multiple variables with columns for each  value of a stratification variable. First, let's add variable labels to a different built-in data.frame.
 
 ```{r}
 data(airquality)
@@ -99,39 +66,45 @@ label(airquality$Wind)    <- 'Wind (mph)'
 label(airquality$Temp)    <- 'Temperature (degrees F)'
 airquality$Month <- factor(airquality$Month, labels = month.abb[5:9])
 ```
-Now, use mutable's formula interface to create a summary table. 
+Now, use mutable's formula interface to create a summary table. This syntax follows Hmisc's summary.formula.  Create an R formula with your stratification (column) variable on the left-hand side, and the list of variables you want to summarize on the right-hand side, separated with the `+` operator.  This examples only uses numeric (continuous) variables, but mutable handles all the common object classes. 
 
 ```{r}
 m2 <- mutable(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality)
 ```
 
-And view the HTML. 
+And here is the HTML. 
 
 ```{r, results = "asis"}
 html(m2) 
 ``` 
 
-Want MathJax? 
+Want to use MathJax?  No problem, just specify a new list of markup.functions.  Since we only need to use the HTML version for this example, you can simply specify only one type of markup. The idea is that markup.functions can be arbitrarily long, and contain all sorts of different types of markup functions that will generate versions of your table. 
+
 ```{r, results = "asis"}
 m3 <- mutable(Month ~ Ozone + Solar.R + Wind + Temp, data = airquality,
               markup.functions = list(html = muExportHTMLMathJax))
 html(m3)
 ```
 
-Or how about Slickgrid? 
+How about a SlickGrid table? SlickGrid is an exciting new JavaScript library with many interactive features. I was not able to (yet) figure out how to integrate the JavaScript output in the Rmd file through knitr, so until then, the results of this call are hosted at the link below. But the key point to notice is that we just had to write new wrapper functions and tell mutable about them. The SlickGrid-specific code is less than 70 lines long, and completely independent of the rest of mutable! It uses the RJSONIO package to convert R objects to JSON. 
 
+```{r, eval=FALSE}
 
-
-```{r, results = "asis"}
-m4 <- mutable(mtcars)
-html(m4,
+m2 <- mutable(mtcars)
+html(m2,
+     documentHeaderFunction = muSlickGridDocHeader,
      headerFunction = muSlickGridHeader,
      markupFunction = muSlickGridMarkupGenerator,
      footerFunction = muSlickGridFooter,
-     completeDocument = FALSE,
-     markupElement = "plain")
-``
+     documentFooterFunction = muSlickGridDocFooter,
+     completeDocument = TRUE,
+     markupElement = "plain",
+     file = "mutable-slickgrid.html")
+
+```
+
+See the results at 
+http://www.sigmafield.org/mutable-demo/mutable-slickgrid.html
 
 
-
-
+I hope you enjoyed learning a little bit about what the mutable package can do. It is a flexible method for generating markup tables of all types, while allowing complete customization of the result.
