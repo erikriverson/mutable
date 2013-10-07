@@ -337,6 +337,6 @@ mutableMatrixMarkup <- function(x, use.names, ...) {
       ps("Column", 1:ncol(x))
  
   list(markup = list(plain = x,
-            html  = htmlComponent,
-            latex = x))
+           html  = htmlComponent,
+           latex = x))
 }

@@ -26,7 +26,7 @@ mutable.formula <- function(formula, data, firstcol = "Variable", overall = TRUE
   response_p <- attr(terms(formula), "response")
 
   split_df <- if(response_p)
-      split(data, data[[as.character(as.list(formula)[[2]])]])
+      split(data, data[[as.character(formula)[[2]]]])
   else
       list(data)
       
