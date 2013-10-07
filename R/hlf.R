@@ -23,10 +23,16 @@ mutable.formula <- function(formula, data, firstcol = "Variable", overall = TRUE
                      muColumn(summary.function = mutableN,
                                    colname = "N", ...)
 
+  response_p <- attr(terms(formula), "response")
+
+  split_df <- if(response_p)
+      split(data, data[[as.character(as.list(formula)[[2]])]])
+  else
+      list(data)
+      
   middle <-
     Reduce("+",
-           lapply(split(data,
-                        data[[as.character(as.list(formula)[[2]])]]),
+           lapply(split_df,
                   function(x) muColumn(formula, data = x,
                                       summary.function = muStratSummary,
                                       markup.functions = markup.functions,
@@ -35,7 +41,7 @@ mutable.formula <- function(formula, data, firstcol = "Variable", overall = TRUE
 
   table <- first + middle
 
-  if(length(unique(data[[as.character(as.list(formula)[[2]])]])) > 1 & overall) {
+  if(overall) {
     last <- muColumn(formula, data,
                     summary.function = muStratSummary,
                     markup.functions = markup.functions, 

@@ -116,7 +116,7 @@ muLatexHeaderTabular <- function(x, caption, collabel.just, colhead2,
   if(missing(collabel.just))
     collabel.just <- paste(c("l", rep("c", ncol(x) - 1)), collapse = "")
   
-  c("{\\footnotesize",
+  c(
     "\\begin{table}[", location, "]", size,
     ps("\\caption{", caption , "}"),
     "\\begin{center}", 
